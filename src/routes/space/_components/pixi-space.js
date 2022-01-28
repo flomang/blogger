@@ -2,7 +2,8 @@ import * as PIXI from "pixi.js";
 import Keyboard from "pixi.js-keyboard";
 import { Ship } from "./ship.js";
 import { Hud } from "./hud.js";
-import { StarField } from "./stars.js"; 
+import { StarField } from "./stars.js";
+import { Asteroid } from "./asteroid.js";
 
 export class PixiSpace {
     constructor({ canvas: canvasElement }) {
@@ -12,7 +13,7 @@ export class PixiSpace {
             height: window.screen.height / 9,
             backgroundColor: 0x090f15,
             //resolution: window.devicePixelRatio || 6 
-            resolution:  3 
+            resolution: 3
         });
 
         const player = new Ship({
@@ -25,17 +26,25 @@ export class PixiSpace {
 
         const padding = 3;
         const hud = new Hud({
-            app:app,
+            app: app,
             x: app.screen.width - 10 - padding,
             y: app.screen.height - 10 - padding,
             w: 10,
             h: 10
         });
 
-        const starField = new StarField({app: app, count: 300}); 
+        const starField = new StarField({ app: app, count: 300 });
 
         //Start the game loop
         app.ticker.add(delta => loop(delta));
+
+        const asteroids = [];
+        for (let i = 0; i < 20; i++) {
+            let x = this.getRandomArbitrary(0, app.screen.width);
+            let y = this.getRandomArbitrary(0, app.screen.height);
+            let asteroid = new Asteroid({ x: x, y: y, radius: 10.0, app: app });
+            asteroids.push(asteroid);
+        }
 
         function input(delta) {
             // Keyboard
@@ -63,6 +72,13 @@ export class PixiSpace {
             player.render(delta);
             hud.render(delta);
             starField.render(delta);
+            for (let i = 0; i < asteroids.length; ++i) {
+                asteroids[i].render(delta);
+            }
         }
+    }
+
+    getRandomArbitrary(min, max) {
+        return Math.random() * (max - min) + min;
     }
 }
