@@ -12,13 +12,11 @@ export class Asteroid {
         this.radius = radius,
         this.velocityX = random(-1, 1);
         this.velocityY = random(-1, 1);
-        this.total = Math.random() * (15 - 5) + 5; 
 
-        let graphics = new PIXI.Graphics();
-        graphics.beginFill(0x2980b9, 0.3); // Yellow
+        let total = random(6, 12); 
         let points = [];
-        for (var i = 0; i < this.total; i++) {
-            let angle = map(i, 0, this.total, 0, Math.PI * 2);
+        for (var i = 0; i < total; i++) {
+            let angle = map(i, 0, total, 0, Math.PI * 2);
             let offset = random(-this.radius * 0.5, this.radius * 0.5); 
             let r = this.radius + offset;
             let x = r * Math.cos(angle);
@@ -28,13 +26,13 @@ export class Asteroid {
             points.push(y);
           }
 
-        // Draw a polygon to look like a star
+        let graphics = new PIXI.Graphics();
+        graphics.beginFill(0x2980b9, 0.3); 
         graphics.drawPolygon(points);
         graphics.endFill();
 
         // the parent container for this asset
         const container = new PIXI.Container();
-        //container.acceleration = new PIXI.Point(0, 0);
         container.pivot.x = container.width / 2;
         container.pivot.y = container.height / 2;
         container.x = x;
