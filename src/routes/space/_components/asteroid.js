@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import {map} from "./map";
+import {map, random} from "./util";
 
 
 
@@ -14,13 +14,13 @@ export class Asteroid {
         this.app = app;
         let graphics = new PIXI.Graphics();
 
-        this.velocityX = Math.random();
-        this.velocityY = Math.random();
+        this.velocityX = random(-1, 1);
+        this.velocityY = random(-1, 1);
 
         this.total = Math.random() * (15 - 5) + 5; 
         this.offset = [];
         for (var i = 0; i < this.total; i++) {
-          this.offset[i] = this.getRandomArbitrary(-this.radius * 0.5, this.radius * 0.5);
+          this.offset[i] = random(-this.radius * 0.5, this.radius * 0.5);
         }
 
         graphics.beginFill(0x2980b9, 0.3); // Yellow
@@ -49,10 +49,6 @@ export class Asteroid {
         container.addChild(graphics);
         this.container = container;
         this.app.stage.addChild(container);
-    }
-
-    getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
     }
 
     render(delta) {

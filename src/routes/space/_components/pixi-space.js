@@ -4,6 +4,7 @@ import { Ship } from "./ship.js";
 import { Hud } from "./hud.js";
 import { StarField } from "./stars.js";
 import { Asteroid } from "./asteroid.js";
+import { random } from "./util";
 
 export class PixiSpace {
     constructor({ canvas: canvasElement }) {
@@ -40,9 +41,10 @@ export class PixiSpace {
 
         const asteroids = [];
         for (let i = 0; i < 20; i++) {
-            let x = this.getRandomArbitrary(0, app.screen.width);
-            let y = this.getRandomArbitrary(0, app.screen.height);
-            let asteroid = new Asteroid({ x: x, y: y, radius: 10.0, app: app });
+            let x = random(0, app.screen.width);
+            let y = random(0, app.screen.height);
+            let r = random(3, 16);
+            let asteroid = new Asteroid({ x: x, y: y, radius: r, app: app });
             asteroids.push(asteroid);
         }
 
@@ -76,9 +78,5 @@ export class PixiSpace {
                 asteroids[i].render(delta);
             }
         }
-    }
-
-    getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
     }
 }
