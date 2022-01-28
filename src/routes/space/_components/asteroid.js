@@ -1,8 +1,6 @@
 import * as PIXI from "pixi.js";
 import {map, random} from "./util";
 
-
-
 export class Asteroid {
     constructor({
         x: x,
@@ -10,24 +8,19 @@ export class Asteroid {
         radius: radius,
         app: app,
     }) {
-        this.radius = radius,
         this.app = app;
-        let graphics = new PIXI.Graphics();
-
+        this.radius = radius,
         this.velocityX = random(-1, 1);
         this.velocityY = random(-1, 1);
-
         this.total = Math.random() * (15 - 5) + 5; 
-        this.offset = [];
-        for (var i = 0; i < this.total; i++) {
-          this.offset[i] = random(-this.radius * 0.5, this.radius * 0.5);
-        }
 
+        let graphics = new PIXI.Graphics();
         graphics.beginFill(0x2980b9, 0.3); // Yellow
         let points = [];
         for (var i = 0; i < this.total; i++) {
             let angle = map(i, 0, this.total, 0, Math.PI * 2);
-            let r = this.radius + this.offset[i];
+            let offset = random(-this.radius * 0.5, this.radius * 0.5); 
+            let r = this.radius + offset;
             let x = r * Math.cos(angle);
             let y = r * Math.sin(angle);
             
