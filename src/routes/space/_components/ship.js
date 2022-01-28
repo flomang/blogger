@@ -4,13 +4,14 @@ import { Particle } from "./particle.js";
 const RADIAN_OFFSET = Math.PI / 2;
 
 export class Ship {
-  constructor({ clientID: id, image: img, x: x, y: y, app: app }) {
+  constructor({ clientID: id, image: img, x: x, y: y, app: app, radius: radius = 6 }) {
     this.app = app;
     this.clientID = id;
     this.particles = [];
     this.heading = new PIXI.Point(0, 0);
     this.thruster = new PIXI.Point(0, 0);
     this.velocity = new PIXI.Point(0, 0);
+    this.radius = radius;
 
     const sprite = PIXI.Sprite.from(img);
     // set the anchor point so the texture is centerd on the sprite
