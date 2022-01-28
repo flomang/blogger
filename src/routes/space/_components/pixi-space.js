@@ -9,8 +9,10 @@ export class PixiSpace {
         let app;
         app = new PIXI.Application({
             view: canvasElement,
+            height: window.screen.height / 9,
             backgroundColor: 0x090f15,
-            resolution: window.devicePixelRatio || 1
+            //resolution: window.devicePixelRatio || 6 
+            resolution:  3 
         });
 
         const player = new Ship({
@@ -21,16 +23,16 @@ export class PixiSpace {
             y: app.screen.height / 2
         });
 
-        const padding = 10;
+        const padding = 3;
         const hud = new Hud({
             app:app,
-            x: app.screen.width - 30 - padding,
-            y: app.screen.height - 30 - padding,
-            w: 30,
-            h: 30
+            x: app.screen.width - 10 - padding,
+            y: app.screen.height - 10 - padding,
+            w: 10,
+            h: 10
         });
 
-        const starField = new StarField({app: app, count: 20000}); 
+        const starField = new StarField({app: app, count: 300}); 
 
         //Start the game loop
         app.ticker.add(delta => loop(delta));

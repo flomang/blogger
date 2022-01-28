@@ -17,7 +17,7 @@ export class Ship {
     sprite.x = 0;
     sprite.y = 0;
     sprite.anchor.set(0.5);
-    sprite.scale.set(0.02);
+    sprite.scale.set(0.01);
     this.sprite = sprite;
 
     // the parent container for this asset
@@ -92,8 +92,8 @@ export class Ship {
     let pellet = new Particle({
       x: this.container.x + this.heading.x * 6,
       y: this.container.y + this.heading.y * 6,
-      width: 2,
-      height: 2,
+      width: 1,
+      height: 1,
       velocityX: this.heading.x * 5,
       velocityY: this.heading.y * 5,
       projectile: true

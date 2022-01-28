@@ -13,10 +13,9 @@
 <style>
   canvas {
     width: 100%;
-    margin: 0 auto;
   }
 </style>
 
-<div class="content" bp="padding">
+<div class="content">
   <canvas bind:this={canvas} />
 </div>

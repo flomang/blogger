@@ -23,8 +23,8 @@ export class Hud {
         for (let i = 0; i < coinCount; i++) {
             const btcd = PIXI.Sprite.from("btc.png");
             btcd.tint = 0x7ac6fa;
-            btcd.width = 10;
-            btcd.height = 10;
+            btcd.width = w/4;
+            btcd.height = h/4;
             btcd.anchor.set(0.5);
             btcd.x = w * Math.cos(increment * i);
             btcd.y = h * Math.sin(increment * i);
