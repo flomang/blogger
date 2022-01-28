@@ -10,7 +10,7 @@
 </main>
 
 <footer>
-	<p>© 2022 Flowy Inc.</p>
+	<p>© 2022 Foolish Inc.</p>
 </footer>
 
 <style>
