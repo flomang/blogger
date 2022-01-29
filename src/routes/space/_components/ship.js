@@ -1,5 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Particle } from "./particle.js";
+import { getDistance } from "./util";
+
 
 const RADIAN_OFFSET = Math.PI / 2;
 
@@ -12,6 +14,7 @@ export class Ship {
     this.thruster = new PIXI.Point(0, 0);
     this.velocity = new PIXI.Point(0, 0);
     this.radius = radius;
+    this.isDestroyed = false;
 
     const sprite = PIXI.Sprite.from(img);
     // set the anchor point so the texture is centerd on the sprite
@@ -23,7 +26,7 @@ export class Ship {
 
     // the parent container for this asset
     const container = new PIXI.Container();
-    container.acceleration = new PIXI.Point(0, 0);
+    //container.acceleration = new PIXI.Point(0, 0);
     container.pivot.x = container.width / 2;
     container.pivot.y = container.height / 2;
     container.x = x;
@@ -44,6 +47,30 @@ export class Ship {
     this.rechargeTime = 500;
   }
 
+  destroy = () => {
+    this.isDestroyed = true;
+    this.container.removeChild(this.sprite);
+    //this.isBoosting = false;
+    //let color = {
+    //  r: 200,
+    //  g: 0,
+    //  b: 0,
+    //  a: 150 
+    //}
+    //let coins = [];
+    //for (let i = 0; i < 9; ++i) {
+    //  coins.push(new Coin({
+    //    p6: this.p5,
+    //    coordinates: this.pos
+    //  }));
+    //}
+    //return coins;
+  }
+
+  destroyed = () => {
+    return this.isDestroyed;
+  }
+
   edges() {
     if (this.container.x > this.app.screen.width + this.sprite.width) {
       this.container.x = -this.sprite.width;
@@ -54,6 +81,17 @@ export class Ship {
       this.container.y = -this.sprite.width;
     } else if (this.container.y < -this.sprite.width) {
       this.container.y = this.app.screen.height + this.sprite.width;
+    }
+  }
+
+  hits = (asteroid) => {
+    let pos = asteroid.position();
+
+    let d = getDistance(this.container.x, this.container.y, pos.x, pos.y);
+    if (d < this.radius + asteroid.radius && !this.isDestroyed) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -105,11 +143,15 @@ export class Ship {
 
     this.recharged = false;
     setTimeout(function () {
-        this.recharged = true;
+      this.recharged = true;
     }.bind(this), this.rechargeTime);
   }
 
   thrust() {
+    if (this.isDestroyed) {
+      return;
+    }
+
     this.velocity.x += this.heading.x * 0.1;
     this.velocity.y += this.heading.y * 0.1;
 

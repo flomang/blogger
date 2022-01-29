@@ -42,6 +42,10 @@ export class Asteroid {
         this.app.stage.addChild(container);
     }
 
+    position() {
+      return {x: this.container.x, y: this.container.y};
+    }
+
     render(delta) {
         this.container.x += this.velocityX;
         this.container.y += this.velocityY;

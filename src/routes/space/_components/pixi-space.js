@@ -74,8 +74,16 @@ export class PixiSpace {
             player.render(delta);
             hud.render(delta);
             starField.render(delta);
+
             for (let i = 0; i < asteroids.length; ++i) {
                 asteroids[i].render(delta);
+
+                if ( player.hits(asteroids[i]) && !player.destroyed() ) {
+                    player.destroy();
+                    //unregisterPlayer(); 
+                    //crashSound.play();
+                    //coins = coins.concat(player.destroy());
+                  }
             }
         }
     }
