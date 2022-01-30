@@ -17,12 +17,15 @@ export class PixiSpace {
             resolution: 3
         });
 
+        let margin = 20;
+        let x = random(margin, app.screen.width - margin);
+        let y = random(margin, app.screen.height - margin);
         const player = new Ship({
             clientID: 1,
             app: app,
             image: "rocket.png",
-            x: app.screen.width / 2,
-            y: app.screen.height / 2
+            x: x,
+            y: y 
         });
 
         const padding = 3;
@@ -66,9 +69,12 @@ export class PixiSpace {
                 starField.warp();
             }
             if (Keyboard.isKeyDown("Enter")) {
-                let x = random(0, app.screen.width);
-                let y = random(0, app.screen.height);
-                player.respawn({ x: x, y: y });
+                if (player.destroyed()) {
+                    let margin = 20;
+                    let x = random(margin, app.screen.width - margin);
+                    let y = random(margin, app.screen.height - margin);
+                    player.respawn({ x: x, y: y });
+                }
             }
 
             Keyboard.update();

@@ -76,6 +76,7 @@ export class Ship {
     this.heading.y = Math.sin(this.container.rotation - RADIAN_OFFSET);
     this.thruster.x = Math.cos(this.container.rotation + RADIAN_OFFSET);
     this.thruster.y = Math.sin(this.container.rotation + RADIAN_OFFSET);
+    this.setRotation(random(0, Math.PI*2));
   }
 
   destroy = () => {
