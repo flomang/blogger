@@ -65,6 +65,11 @@ export class PixiSpace {
             if (Keyboard.isKeyDown("Space")) {
                 starField.warp();
             }
+            if (Keyboard.isKeyDown("Enter")) {
+                let x = random(0, app.screen.width);
+                let y = random(0, app.screen.height);
+                player.respawn({ x: x, y: y });
+            }
 
             Keyboard.update();
         }
@@ -78,12 +83,12 @@ export class PixiSpace {
             for (let i = 0; i < asteroids.length; ++i) {
                 asteroids[i].render(delta);
 
-                if ( player.hits(asteroids[i]) && !player.destroyed() ) {
+                if (player.hits(asteroids[i]) && !player.destroyed()) {
                     player.destroy();
                     //unregisterPlayer(); 
                     //crashSound.play();
                     //coins = coins.concat(player.destroy());
-                  }
+                }
             }
         }
     }

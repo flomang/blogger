@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Particle } from "./particle.js";
-import { getDistance } from "./util";
+import { getDistance, random } from "./util";
 
 
 const RADIAN_OFFSET = Math.PI / 2;
@@ -15,6 +15,11 @@ export class Ship {
     this.velocity = new PIXI.Point(0, 0);
     this.radius = radius;
     this.isDestroyed = false;
+    this.particles = [];
+    this.torpedos = [];
+    this.ammoLimit = 3;
+    this.recharged = true;
+    this.rechargeTime = 500;
 
     const sprite = PIXI.Sprite.from(img);
     // set the anchor point so the texture is centerd on the sprite
@@ -23,6 +28,38 @@ export class Ship {
     sprite.anchor.set(0.5);
     sprite.scale.set(0.01);
     this.sprite = sprite;
+
+    // // the parent container for this asset
+    // const container = new PIXI.Container();
+    // //container.acceleration = new PIXI.Point(0, 0);
+    // container.pivot.x = container.width / 2;
+    // container.pivot.y = container.height / 2;
+    // container.x = x;
+    // container.y = y;
+    // container.addChild(this.sprite);
+    // this.container = container;
+    // this.app.stage.addChild(container);
+
+    // this.heading.x = Math.cos(this.container.rotation - RADIAN_OFFSET);
+    // this.heading.y = Math.sin(this.container.rotation - RADIAN_OFFSET);
+    // this.thruster.x = Math.cos(this.container.rotation + RADIAN_OFFSET);
+    // this.thruster.y = Math.sin(this.container.rotation + RADIAN_OFFSET);
+    this.respawn({x: x, y: y});
+  }
+
+  respawn = ({ x: x, y: y }) => {
+    //this.container.addChild(this.sprite);
+    this.isDestroyed = false;
+    //this.container.x = x;
+    //this.container.y = y;
+    this.radius = 6;
+    this.heading = new PIXI.Point(0, 0);
+    this.thruster = new PIXI.Point(0, 0);
+    this.velocity = new PIXI.Point(0, 0);
+
+    if (this.container != undefined) {
+      this.app.stage.removeChild(this.container);
+    }
 
     // the parent container for this asset
     const container = new PIXI.Container();
@@ -39,12 +76,6 @@ export class Ship {
     this.heading.y = Math.sin(this.container.rotation - RADIAN_OFFSET);
     this.thruster.x = Math.cos(this.container.rotation + RADIAN_OFFSET);
     this.thruster.y = Math.sin(this.container.rotation + RADIAN_OFFSET);
-
-    this.particles = [];
-    this.torpedos = [];
-    this.ammoLimit = 3;
-    this.recharged = true;
-    this.rechargeTime = 500;
   }
 
   destroy = () => {
