@@ -17,15 +17,13 @@ export class PixiSpace {
             resolution: 3
         });
 
-        let margin = 20;
-        let x = random(margin, app.screen.width - margin);
-        let y = random(margin, app.screen.height - margin);
+        let pos = randomPoint(20);
         const player = new Ship({
             clientID: 1,
             app: app,
             image: "rocket.png",
-            x: x,
-            y: y 
+            x: pos.x,
+            y: pos.y 
         });
 
         const padding = 3;
@@ -43,12 +41,17 @@ export class PixiSpace {
         app.ticker.add(delta => loop(delta));
 
         const asteroids = [];
-        for (let i = 0; i < 20; i++) {
-            let x = random(0, app.screen.width);
-            let y = random(0, app.screen.height);
-            let r = random(3, 16);
-            let asteroid = new Asteroid({ x: x, y: y, radius: r, app: app });
+        for (let i = 0; i < 60; i++) {
+            let pos = randomPoint(0);
+            let r = random(3, 21);
+            let asteroid = new Asteroid({ x: pos.x, y: pos.y, radius: r, app: app });
             asteroids.push(asteroid);
+        }
+
+        function randomPoint(margin) {
+            let x = random(margin, app.screen.width - margin);
+            let y = random(margin, app.screen.height - margin);
+            return {x: x, y: y};
         }
 
         function input(delta) {
@@ -70,10 +73,8 @@ export class PixiSpace {
             }
             if (Keyboard.isKeyDown("Enter")) {
                 if (player.destroyed()) {
-                    let margin = 20;
-                    let x = random(margin, app.screen.width - margin);
-                    let y = random(margin, app.screen.height - margin);
-                    player.respawn({ x: x, y: y });
+                    let pos = randomPoint(20);
+                    player.respawn(pos);
                 }
             }
 
@@ -82,6 +83,7 @@ export class PixiSpace {
 
         function loop(delta) {
             input(delta);
+
             player.render(delta);
             hud.render(delta);
             starField.render(delta);
