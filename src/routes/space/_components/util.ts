@@ -19,17 +19,15 @@ export function getDistance(x1: number, y1: number, x2: number, y2: number): num
 }
 
 export function distance(x1: number, y1: number, x2: number, y2: number): number {
-  let y = x2 - x1;
-  let x = y2 - y1;
+  let dx = x2 - x1;
+  let dy = y2 - y1;
 
-  return Math.sqrt((x * x) + (y * y));
+  return Math.sqrt((dx * dx) + (dy * dy));
 }
 
 export function pointCircle(px: number, py: number, cx: number, cy: number, r: number): boolean {
-  let dx = px - cx;
-  let dy = py - cy;
-  let distance = Math.sqrt((dx * dx) + (dy * dy));
-  if (distance <= r) {
+  let dist = distance(px, py, cx, cy);
+  if (dist <= r) {
     return true;
   }
   return false;
@@ -39,7 +37,7 @@ export function linePoint(x1: number, y1: number, x2: number, y2: number, px: nu
   let d1 = distance(px, py, x1, y1);
   let d2 = distance(px, py, x2, y2);
   let lineLen = distance(x1, y1, x2, y2);
-  let buffer = 0.05
+  let buffer = 0.1
 
   // if the two distances are equal to the line's
   // length, the point is on the line!
@@ -77,11 +75,11 @@ export function lineCircle(x1: number, y1: number, x2: number, y2: number, cx: n
 
 export function polyCircle(vertices: number[], cx: number, cy: number, r: number): boolean {
   let next = 0;
-  for (let current = 0; current < vertices.length; current++) {
+  for (let current = 0; current < vertices.length; current+=2) {
     // get next vertex in list
     // if we've hit the end, wrap around to 0
-    next = (current + 2) % vertices.length;
-    //if (next == vertices.length) next = 0;
+    next = (current + 2);
+    if (next == vertices.length) next = 0;
 
     let v1x = vertices[current];    // c for "current"
     let v1y = vertices[current + 1];       // n for "next"

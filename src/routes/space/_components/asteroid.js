@@ -10,7 +10,7 @@ export class Asteroid {
   }) {
     this.app = app;
     this.radius = radius,
-    this.velocityX = random(-1, 1);
+      this.velocityX = random(-1, 1);
     this.velocityY = random(-1, 1);
 
     let total = random(6, 12);
@@ -33,8 +33,6 @@ export class Asteroid {
 
     // the parent container for this asset
     const container = new PIXI.Container();
-    container.pivot.x = container.width / 2;
-    container.pivot.y = container.height / 2;
     container.x = x;
     container.y = y;
     container.addChild(graphics);
@@ -45,9 +43,9 @@ export class Asteroid {
   allPoints() {
     let points = [];
 
-    for (var i = 0; i < this.points.length; i++) {
+    for (var i = 0; i < this.points.length; i += 2) {
       let x = this.container.x + this.points[i];
-      let y = this.container.y + this.points[i+1];
+      let y = this.container.y + this.points[i + 1];
       points.push(x);
       points.push(y);
     }
