@@ -10,7 +10,7 @@ export class Asteroid {
   }) {
     this.app = app;
     this.radius = radius,
-      this.velocityX = random(-1, 1);
+    this.velocityX = random(-1, 1);
     this.velocityY = random(-1, 1);
 
     let total = random(6, 12);
@@ -40,7 +40,7 @@ export class Asteroid {
     this.app.stage.addChild(container);
   }
 
-  allPoints() {
+  vertices() {
     let points = [];
 
     for (var i = 0; i < this.points.length; i += 2) {

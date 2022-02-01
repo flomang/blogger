@@ -11,13 +11,6 @@ export function random(min: number, max: number): number {
   return Math.random() * (max - min) + min;
 }
 
-export function getDistance(x1: number, y1: number, x2: number, y2: number): number {
-  let y = x2 - x1;
-  let x = y2 - y1;
-
-  return Math.sqrt(x * x + y * y);
-}
-
 export function distance(x1: number, y1: number, x2: number, y2: number): number {
   let dx = x2 - x1;
   let dy = y2 - y1;

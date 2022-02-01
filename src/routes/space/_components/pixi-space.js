@@ -87,21 +87,14 @@ export class PixiSpace {
 
             for (let i = 0; i < asteroids.length; ++i) {
                 let asteroid = asteroids[i]
-                //asteroid.render(delta);
+                asteroid.render(delta);
 
-                let points = asteroid.allPoints();
+                let points = asteroid.vertices();
                 let position = player.position();
 
                 if (polyCircle(points, position.x, position.y, player.radius) && !player.destroyed()) {
                     player.destroy();
-
                 }
-                //if (player.hits(asteroids[i]) && !player.destroyed()) {
-                //    player.destroy();
-                //    //unregisterPlayer(); 
-                //    //crashSound.play();
-                //    //coins = coins.concat(player.destroy());
-                //}
             }
         }
 

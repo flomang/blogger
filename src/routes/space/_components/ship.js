@@ -1,12 +1,12 @@
 import * as PIXI from "pixi.js";
 import { Particle } from "./particle.js";
-import { getDistance, random } from "./util";
+import { random } from "./util";
 
 
 const RADIAN_OFFSET = Math.PI / 2;
 
 export class Ship {
-  constructor({ clientID: id, image: img, x: x, y: y, app: app, radius: radius = 3 }) {
+  constructor({ clientID: id, image: img, x: x, y: y, app: app, radius: radius = 2.5 }) {
     this.app = app;
     this.clientID = id;
     this.particles = [];
@@ -29,13 +29,11 @@ export class Ship {
     sprite.scale.set(0.01);
     this.sprite = sprite;
 
-    var graphics = new PIXI.Graphics();
-    graphics.beginFill(0xe74c3c); // Red
-    // Draw a circle
-    graphics.drawCircle(0, 0, this.radius); // drawCircle(x, y, radius)
-    // Applies fill to lines and shapes since the last call to beginFill.
-    graphics.endFill();
-    this.graphics = graphics;
+    var shield = new PIXI.Graphics();
+    shield.beginFill(0xffffff, 0.3);  
+    shield.drawCircle(0, 0, this.radius+2.0);
+    shield.endFill();
+    this.shield = shield;
 
     this.respawn({ x: x, y: y });
   }
@@ -58,7 +56,7 @@ export class Ship {
     this.container = container;
     this.app.stage.addChild(container);
 
-    container.addChild(this.graphics);
+    container.addChild(this.shield);
 
     this.heading.x = Math.cos(this.container.rotation - RADIAN_OFFSET);
     this.heading.y = Math.sin(this.container.rotation - RADIAN_OFFSET);
@@ -70,22 +68,7 @@ export class Ship {
   destroy = () => {
     this.isDestroyed = true;
     this.container.removeChild(this.sprite);
-    this.container.removeChild(this.graphics);
-    //this.isBoosting = false;
-    //let color = {
-    //  r: 200,
-    //  g: 0,
-    //  b: 0,
-    //  a: 150 
-    //}
-    //let coins = [];
-    //for (let i = 0; i < 9; ++i) {
-    //  coins.push(new Coin({
-    //    p6: this.p5,
-    //    coordinates: this.pos
-    //  }));
-    //}
-    //return coins;
+    this.container.removeChild(this.shield);
   }
 
   destroyed = () => {
@@ -107,17 +90,6 @@ export class Ship {
 
   position = () => {
     return { x: this.container.x, y: this.container.y };
-  }
-
-  hits = (asteroid) => {
-    let pos = asteroid.position();
-
-    let d = getDistance(this.container.x, this.container.y, pos.x, pos.y);
-    if (d < this.radius + asteroid.radius && !this.isDestroyed) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   render(delta) {
