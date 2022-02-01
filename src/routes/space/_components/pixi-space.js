@@ -5,6 +5,8 @@ import { Hud } from "./hud.js";
 import { StarField } from "./stars.js";
 import { Asteroid } from "./asteroid.js";
 import { random, polyCircle } from "./util";
+import { sound } from '@pixi/sound';
+
 
 export class PixiSpace {
     constructor({ canvas: canvasElement }) {
@@ -34,6 +36,9 @@ export class PixiSpace {
             w: 10,
             h: 10
         });
+
+        sound.add('crash', 'crash.mp3');
+        sound.volume('crash', 0.01);
 
         const starField = new StarField({ app: app, count: 300 });
 
@@ -93,6 +98,7 @@ export class PixiSpace {
                 let position = player.position();
 
                 if (polyCircle(points, position.x, position.y, player.radius) && !player.destroyed()) {
+                    sound.play('crash');
                     player.destroy();
                 }
             }
