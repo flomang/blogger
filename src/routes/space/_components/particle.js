@@ -9,6 +9,7 @@ export class Particle {
         width: w,
         height: h,
         projectile: isProjectile,
+        alpha = 0.9,
     }) {
         this.velocity = new PIXI.Point(vx, vy);
         this.sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -18,7 +19,7 @@ export class Particle {
         this.sprite.x = x;
         this.sprite.y = y;
         this.sprite.anchor.set(0.5);
-        this.sprite.alpha = 0.9;
+        this.sprite.alpha = alpha;
         this.projectile = isProjectile;
     }
 

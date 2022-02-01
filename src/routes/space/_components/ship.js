@@ -30,8 +30,8 @@ export class Ship {
     this.sprite = sprite;
 
     var shield = new PIXI.Graphics();
-    shield.beginFill(0xffffff, 0.3);  
-    shield.drawCircle(0, 0, this.radius+2.0);
+    shield.beginFill(0xffffff, 0.3);
+    shield.drawCircle(0, 0, this.radius + 2.0);
     shield.endFill();
     this.shield = shield;
 
@@ -68,10 +68,27 @@ export class Ship {
   }
 
   destroy = () => {
-    sound.play('crash');
+    //sound.play('crash');
     this.isDestroyed = true;
     this.container.removeChild(this.sprite);
     this.container.removeChild(this.shield);
+
+    for (let i = 0; i < 20; ++i) {
+      let angle = Math.random() * Math.PI *2;
+      var particle = new Particle({
+        alpha: 0.6,
+        x: this.container.x,
+        y: this.container.y,
+        width: 1,
+        height: 1,
+        velocityX: Math.cos(angle),
+        velocityY: Math.sin(angle),
+        projectile: false
+      });
+
+      this.particles.push(particle);
+      this.app.stage.addChild(particle.sprite);
+    }
   }
 
   destroyed = () => {
