@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Particle } from "./particle.js";
 import { random } from "./util";
-
+import { sound } from '@pixi/sound';
 
 const RADIAN_OFFSET = Math.PI / 2;
 
@@ -36,6 +36,8 @@ export class Ship {
     this.shield = shield;
 
     this.respawn({ x: x, y: y });
+    sound.add('crash', 'crash.mp3');
+    sound.volume('crash', 0.01);
   }
 
   respawn = ({ x: x, y: y }) => {
@@ -66,6 +68,7 @@ export class Ship {
   }
 
   destroy = () => {
+    sound.play('crash');
     this.isDestroyed = true;
     this.container.removeChild(this.sprite);
     this.container.removeChild(this.shield);
