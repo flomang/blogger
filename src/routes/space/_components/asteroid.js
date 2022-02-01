@@ -14,7 +14,7 @@ export class Asteroid {
     this.velocityY = random(-1, 1);
 
     let total = random(6, 12);
-    let points = [];
+    this.points = [];
     for (var i = 0; i < total; i++) {
       let angle = map(i, 0, total, 0, Math.PI * 2);
       let offset = random(-this.radius * 0.5, this.radius * 0.5);
@@ -22,13 +22,13 @@ export class Asteroid {
       let x = r * Math.cos(angle);
       let y = r * Math.sin(angle);
 
-      points.push(x);
-      points.push(y);
+      this.points.push(x);
+      this.points.push(y);
     }
 
     let graphics = new PIXI.Graphics();
     graphics.beginFill(0x2980b9, 0.3);
-    graphics.drawPolygon(points);
+    graphics.drawPolygon(this.points);
     graphics.endFill();
 
     // the parent container for this asset
@@ -40,6 +40,18 @@ export class Asteroid {
     container.addChild(graphics);
     this.container = container;
     this.app.stage.addChild(container);
+  }
+
+  allPoints() {
+    let points = [];
+
+    for (var i = 0; i < this.points.length; i++) {
+      let x = this.container.x + this.points[i];
+      let y = this.container.y + this.points[i+1];
+      points.push(x);
+      points.push(y);
+    }
+    return points;
   }
 
   position() {

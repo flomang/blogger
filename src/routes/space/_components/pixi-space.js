@@ -4,7 +4,7 @@ import { Ship } from "./ship.js";
 import { Hud } from "./hud.js";
 import { StarField } from "./stars.js";
 import { Asteroid } from "./asteroid.js";
-import { random } from "./util";
+import { random, polyCircle } from "./util";
 
 export class PixiSpace {
     constructor({ canvas: canvasElement }) {
@@ -23,7 +23,7 @@ export class PixiSpace {
             app: app,
             image: "rocket.png",
             x: pos.x,
-            y: pos.y 
+            y: pos.y
         });
 
         const padding = 3;
@@ -37,9 +37,6 @@ export class PixiSpace {
 
         const starField = new StarField({ app: app, count: 300 });
 
-        //Start the game loop
-        app.ticker.add(delta => loop(delta));
-
         const asteroids = [];
         for (let i = 0; i < 60; i++) {
             let pos = randomPoint(0);
@@ -51,7 +48,7 @@ export class PixiSpace {
         function randomPoint(margin) {
             let x = random(margin, app.screen.width - margin);
             let y = random(margin, app.screen.height - margin);
-            return {x: x, y: y};
+            return { x: x, y: y };
         }
 
         function input(delta) {
@@ -89,15 +86,26 @@ export class PixiSpace {
             starField.render(delta);
 
             for (let i = 0; i < asteroids.length; ++i) {
-                asteroids[i].render(delta);
+                let asteroid = asteroids[i]
+                //asteroid.render(delta);
 
-                if (player.hits(asteroids[i]) && !player.destroyed()) {
+                let points = asteroid.allPoints();
+                let position = player.position();
+
+                if (polyCircle(points, position.x, position.y, player.radius) && !player.destroyed()) {
                     player.destroy();
-                    //unregisterPlayer(); 
-                    //crashSound.play();
-                    //coins = coins.concat(player.destroy());
+
                 }
+                //if (player.hits(asteroids[i]) && !player.destroyed()) {
+                //    player.destroy();
+                //    //unregisterPlayer(); 
+                //    //crashSound.play();
+                //    //coins = coins.concat(player.destroy());
+                //}
             }
         }
+
+        //Start the game loop
+        app.ticker.add(delta => loop(delta));
     }
 }

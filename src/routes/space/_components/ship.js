@@ -6,7 +6,7 @@ import { getDistance, random } from "./util";
 const RADIAN_OFFSET = Math.PI / 2;
 
 export class Ship {
-  constructor({ clientID: id, image: img, x: x, y: y, app: app, radius: radius = 2 }) {
+  constructor({ clientID: id, image: img, x: x, y: y, app: app, radius: radius = 3 }) {
     this.app = app;
     this.clientID = id;
     this.particles = [];
@@ -29,7 +29,15 @@ export class Ship {
     sprite.scale.set(0.01);
     this.sprite = sprite;
 
-    this.respawn({x: x, y: y});
+    var graphics = new PIXI.Graphics();
+    graphics.beginFill(0xe74c3c); // Red
+    // Draw a circle
+    graphics.drawCircle(0, 0, this.radius); // drawCircle(x, y, radius)
+    // Applies fill to lines and shapes since the last call to beginFill.
+    graphics.endFill();
+    this.graphics = graphics;
+
+    this.respawn({ x: x, y: y });
   }
 
   respawn = ({ x: x, y: y }) => {
@@ -50,16 +58,19 @@ export class Ship {
     this.container = container;
     this.app.stage.addChild(container);
 
+    container.addChild(this.graphics);
+
     this.heading.x = Math.cos(this.container.rotation - RADIAN_OFFSET);
     this.heading.y = Math.sin(this.container.rotation - RADIAN_OFFSET);
     this.thruster.x = Math.cos(this.container.rotation + RADIAN_OFFSET);
     this.thruster.y = Math.sin(this.container.rotation + RADIAN_OFFSET);
-    this.setRotation(random(0, Math.PI*2));
+    this.setRotation(random(0, Math.PI * 2));
   }
 
   destroy = () => {
     this.isDestroyed = true;
     this.container.removeChild(this.sprite);
+    this.container.removeChild(this.graphics);
     //this.isBoosting = false;
     //let color = {
     //  r: 200,
@@ -92,6 +103,10 @@ export class Ship {
     } else if (this.container.y < -this.sprite.width) {
       this.container.y = this.app.screen.height + this.sprite.width;
     }
+  }
+
+  position = () => {
+    return { x: this.container.x, y: this.container.y };
   }
 
   hits = (asteroid) => {
