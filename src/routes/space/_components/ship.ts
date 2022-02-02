@@ -9,18 +9,24 @@ export class Ship {
   app: PIXI.Application;
   container: PIXI.Container;
   radius: number;
-  velocity: PIXI.Point;
   clientID: number;
-  particles: Particle[];
+
+  velocity: PIXI.Point;
   heading: PIXI.Point;
   thruster: PIXI.Point;
-  isDestroyed: boolean;
+
+  destroyPieceCount = 33;
+  particles: Particle[];
   torpedos: Particle[];
-  ammoLimit: number = 3;
+
+  ammoLimit: number = 6;
   recharged: boolean;
-  rechargeTime: number = 500;
+  isDestroyed: boolean;
+  rechargeTime: number = 100;
+
   sprite: PIXI.Sprite;
   shield: PIXI.Graphics;
+
 
   constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, radius: number = 2.5) {
     this.app = app;
@@ -29,7 +35,6 @@ export class Ship {
     this.thruster = new PIXI.Point(0, 0);
     this.velocity = new PIXI.Point(0, 0);
     this.radius = radius;
-    this.isDestroyed = false;
     this.particles = [];
     this.torpedos = [];
     this.recharged = true;
@@ -48,52 +53,48 @@ export class Ship {
     shield.endFill();
     this.shield = shield;
 
-    this.respawn({ x: x, y: y });
-    sound.add('crash', 'pop.mp3');
-    sound.add('laser', 'laser.mp3');
-    sound.volume('crash', 0.03);
-    sound.volume('laser', 0.03);
-  }
-
-  respawn = ({ x: x, y: y }) => {
-    this.isDestroyed = false;
-    this.velocity = new PIXI.Point(0, 0);
-
-    if (this.container != undefined) {
-      this.app.stage.removeChild(this.container);
-    }
-
-    // the parent container for this asset
     const container = new PIXI.Container();
     container.pivot.x = container.width / 2;
     container.pivot.y = container.height / 2;
-    container.x = x;
-    container.y = y;
     container.addChild(this.sprite);
-    this.container = container;
-    this.app.stage.addChild(container);
-
     container.addChild(this.shield);
+    this.container = container;
 
-    this.heading.x = Math.cos(this.container.rotation - RADIAN_OFFSET);
-    this.heading.y = Math.sin(this.container.rotation - RADIAN_OFFSET);
-    this.thruster.x = Math.cos(this.container.rotation + RADIAN_OFFSET);
-    this.thruster.y = Math.sin(this.container.rotation + RADIAN_OFFSET);
+    sound.add('pop', 'pop.mp3');
+    sound.add('laser', 'laser.mp3');
+    sound.volume('pop', 0.03);
+    sound.volume('laser', 0.03);
+
+    this.respawn(new PIXI.Point(x, y));
+  }
+
+  respawn(pos: PIXI.Point): void {
+    this.isDestroyed = false;
+    this.velocity = new PIXI.Point(0, 0);
+    this.container.x = pos.x;
+    this.container.y = pos.y;
+
     this.setRotation(random(0, Math.PI * 2));
+
+    this.app.stage.addChild(this.container);
   }
 
   destroy(): void {
-    this.isDestroyed = true;
-    this.container.removeChild(this.sprite);
-    this.container.removeChild(this.shield);
+    if (this.isDestroyed) return;
 
-    for (let i = 0; i < 20; ++i) {
+    this.isDestroyed = true;
+    this.app.stage.removeChild(this.container);
+
+    for (let i = 0; i < this.destroyPieceCount; ++i) {
       let angle = Math.random() * Math.PI * 2;
+      let x = Math.cos(angle);
+      let y = Math.sin(angle); 
+
       var particle = new Particle(
         this.container.x,
         this.container.y,
-        Math.cos(angle),
-        Math.sin(angle),
+        x,
+        y,
         1,
         1,
         false,
@@ -102,7 +103,7 @@ export class Ship {
       this.particles.push(particle);
       this.app.stage.addChild(particle.sprite);
     }
-    sound.play('crash');
+    sound.play('pop');
   }
 
   destroyed(): boolean {
@@ -164,8 +165,8 @@ export class Ship {
       this.container.y + this.heading.y * 6,
       this.heading.x * 5,
       this.heading.y * 5,
-      1,
-      1,
+      2,
+      2,
       true);
 
     this.app.stage.addChild(pellet.sprite);
@@ -173,6 +174,7 @@ export class Ship {
 
     sound.play('laser');
     this.recharged = false;
+
     setTimeout(function () {
       this.recharged = true;
     }.bind(this), this.rechargeTime);
@@ -210,16 +212,5 @@ export class Ship {
     this.heading.y = Math.sin(this.container.rotation - RADIAN_OFFSET);
     this.thruster.x = Math.cos(this.container.rotation + RADIAN_OFFSET);
     this.thruster.y = Math.sin(this.container.rotation + RADIAN_OFFSET);
-  }
-
-  torpedo(): Particle {
-    return new Particle(
-      this.container.x + this.heading.x * 6,
-      this.container.y + this.heading.y * 6,
-      2,
-      2,
-      this.heading.x * 5,
-      this.heading.y * 5,
-      true);
   }
 }

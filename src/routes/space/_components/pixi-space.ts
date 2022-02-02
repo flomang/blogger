@@ -14,6 +14,7 @@ export class PixiSpace {
     hud: Hud;
 
     constructor({ canvas: canvasElement }) {
+        this.asteroids = [];
         this.app = new PIXI.Application({
             view: canvasElement,
             height: window.screen.height / 9,
@@ -40,23 +41,21 @@ export class PixiSpace {
 
         this.starfield = new StarField(this.app, 300);
 
-        let asteroids = []
         for (let i = 0; i < 60; i++) {
             let pos = this.randomPoint(0);
             let radius = random(3, 21);
             let asteroid = new Asteroid(this.app, pos.x, pos.y, radius);
-            asteroids.push(asteroid);
+            this.asteroids.push(asteroid);
         }
-        this.asteroids = asteroids;
 
         //Start the game loop
         this.app.ticker.add(delta => this.loop(delta));
     }
 
-    randomPoint(margin: number): any {
+    randomPoint(margin: number): PIXI.Point {
         let x = random(margin, this.app.screen.width - margin);
         let y = random(margin, this.app.screen.height - margin);
-        return { x: x, y: y };
+        return new PIXI.Point(x, y);
     }
 
     loop(delta: number): void {
@@ -66,17 +65,17 @@ export class PixiSpace {
         this.hud.render(delta);
         this.starfield.render(delta);
 
-        for (let i = 0; i < this.asteroids.length; ++i) {
-            let asteroid = this.asteroids[i]
+        this.asteroids.forEach(function (asteroid: Asteroid) {
             asteroid.render(delta);
 
+            // check collision with asteriod
             let points = asteroid.vertices();
-            let position = this.player.position();
+            let playerPos = this.player.position();
 
-            if (polyCircle(points, position.x, position.y, this.player.radius) && !this.player.destroyed()) {
+            if (polyCircle(points, playerPos.x, playerPos.y, this.player.radius) && !this.player.destroyed()) {
                 this.player.destroy();
             }
-        }
+        }.bind(this));
     }
 
     input(delta: number): void {
@@ -90,11 +89,11 @@ export class PixiSpace {
         if (Keyboard.isKeyDown("ArrowUp", "KeyW")) {
             this.player.thrust();
         }
-        if (Keyboard.isKeyDown("KeyF")) {
-            this.player.fire();
+        if (Keyboard.isKeyDown("KeyW")) {
+            this.starfield.warp();
         }
         if (Keyboard.isKeyDown("Space")) {
-            this.starfield.warp();
+            this.player.fire();
         }
         if (Keyboard.isKeyDown("Enter")) {
             if (this.player.destroyed()) {
