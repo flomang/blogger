@@ -6,19 +6,17 @@ class Star{
     x: number;
     y: number;
     z: number;
-    cameraZ = 0;
 
-    constructor(container: PIXI.Container, sprite: PIXI.Sprite, cameraZ: number) {
+    constructor(container: PIXI.Container, sprite: PIXI.Sprite) {
         this.container = container;
         this.sprite = sprite;
-        this.cameraZ = cameraZ;
-        this.randomize(true);
+        this.randomize(true, 0);
     }
 
-    randomize(initial: boolean): void {
+    randomize(initial: boolean, cameraZ: number): void {
         this.z = initial
             ? Math.random() * 2000
-            : this.cameraZ + Math.random() * 1000 + 2000;
+            : cameraZ + Math.random() * 1000 + 2000;
 
         // Calculate star positions with radial random coordinate so no star hits the camera.
         const deg = Math.random() * Math.PI * 2;
@@ -52,7 +50,7 @@ export class StarField {
             container.addChild(sprite);
             app.stage.addChild(container);
 
-            this.stars.push(new Star(container, sprite, this.cameraZ));
+            this.stars.push(new Star(container, sprite));
         }
     }
 
@@ -73,7 +71,7 @@ export class StarField {
         this.cameraZ += delta * 10 * (this.speed + baseSpeed);
 
         this.stars.forEach(function (star: Star) {
-            if (star.z < this.cameraZ) star.randomize(false);
+            if (star.z < this.cameraZ) star.randomize(false, this.cameraZ);
 
             // Map star 3d position to 2d with really simple projection
             const z = star.z - this.cameraZ;
