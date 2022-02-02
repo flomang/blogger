@@ -27,7 +27,7 @@ export class Particle {
         this.projectile = projectile;
     }
 
-    offScreen(screenWidth, screenHeight) {
+    offScreen(screenWidth: number, screenHeight: number): boolean {
         if (this.sprite.x > screenWidth || 
             this.sprite.y > screenHeight || 
             this.sprite.x < 0 || 
@@ -37,7 +37,7 @@ export class Particle {
         return false;
     }
 
-    render() {
+    render(): void {
         this.sprite.x += this.velocity.x;
         this.sprite.y += this.velocity.y;
 
@@ -46,7 +46,7 @@ export class Particle {
         }
     }
 
-    finished() {
+    finished(): boolean {
         return this.sprite.alpha < 0;
     }
 }

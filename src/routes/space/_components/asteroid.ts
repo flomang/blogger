@@ -9,10 +9,10 @@ export class Asteroid {
   points: number[];
 
   constructor(
+    app: PIXI.Application,
     x: number,
     y: number,
     radius: number,
-    app: PIXI.Application,
   ) {
     this.app = app;
     this.radius = radius,
@@ -57,8 +57,8 @@ export class Asteroid {
     return points;
   }
 
-  position(): any {
-    return { x: this.container.x, y: this.container.y };
+  position(): PIXI.Point {
+    return new PIXI.Point(this.container.x, this.container.y );
   }
 
   render(delta: number): void {

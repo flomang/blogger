@@ -44,57 +44,10 @@ export class PixiSpace {
         for (let i = 0; i < 60; i++) {
             let pos = this.randomPoint(0);
             let radius = random(3, 21);
-            let asteroid = new Asteroid(pos.x, pos.y, radius, this.app);
+            let asteroid = new Asteroid(this.app, pos.x, pos.y, radius);
             asteroids.push(asteroid);
         }
         this.asteroids = asteroids;
-
-        // function input(delta) {
-        //     // Keyboard
-        //     if (Keyboard.isKeyDown("ArrowLeft", "KeyA")) {
-        //         player.setRotation(-0.05 * delta);
-        //     }
-        //     if (Keyboard.isKeyDown("ArrowRight", "KeyD")) {
-        //         player.setRotation(0.05 * delta);
-        //     }
-        //     if (Keyboard.isKeyDown("ArrowUp", "KeyW")) {
-        //         player.thrust();
-        //     }
-        //     if (Keyboard.isKeyDown("KeyF")) {
-        //         player.fire();
-        //     }
-        //     if (Keyboard.isKeyDown("Space")) {
-        //         starField.warp();
-        //     }
-        //     if (Keyboard.isKeyDown("Enter")) {
-        //         if (player.destroyed()) {
-        //             let pos = this.randomPoint(20);
-        //             player.respawn(pos);
-        //         }
-        //     }
-
-        //     Keyboard.update();
-        // }
-
-        // function loop(delta) {
-        //     this.input(delta);
-
-        //     this.player.render(delta);
-        //     this.hud.render(delta);
-        //     this.starfield.render(delta);
-
-        //     for (let i = 0; i < this.asteroids.length; ++i) {
-        //         let asteroid = this.asteroids[i]
-        //         asteroid.render(delta);
-
-        //         let points = asteroid.vertices();
-        //         let position = this.player.position();
-
-        //         if (polyCircle(points, position.x, position.y, this.player.radius) && !this.player.destroyed()) {
-        //             this.player.destroy();
-        //         }
-        //     }
-        // }
 
         //Start the game loop
         this.app.ticker.add(delta => this.loop(delta));
