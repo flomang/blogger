@@ -7,6 +7,7 @@ export class Asteroid {
   radius: number;
   velocity: PIXI.Point;
   points: number[];
+  color: number = 0x2980b9; 
 
   constructor(
     app: PIXI.Application,
@@ -32,7 +33,7 @@ export class Asteroid {
     }
 
     let graphics = new PIXI.Graphics();
-    graphics.beginFill(0x2980b9, 0.3);
+    graphics.beginFill(this.color, 0.3);
     graphics.drawPolygon(this.points);
     graphics.endFill();
 
@@ -58,7 +59,7 @@ export class Asteroid {
   }
 
   position(): PIXI.Point {
-    return new PIXI.Point(this.container.x, this.container.y );
+    return new PIXI.Point(this.container.x, this.container.y);
   }
 
   render(delta: number): void {

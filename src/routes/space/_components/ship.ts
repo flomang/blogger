@@ -19,14 +19,13 @@ export class Ship {
   particles: Particle[];
   torpedos: Particle[];
 
-  ammoLimit: number = 6;
+  ammoLimit: number = 3;
   recharged: boolean;
   isDestroyed: boolean;
-  rechargeTime: number = 100;
+  rechargeTime: number = 300;
 
   sprite: PIXI.Sprite;
   shield: PIXI.Graphics;
-
 
   constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, radius: number = 2.5) {
     this.app = app;
@@ -152,13 +151,15 @@ export class Ship {
   }
 
   fire(): void {
-    if (this.torpedos.length >= this.ammoLimit) {
+    if (this.torpedos.length == this.ammoLimit) {
       return;
     }
 
     if (!this.recharged) {
       return;
     }
+
+    this.recharged = false;
 
     let pellet = new Particle(
       this.container.x + this.heading.x * 6,
@@ -173,7 +174,6 @@ export class Ship {
     this.torpedos.push(pellet);
 
     sound.play('laser');
-    this.recharged = false;
 
     setTimeout(function () {
       this.recharged = true;

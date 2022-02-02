@@ -6,11 +6,11 @@ export class Hud {
     ring: PIXI.Container;
     flip: boolean;
 
-    constructor(app: PIXI.Application, x: number, y: number, w: number, h: number) {
+    constructor(app: PIXI.Application, x: number, y: number, width: number, height: number) {
         const btc = PIXI.Sprite.from("btc.png");
         btc.anchor.set(0.5);
-        btc.width = w;
-        btc.height = h;
+        btc.width = width;
+        btc.height = height;
 
         const container = new PIXI.Container();
         container.x = x;
@@ -28,11 +28,11 @@ export class Hud {
         for (let i = 0; i < coinCount; i++) {
             const btcd = PIXI.Sprite.from("btc.png");
             btcd.tint = 0x7ac6fa;
-            btcd.width = w/4;
-            btcd.height = h/4;
+            btcd.width = width/4;
+            btcd.height = height/4;
             btcd.anchor.set(0.5);
-            btcd.x = w * Math.cos(increment * i);
-            btcd.y = h * Math.sin(increment * i);
+            btcd.x = width * Math.cos(increment * i);
+            btcd.y = height * Math.sin(increment * i);
             ring.addChild(btcd);
         }
 

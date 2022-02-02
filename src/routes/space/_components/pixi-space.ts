@@ -79,26 +79,27 @@ export class PixiSpace {
     }
 
     input(delta: number): void {
-        // Keyboard
-        if (Keyboard.isKeyDown("ArrowLeft", "KeyA")) {
-            this.player.setRotation(-0.05 * delta);
-        }
-        if (Keyboard.isKeyDown("ArrowRight", "KeyD")) {
-            this.player.setRotation(0.05 * delta);
-        }
-        if (Keyboard.isKeyDown("ArrowUp", "KeyW")) {
-            this.player.thrust();
-        }
-        if (Keyboard.isKeyDown("KeyW")) {
-            this.starfield.warp();
-        }
-        if (Keyboard.isKeyDown("Space")) {
-            this.player.fire();
-        }
-        if (Keyboard.isKeyDown("Enter")) {
-            if (this.player.destroyed()) {
+        if (this.player.destroyed()) {
+            if (Keyboard.isKeyDown("Enter")) {
                 let pos = this.randomPoint(20);
                 this.player.respawn(pos);
+            }
+        } else {
+            // Keyboard
+            if (Keyboard.isKeyDown("ArrowLeft", "KeyA")) {
+                this.player.setRotation(-0.05 * delta);
+            }
+            if (Keyboard.isKeyDown("ArrowRight", "KeyD")) {
+                this.player.setRotation(0.05 * delta);
+            }
+            if (Keyboard.isKeyDown("ArrowUp", "KeyW")) {
+                this.player.thrust();
+            }
+            if (Keyboard.isKeyDown("KeyW")) {
+                this.starfield.warp();
+            }
+            if (Keyboard.isKeyDown("Space")) {
+                this.player.fire();
             }
         }
 

@@ -8,12 +8,9 @@ class Star{
     z: number;
     cameraZ = 0;
 
-    constructor(container: PIXI.Container, sprite: PIXI.Sprite, x: number, y: number, z: number, cameraZ: number) {
+    constructor(container: PIXI.Container, sprite: PIXI.Sprite, cameraZ: number) {
         this.container = container;
         this.sprite = sprite;
-        this.x = x;
-        this.y = y;
-        this.z = z;
         this.cameraZ = cameraZ;
         this.randomize(true);
     }
@@ -33,17 +30,14 @@ class Star{
 }
 export class StarField {
     app: PIXI.Application;
-    cameraZ: number;
-    speed: number;
-    warpSpeed: number;
+    cameraZ: number = 0;
+    speed: number = 0;
+    warpSpeed: number = 0;
     stars: Star[];
 
     constructor(app: PIXI.Application, count: number) {
         const starTexture = PIXI.Texture.from("star.png");
         this.app = app;
-        this.cameraZ = 0;
-        this.speed = 0;
-        this.warpSpeed = 0;
         this.stars = [];
 
         // init stars
@@ -58,26 +52,7 @@ export class StarField {
             container.addChild(sprite);
             app.stage.addChild(container);
 
-            const star = new Star(container, sprite, 0, 0, 0, this.cameraZ);
-            this.stars.push(star);
-        }
-
-        function onButtonOver() {
-            this.isOver = true;
-            this.alpha = 1;
-            if (this.isdown) {
-                return;
-            }
-            //this.texture = textureButtonOver;
-        }
-
-        function onButtonOut() {
-            this.isOver = false;
-            this.alpha = 0.3;
-            if (this.isdown) {
-                return;
-            }
-            //this.texture = textureButton;
+            this.stars.push(new Star(container, sprite, this.cameraZ));
         }
     }
 
