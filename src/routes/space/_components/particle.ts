@@ -1,26 +1,30 @@
 import * as PIXI from "pixi.js";
 
 export class Particle {
-    constructor({
-        x: x,
-        y: y,
-        velocityX: vx, 
-        velocityY: vy,
-        width: w,
-        height: h,
-        projectile: isProjectile,
-        alpha = 0.9,
-    }) {
-        this.velocity = new PIXI.Point(vx, vy);
+    sprite: PIXI.Sprite;
+    velocity: PIXI.Point;
+    projectile: boolean;
+
+    constructor(
+        x: number,
+        y: number,
+        velocityX: number, 
+        velocityY: number,
+        width: number,
+        height: number,
+        projectile: boolean,
+        alpha: number = 0.9,
+    ) {
+        this.velocity = new PIXI.Point(velocityX, velocityY);
         this.sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
 
-        this.sprite.width = w;
-        this.sprite.height = h;
+        this.sprite.width = width;
+        this.sprite.height = height;
         this.sprite.x = x;
         this.sprite.y = y;
         this.sprite.anchor.set(0.5);
         this.sprite.alpha = alpha;
-        this.projectile = isProjectile;
+        this.projectile = projectile;
     }
 
     offScreen(screenWidth, screenHeight) {

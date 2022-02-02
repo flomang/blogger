@@ -1,7 +1,12 @@
 import * as PIXI from "pixi.js";
 
 export class Hud {
-    constructor({app: app, x: x, y: y, w: w, h: h}) {
+    app: PIXI.Application;
+    container: PIXI.Container;
+    ring: PIXI.Container;
+    flip: boolean;
+
+    constructor(app: PIXI.Application, x: number, y: number, w: number, h: number) {
         const btc = PIXI.Sprite.from("btc.png");
         btc.anchor.set(0.5);
         btc.width = w;
@@ -37,7 +42,7 @@ export class Hud {
         this.flip = true;
     }
 
-    render(delta) {
+    render(delta: number):void {
         this.ring.rotation += 0.1;
 
         const container = this.container;

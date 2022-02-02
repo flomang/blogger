@@ -1,7 +1,13 @@
 import * as PIXI from "pixi.js";
 
 export class StarField {
-    constructor({ app: app, count: count }) {
+    app: PIXI.Application;
+    cameraZ: number;
+    speed: number;
+    warpSpeed: number;
+    stars: any[];
+
+    constructor(app: PIXI.Application, count: number) {
         const starTexture = PIXI.Texture.from("star.png");
         this.app = app;
         this.cameraZ = 0;
@@ -57,7 +63,7 @@ export class StarField {
         }
     }
 
-    randomizeStar(star, initial) {
+    randomizeStar(star: any, initial: boolean): void {
         star.z = initial
             ? Math.random() * 2000
             : this.cameraZ + Math.random() * 1000 + 2000;
@@ -69,14 +75,14 @@ export class StarField {
         star.y = Math.sin(deg) * distance;
     }
 
-    warp() {
+    warp(): void {
         this.warpSpeed = 1;
         setTimeout(function () {
             this.warpSpeed = 0;
         }.bind(this), 3000);
     }
 
-    render(delta) {
+    render(delta: number): void {
         const baseSpeed = 0.025;
         const starBaseSize = 0.05;
         const starStretch = 5;

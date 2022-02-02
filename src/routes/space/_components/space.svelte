@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import { PixiSpace } from "./pixi-space.js";
+  import { PixiSpace } from "./pixi-space";
 
   // bind the canvas element i.e bind:this={canvas} 
   let canvas;

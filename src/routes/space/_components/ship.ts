@@ -1,15 +1,30 @@
 import * as PIXI from "pixi.js";
-import { Particle } from "./particle.js";
+import { Particle } from "./particle";
 import { random } from "./util";
 import { sound } from '@pixi/sound';
 
 const RADIAN_OFFSET = Math.PI / 2;
 
 export class Ship {
-  constructor({ clientID: id, image: img, x: x, y: y, app: app, radius: radius = 2.5 }) {
+  app: PIXI.Application;
+  container: PIXI.Container;
+  radius: number;
+  velocity: PIXI.Point;
+  clientID: number;
+  particles: Particle[];
+  heading: PIXI.Point;
+  thruster: PIXI.Point;
+  isDestroyed: boolean;
+  torpedos: Particle[];
+  ammoLimit: number = 3;
+  recharged: boolean;
+  rechargeTime: number = 500;
+  sprite: PIXI.Sprite;
+  shield: PIXI.Graphics;
+
+  constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, radius: number = 2.5) {
     this.app = app;
-    this.clientID = id;
-    this.particles = [];
+    this.clientID = clientID;
     this.heading = new PIXI.Point(0, 0);
     this.thruster = new PIXI.Point(0, 0);
     this.velocity = new PIXI.Point(0, 0);
@@ -17,11 +32,9 @@ export class Ship {
     this.isDestroyed = false;
     this.particles = [];
     this.torpedos = [];
-    this.ammoLimit = 3;
     this.recharged = true;
-    this.rechargeTime = 500;
 
-    const sprite = PIXI.Sprite.from(img);
+    const sprite = PIXI.Sprite.from(image);
     // set the anchor point so the texture is centerd on the sprite
     sprite.x = 0;
     sprite.y = 0;
@@ -69,23 +82,22 @@ export class Ship {
     this.setRotation(random(0, Math.PI * 2));
   }
 
-  destroy = () => {
+  destroy(): void {
     this.isDestroyed = true;
     this.container.removeChild(this.sprite);
     this.container.removeChild(this.shield);
 
     for (let i = 0; i < 20; ++i) {
-      let angle = Math.random() * Math.PI *2;
-      var particle = new Particle({
-        alpha: 0.6,
-        x: this.container.x,
-        y: this.container.y,
-        width: 1,
-        height: 1,
-        velocityX: Math.cos(angle),
-        velocityY: Math.sin(angle),
-        projectile: false
-      });
+      let angle = Math.random() * Math.PI * 2;
+      var particle = new Particle(
+        this.container.x,
+        this.container.y,
+        Math.cos(angle),
+        Math.sin(angle),
+        1,
+        1,
+        false,
+        0.6);
 
       this.particles.push(particle);
       this.app.stage.addChild(particle.sprite);
@@ -93,11 +105,11 @@ export class Ship {
     sound.play('crash');
   }
 
-  destroyed = () => {
+  destroyed(): boolean {
     return this.isDestroyed;
   }
 
-  edges() {
+  edges(): void {
     if (this.container.x > this.app.screen.width + this.sprite.width) {
       this.container.x = -this.sprite.width;
     } else if (this.container.x < -this.sprite.width) {
@@ -110,11 +122,11 @@ export class Ship {
     }
   }
 
-  position = () => {
+  position(): any {
     return { x: this.container.x, y: this.container.y };
   }
 
-  render(delta) {
+  render(delta: number): void {
     this.container.x += this.velocity.x;
     this.container.y += this.velocity.y;
     this.velocity.x *= 0.99;
@@ -138,7 +150,7 @@ export class Ship {
     }.bind(this));
   }
 
-  fire() {
+  fire(): void {
     if (this.torpedos.length >= this.ammoLimit) {
       return;
     }
@@ -147,15 +159,14 @@ export class Ship {
       return;
     }
 
-    let pellet = new Particle({
-      x: this.container.x + this.heading.x * 6,
-      y: this.container.y + this.heading.y * 6,
-      width: 1,
-      height: 1,
-      velocityX: this.heading.x * 5,
-      velocityY: this.heading.y * 5,
-      projectile: true
-    });
+    let pellet = new Particle(
+      this.container.x + this.heading.x * 6,
+      this.container.y + this.heading.y * 6,
+      this.heading.x * 5,
+      this.heading.y * 5,
+      1,
+      1,
+      true);
 
     this.app.stage.addChild(pellet.sprite);
     this.torpedos.push(pellet);
@@ -167,7 +178,7 @@ export class Ship {
     }.bind(this), this.rechargeTime);
   }
 
-  thrust() {
+  thrust(): void {
     if (this.isDestroyed) {
       return;
     }
@@ -176,24 +187,22 @@ export class Ship {
     this.velocity.y += this.heading.y * 0.1;
 
     for (let i = 0; i < 5; ++i) {
-      var particle = new Particle({
-        x: this.container.x - this.heading.x * 6,
-        y: this.container.y - this.heading.y * 6,
-        width: 1,
-        height: 1,
-        velocityX:
-          this.thruster.x * ((Math.floor(Math.random() * 51) - 40) / 100),
-        velocityY:
-          this.thruster.y * ((Math.floor(Math.random() * 51) - 40) / 100),
-        projectile: false
-      });
+      var particle = new Particle(
+        this.container.x - this.heading.x * 6,
+        this.container.y - this.heading.y * 6,
+        this.thruster.x * ((Math.floor(Math.random() * 51) - 40) / 100),
+        this.thruster.y * ((Math.floor(Math.random() * 51) - 40) / 100),
+        1,
+        1,
+        false,
+        0.9);
 
       this.particles.push(particle);
       this.app.stage.addChild(particle.sprite);
     }
   }
 
-  setRotation(radian) {
+  setRotation(radian: number): void {
     // rotate the parent container
     this.container.rotation += radian;
     // set heading vector
@@ -203,15 +212,14 @@ export class Ship {
     this.thruster.y = Math.sin(this.container.rotation + RADIAN_OFFSET);
   }
 
-  torpedo() {
-    return new Particle({
-      x: this.container.x + this.heading.x * 6,
-      y: this.container.y + this.heading.y * 6,
-      width: 2,
-      height: 2,
-      velocityX: this.heading.x * 5,
-      velocityY: this.heading.y * 5,
-      projectile: true
-    });
+  torpedo(): Particle {
+    return new Particle(
+      this.container.x + this.heading.x * 6,
+      this.container.y + this.heading.y * 6,
+      2,
+      2,
+      this.heading.x * 5,
+      this.heading.y * 5,
+      true);
   }
 }

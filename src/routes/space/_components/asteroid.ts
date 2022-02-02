@@ -2,16 +2,21 @@ import * as PIXI from "pixi.js";
 import { map, random } from "./util";
 
 export class Asteroid {
-  constructor({
-    x: x,
-    y: y,
-    radius: radius,
-    app: app,
-  }) {
+  app: PIXI.Application;
+  container: PIXI.Container;
+  radius: number;
+  velocity: PIXI.Point;
+  points: number[];
+
+  constructor(
+    x: number,
+    y: number,
+    radius: number,
+    app: PIXI.Application,
+  ) {
     this.app = app;
     this.radius = radius,
-    this.velocityX = random(-1, 1);
-    this.velocityY = random(-1, 1);
+    this.velocity = new PIXI.Point(random(-1, 1), random(-1, 1));
 
     let total = random(6, 12);
     this.points = [];
@@ -40,7 +45,7 @@ export class Asteroid {
     this.app.stage.addChild(container);
   }
 
-  vertices() {
+  vertices(): number[] {
     let points = [];
 
     for (var i = 0; i < this.points.length; i += 2) {
@@ -52,17 +57,17 @@ export class Asteroid {
     return points;
   }
 
-  position() {
+  position(): any {
     return { x: this.container.x, y: this.container.y };
   }
 
-  render(delta) {
-    this.container.x += this.velocityX;
-    this.container.y += this.velocityY;
+  render(delta: number): void {
+    this.container.x += this.velocity.x;
+    this.container.y += this.velocity.y;
     this.edges();
   }
 
-  edges = () => {
+  edges(): void {
     if (this.container.x > this.app.screen.width + this.radius) {
       this.container.x = -this.radius;
     } else if (this.container.x < -this.radius) {

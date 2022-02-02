@@ -30,7 +30,7 @@ export function linePoint(x1: number, y1: number, x2: number, y2: number, px: nu
   let d1 = distance(px, py, x1, y1);
   let d2 = distance(px, py, x2, y2);
   let lineLen = distance(x1, y1, x2, y2);
-  let buffer = 0.1
+  let buffer = 0.1;
 
   // if the two distances are equal to the line's
   // length, the point is on the line!
@@ -43,8 +43,8 @@ export function linePoint(x1: number, y1: number, x2: number, y2: number, px: nu
 }
 
 export function lineCircle(x1: number, y1: number, x2: number, y2: number, cx: number, cy: number, r: number): boolean {
-  let inside1 = pointCircle(x1, y1, cx, cy, r);
-  let inside2 = pointCircle(x2, y2, cx, cy, r);
+  let inside1: boolean = pointCircle(x1, y1, cx, cy, r);
+  let inside2: boolean = pointCircle(x2, y2, cx, cy, r);
   if (inside1 || inside2) return true;
 
   let dx = x1 - x2;
@@ -56,10 +56,10 @@ export function lineCircle(x1: number, y1: number, x2: number, y2: number, cx: n
   let closestX = x1 + (dot * (x2 - x1));
   let closestY = y1 + (dot * (y2 - y1));
 
-  let onSegment = linePoint(x1, y1, x2, y2, closestX, closestY);
+  let onSegment: boolean = linePoint(x1, y1, x2, y2, closestX, closestY);
   if (!onSegment) return false;
 
-  let dist = distance(cx, cy, closestX, closestY)
+  let dist: number = distance(cx, cy, closestX, closestY);
   if (dist <= r) {
     return true;
   }
@@ -69,19 +69,19 @@ export function lineCircle(x1: number, y1: number, x2: number, y2: number, cx: n
 export function polyCircle(vertices: number[], cx: number, cy: number, r: number): boolean {
   let next = 0;
   for (let current = 0; current < vertices.length; current+=2) {
-    // get next vertex in list
+    // get next vertex pair in array 
     // if we've hit the end, wrap around to 0
-    next = (current + 2);
+    next = current + 2;
     if (next == vertices.length) next = 0;
 
-    let v1x = vertices[current];    // c for "current"
-    let v1y = vertices[current + 1];       // n for "next"
-    let v2x = vertices[next];       // n for "next"
-    let v2y = vertices[next + 1];       // n for "next"
+    let v1x: number = vertices[current];    
+    let v1y: number = vertices[current + 1];   
+    let v2x: number = vertices[next];       
+    let v2y: number = vertices[next + 1];      
 
     // check for collision between the circle and
     // a line formed between the two vertices
-    let collision = lineCircle(v1x, v1y, v2x, v2y, cx, cy, r);
+    let collision: boolean = lineCircle(v1x, v1y, v2x, v2y, cx, cy, r);
     if (collision) return true;
   }
   return false;
