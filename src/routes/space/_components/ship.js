@@ -37,7 +37,9 @@ export class Ship {
 
     this.respawn({ x: x, y: y });
     sound.add('crash', 'pop.mp3');
+    sound.add('laser', 'laser.mp3');
     sound.volume('crash', 0.03);
+    sound.volume('laser', 0.03);
   }
 
   respawn = ({ x: x, y: y }) => {
@@ -158,6 +160,7 @@ export class Ship {
     this.app.stage.addChild(pellet.sprite);
     this.torpedos.push(pellet);
 
+    sound.play('laser');
     this.recharged = false;
     setTimeout(function () {
       this.recharged = true;
