@@ -5,6 +5,9 @@ import { Hud } from "./hud";
 import { StarField } from "./stars";
 import { Asteroid } from "./asteroid";
 import { random, polyCircle } from "./util";
+import { GameSocket } from "./socket";
+
+const TopicPlayerRegister = "player-register";
 
 export class PixiSpace {
     app: PIXI.Application;
@@ -12,8 +15,26 @@ export class PixiSpace {
     starfield: StarField;
     asteroids: Asteroid[];
     hud: Hud;
+    socket: GameSocket;
+
+    onSocketMessage(evt: any): void {
+        console.log(evt);
+    }
+    onSocketConnected(evt: any): void {
+        console.log(evt);
+    }
+    onSocketClosed(evt: any): void {
+        console.log(evt);
+    }
 
     constructor({ canvas: canvasElement }) {
+        this.socket = new GameSocket("ws://localhost:8080/ws/");
+        this.socket.connect({
+            onMessage: this.onSocketMessage,
+            onOpen: this.onSocketConnected,
+            onClose: this.onSocketClosed
+        });
+
         this.asteroids = [];
         this.app = new PIXI.Application({
             view: canvasElement,
@@ -83,6 +104,12 @@ export class PixiSpace {
             if (Keyboard.isKeyDown("Enter")) {
                 let pos = this.randomPoint(20);
                 this.player.respawn(pos);
+                this.socket.send([{
+                    topic: TopicPlayerRegister,
+                    clientID: 1,
+                    screenWidth: this.app.screen.width,
+                    screenHeight: this.app.screen.height,
+                }]);
             }
         } else {
             // Keyboard

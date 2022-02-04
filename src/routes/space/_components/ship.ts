@@ -86,14 +86,14 @@ export class Ship {
 
     for (let i = 0; i < this.destroyPieceCount; ++i) {
       let angle = Math.random() * Math.PI * 2;
-      let x = Math.cos(angle);
-      let y = Math.sin(angle); 
+      let velocityX = Math.cos(angle);
+      let velocityY = Math.sin(angle); 
 
       var particle = new Particle(
         this.container.x,
         this.container.y,
-        x,
-        y,
+        velocityX,
+        velocityY,
         1,
         1,
         false,
