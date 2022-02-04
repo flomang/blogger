@@ -27,6 +27,10 @@ export class PixiSpace {
         console.log(evt);
     }
 
+    destroy() {
+        this.socket.close();
+    }
+
     constructor({ canvas: canvasElement }) {
         this.socket = new GameSocket("ws://localhost:8080/ws/");
         this.socket.connect({
