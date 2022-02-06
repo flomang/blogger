@@ -7,7 +7,15 @@ import { Asteroid } from "./asteroid";
 import { random, polyCircle } from "./util";
 import { GameSocket } from "./socket";
 
-const TopicPlayerRegister = "player-register";
+const TopicAsteroid = "new-asteroid";
+const TopicPlayerRegister = "RegisterPlayer";
+const TopicPlayerUnregister = "player-unregister";
+const TopicShipBoost = "ship-boost";
+const TopicShipCoordinates = "ship-coordinates";
+const TopicShipHeading = "ship-heading";
+const TopicShipLaser = "ship-laser";
+const TopicShipRotation = "ship-rotation";
+const TopicShipVelocity = "ship-velocity";
 
 export class PixiSpace {
     app: PIXI.Application;
@@ -19,6 +27,22 @@ export class PixiSpace {
 
     onSocketMessage(evt: any): void {
         console.log(evt);
+        try {
+            const jsonres = JSON.parse(evt.data);
+
+            for (const json of jsonres) {
+                switch (json.topic) {
+                    case TopicPlayerRegister:
+                }
+            }
+        }
+        catch (err) {
+            // 12/7/18
+            // ignore SyntaxError: Unexpected token {
+            // results from JSON.parse above
+            // this might be fixed now that the messages are handled as an array
+            console.log(`ERROR: ${err}`);
+        }
     }
     onSocketConnected(evt: any): void {
         console.log(evt);
@@ -109,11 +133,14 @@ export class PixiSpace {
                 let pos = this.randomPoint(20);
                 this.player.respawn(pos);
 
-                this.socket.sendcommand("/register", {
-                    name: "flow",
-                    screenWidth: this.app.screen.width,
-                    screenHeight: this.app.screen.height,
-                });
+                this.socket.sendmessages("/messages", [
+                    {
+                        type: TopicPlayerRegister,
+                        name: "flow",
+                        screenWidth: this.app.screen.width,
+                        screenHeight: this.app.screen.height,
+                    }
+                ]);
             }
         } else {
             // Keyboard
