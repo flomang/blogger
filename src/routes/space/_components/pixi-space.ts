@@ -108,12 +108,12 @@ export class PixiSpace {
             if (Keyboard.isKeyDown("Enter")) {
                 let pos = this.randomPoint(20);
                 this.player.respawn(pos);
-                this.socket.send([{
-                    topic: TopicPlayerRegister,
-                    clientID: 1,
+
+                this.socket.sendcommand("/register", {
+                    name: "flow",
                     screenWidth: this.app.screen.width,
                     screenHeight: this.app.screen.height,
-                }]);
+                });
             }
         } else {
             // Keyboard

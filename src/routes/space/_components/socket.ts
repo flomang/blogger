@@ -25,4 +25,9 @@ export class GameSocket {
   send = (messages: any) => {
     this.connection.send(JSON.stringify(messages));
   }
+
+  sendcommand = (cmd: string, data: any) => {
+    let payload = `${cmd} ${JSON.stringify(data)}`;
+    this.connection.send(payload);
+  }
 }
