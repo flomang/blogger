@@ -24,6 +24,7 @@ export class PixiSpace {
     asteroids: Asteroid[];
     hud: Hud;
     socket: GameSocket;
+    players: Ship[];
 
     onSocketMessage(evt: any): void {
         console.log(evt);
@@ -135,11 +136,12 @@ export class PixiSpace {
 
                 this.socket.sendmessages("/messages", [
                     {
+                        id: "1",
                         type: TopicPlayerRegister,
                         name: "flow",
-                        screenWidth: this.app.screen.width,
-                        screenHeight: this.app.screen.height,
-                    }
+                        x: pos.x, 
+                        y: pos.y,
+                    },
                 ]);
             }
         } else {
