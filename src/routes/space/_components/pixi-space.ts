@@ -9,6 +9,7 @@ import { GameSocket } from "./socket";
 import * as uuid from 'uuid';
 
 const TopicAsteroid = "new-asteroid";
+const TopicPlayerDied = "RegisterDied";
 const TopicPlayerRegister = "RegisterPlayer";
 const TopicPlayerUnregister = "player-unregister";
 const TopicShipBoost = "ship-boost";
@@ -35,9 +36,18 @@ export class PixiSpace {
             //for (const json of jsonres) {
             switch (json.type) {
                 case TopicPlayerRegister:
-                    if (this.clientID == json.id && this.player != undefined) {
-                        this.player.respawn(new PIXI.Point(json.x, json.y));
-                    } else {
+                    let respawn = false;
+                    this.players.forEach(function (player: Ship) {
+                        if (player.clientID == json.id) {
+                            player.respawn(new PIXI.Point(json.x, json.y));
+                            respawn = true;
+                        }
+                    });
+
+                    if (!respawn) {
+                        //if (this.clientID == json.id && this.player != undefined) {
+                        //    this.player.respawn(new PIXI.Point(json.x, json.y));
+                        //} else {
                         let player = new Ship(
                             this.app,
                             json.id,
@@ -51,6 +61,18 @@ export class PixiSpace {
                             this.player = player;
                         }
                     }
+                    break;
+
+                case TopicPlayerDied:
+                    for (let i = 0; i < this.players.length; ++i) {
+                        if (this.players[i].clientID == json.id) {
+                            this.players[i].destroy();
+                            //this.players.splice(i, 1);
+                        }
+                    }
+                    break;
+
+                default:
             }
             //}
         }
@@ -144,7 +166,13 @@ export class PixiSpace {
                 let playerPos = this.player.position();
 
                 if (polyCircle(points, playerPos.x, playerPos.y, this.player.radius) && !this.player.destroyed()) {
-                    this.player.destroy();
+                    //this.player.destroy();
+                    this.socket.sendmessages("/messages", [
+                        {
+                            id: this.clientID,
+                            type: TopicPlayerDied,
+                        },
+                    ]);
                 }
             }
         }.bind(this));
