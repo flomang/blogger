@@ -6,6 +6,7 @@ import { StarField } from "./stars";
 import { Asteroid } from "./asteroid";
 import { random, polyCircle } from "./util";
 import { GameSocket } from "./socket";
+import * as uuid from 'uuid';
 
 const TopicAsteroid = "new-asteroid";
 const TopicPlayerRegister = "RegisterPlayer";
@@ -25,6 +26,7 @@ export class PixiSpace {
     hud: Hud;
     socket: GameSocket;
     players: Ship[];
+    clientID: String = uuid.v1();
 
     onSocketMessage(evt: any): void {
         console.log(evt);
@@ -136,7 +138,7 @@ export class PixiSpace {
 
                 this.socket.sendmessages("/messages", [
                     {
-                        id: "1",
+                        id: this.clientID,
                         type: TopicPlayerRegister,
                         name: "flow",
                         x: pos.x, 
