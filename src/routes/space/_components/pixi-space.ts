@@ -20,24 +20,39 @@ const TopicShipVelocity = "ship-velocity";
 
 export class PixiSpace {
     app: PIXI.Application;
-    player: Ship;
     starfield: StarField;
-    asteroids: Asteroid[];
+    asteroids: Asteroid[] = [];
     hud: Hud;
     socket: GameSocket;
-    players: Ship[];
+    player: Ship;
+    players: Ship[] = [];
     clientID: String = uuid.v1();
 
     onSocketMessage(evt: any): void {
         console.log(evt);
         try {
-            const jsonres = JSON.parse(evt.data);
+            const json = JSON.parse(evt.data);
+            //for (const json of jsonres) {
+            switch (json.type) {
+                case TopicPlayerRegister:
+                    if (this.clientID == json.id && this.player != undefined) {
+                        this.player.respawn(new PIXI.Point(json.x, json.y));
+                    } else {
+                        let player = new Ship(
+                            this.app,
+                            json.id,
+                            "rocket.png",
+                            json.x,
+                            json.y);
 
-            for (const json of jsonres) {
-                switch (json.topic) {
-                    case TopicPlayerRegister:
-                }
+                        this.players.push(player);
+
+                        if (this.clientID == json.id) {
+                            this.player = player;
+                        }
+                    }
             }
+            //}
         }
         catch (err) {
             // 12/7/18
@@ -61,9 +76,9 @@ export class PixiSpace {
     constructor({ canvas: canvasElement }) {
         this.socket = new GameSocket("ws://localhost:8080/ws/");
         this.socket.connect({
-            onMessage: this.onSocketMessage,
-            onOpen: this.onSocketConnected,
-            onClose: this.onSocketClosed
+            onMessage: this.onSocketMessage.bind(this),
+            onOpen: this.onSocketConnected.bind(this),
+            onClose: this.onSocketClosed.bind(this)
         });
 
         this.asteroids = [];
@@ -75,13 +90,13 @@ export class PixiSpace {
             resolution: 3
         });
 
-        let pos = this.randomPoint(20);
-        this.player = new Ship(
-            this.app,
-            1,
-            "rocket.png",
-            pos.x,
-            pos.y);
+        // let pos = this.randomPoint(20);
+        // this.player = new Ship(
+        //     this.app,
+        //     1,
+        //     "rocket.png",
+        //     pos.x,
+        //     pos.y);
 
         const padding = 3;
         this.hud = new Hud(
@@ -113,35 +128,39 @@ export class PixiSpace {
     loop(delta: number): void {
         this.input(delta);
 
-        this.player.render(delta);
+        this.players.forEach(function (player: Ship) {
+            player.render(delta);
+        });
+        //this.player.render(delta);
         this.hud.render(delta);
         this.starfield.render(delta);
 
         this.asteroids.forEach(function (asteroid: Asteroid) {
             asteroid.render(delta);
 
-            // check collision with asteriod
-            let points = asteroid.vertices();
-            let playerPos = this.player.position();
+            if (this.player != undefined) {
+                // check collision with asteriod
+                let points = asteroid.vertices();
+                let playerPos = this.player.position();
 
-            if (polyCircle(points, playerPos.x, playerPos.y, this.player.radius) && !this.player.destroyed()) {
-                this.player.destroy();
+                if (polyCircle(points, playerPos.x, playerPos.y, this.player.radius) && !this.player.destroyed()) {
+                    this.player.destroy();
+                }
             }
         }.bind(this));
     }
 
     input(delta: number): void {
-        if (this.player.destroyed()) {
+        if (this.player == undefined || this.player.destroyed()) {
             if (Keyboard.isKeyDown("Enter")) {
                 let pos = this.randomPoint(20);
-                this.player.respawn(pos);
-
+                // this.player.respawn(pos);
                 this.socket.sendmessages("/messages", [
                     {
                         id: this.clientID,
                         type: TopicPlayerRegister,
                         name: "flow",
-                        x: pos.x, 
+                        x: pos.x,
                         y: pos.y,
                     },
                 ]);
