@@ -8,16 +8,16 @@ import { random, polyCircle } from "./util";
 import { GameSocket } from "./socket";
 import * as uuid from 'uuid';
 
-const TopicAsteroid = "new-asteroid";
-const TopicPlayerDied = "RegisterDied";
-const TopicPlayerRegister = "RegisterPlayer";
-const TopicPlayerUnregister = "player-unregister";
-const TopicShipBoost = "ship-boost";
-const TopicShipCoordinates = "ship-coordinates";
-const TopicShipHeading = "ship-heading";
-const TopicShipLaser = "ship-laser";
-const TopicShipRotation = "ship-rotation";
-const TopicShipVelocity = "ship-velocity";
+// client messages 
+const CMPlayerDied = "PlayerDied";
+const CMPlayerRegister = "RegisterPlayer";
+const CMPlayerRespawn = "RespawnPlayer";
+
+// server messages 
+const SMPlayerRegistered = "PlayerRegistered";
+const SMPlayerUnregistered = "PlayerUnregistered";
+const SMPlayerDied = "PlayerDied";
+const SMPlayerRespawned = "PlayerRespawned";
 
 export class PixiSpace {
     app: PIXI.Application;
@@ -35,39 +35,47 @@ export class PixiSpace {
             const json = JSON.parse(evt.data);
             //for (const json of jsonres) {
             switch (json.type) {
-                case TopicPlayerRegister:
-                    let respawn = false;
-                    this.players.forEach(function (player: Ship) {
-                        if (player.clientID == json.id) {
-                            player.respawn(new PIXI.Point(json.x, json.y));
-                            respawn = true;
-                        }
-                    });
+                case SMPlayerRegistered:
+                    let player = new Ship(
+                        this.app,
+                        json.id,
+                        "rocket.png",
+                        json.x,
+                        json.y);
 
-                    if (!respawn) {
-                        //if (this.clientID == json.id && this.player != undefined) {
-                        //    this.player.respawn(new PIXI.Point(json.x, json.y));
-                        //} else {
-                        let player = new Ship(
-                            this.app,
-                            json.id,
-                            "rocket.png",
-                            json.x,
-                            json.y);
+                    this.players.push(player);
 
-                        this.players.push(player);
-
-                        if (this.clientID == json.id) {
-                            this.player = player;
-                        }
+                    if (this.clientID == json.id) {
+                        this.player = player;
                     }
                     break;
 
-                case TopicPlayerDied:
+                case SMPlayerUnregistered: 
+                    for (let i = 0; i < this.players.length; ++i) {
+                        if (this.players[i].clientID == json.id) {
+                            this.players.splice(i, 1);
+                            break;
+                        }
+                    }
+
+                    if (this.clientID == json.id) {
+                        this.player == undefined;
+                    }
+                    break;
+
+                case SMPlayerRespawned:
+                    this.players.forEach(function (player: Ship) {
+                        if (player.clientID == json.id) {
+                            player.respawn(new PIXI.Point(json.x, json.y));
+                        }
+                    });
+                    break;
+
+                case SMPlayerDied:
                     for (let i = 0; i < this.players.length; ++i) {
                         if (this.players[i].clientID == json.id) {
                             this.players[i].destroy();
-                            //this.players.splice(i, 1);
+                            break;
                         }
                     }
                     break;
@@ -170,7 +178,7 @@ export class PixiSpace {
                     this.socket.sendmessages("/messages", [
                         {
                             id: this.clientID,
-                            type: TopicPlayerDied,
+                            type: CMPlayerDied,
                         },
                     ]);
                 }
@@ -182,16 +190,28 @@ export class PixiSpace {
         if (this.player == undefined || this.player.destroyed()) {
             if (Keyboard.isKeyDown("Enter")) {
                 let pos = this.randomPoint(20);
-                // this.player.respawn(pos);
-                this.socket.sendmessages("/messages", [
-                    {
-                        id: this.clientID,
-                        type: TopicPlayerRegister,
-                        name: "flow",
-                        x: pos.x,
-                        y: pos.y,
-                    },
-                ]);
+
+                if (this.player == undefined) {
+                    this.socket.sendmessages("/messages", [
+                        {
+                            id: this.clientID,
+                            type: CMPlayerRegister,
+                            name: "flow",
+                            x: pos.x,
+                            y: pos.y,
+                        },
+                    ]);
+                } else {
+                    this.socket.sendmessages("/messages", [
+                        {
+                            id: this.clientID,
+                            type: CMPlayerRespawn,
+                            x: pos.x,
+                            y: pos.y,
+                        },
+                    ]);
+
+                }
             }
         } else {
             // Keyboard
