@@ -24,6 +24,8 @@ export class Ship {
   isDestroyed: boolean;
   rechargeTime: number = 300;
   throttle: boolean;
+  isTurningLeft: boolean;
+  isTurningRight: boolean;
 
   sprite: PIXI.Sprite;
   shield: PIXI.Graphics;
@@ -40,6 +42,8 @@ export class Ship {
     this.torpedos = [];
     this.recharged = true;
     this.throttle = false;
+    this.isTurningLeft = false;
+    this.isTurningRight = false;
 
     const sprite = PIXI.Sprite.from(image);
     // set the anchor point so the texture is centerd on the sprite
@@ -85,6 +89,8 @@ export class Ship {
     if (this.isDestroyed) return;
 
     this.throttle = false;
+    this.isTurningLeft = false;
+    this.isTurningRight = false;
     this.isDestroyed = true;
     this.app.stage.removeChild(this.container);
 
@@ -134,6 +140,14 @@ export class Ship {
     if (this.throttle) {
       this.boost();
     } 
+
+    if (this.isTurningLeft) {
+      this.setRotation(-0.05 * delta);
+    }
+
+    if (this.isTurningRight) {
+      this.setRotation(0.05 * delta);
+    }
 
     this.container.x += this.velocity.x;
     this.container.y += this.velocity.y;
@@ -215,6 +229,14 @@ export class Ship {
       this.particles.push(particle);
       this.app.stage.addChild(particle.sprite);
     }
+  }
+
+  setRotationLeft(rotate: boolean): void {
+    this.isTurningLeft = rotate;
+  }
+
+  setRotationRight(rotate: boolean): void {
+    this.isTurningRight = rotate;
   }
 
   setRotation(radian: number): void {

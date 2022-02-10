@@ -13,6 +13,8 @@ const CMPlayerDied = "PlayerDied";
 const CMPlayerRegister = "RegisterPlayer";
 const CMPlayerRespawn = "RespawnPlayer";
 const CMPlayerArrowUp = "PlayerKeyboardArrowUp";
+const CMPlayerArrowLeft = "PlayerKeyboardArrowLeft";
+const CMPlayerArrowRight = "PlayerKeyboardArrowRight";
 
 // server messages 
 const SMPlayerRegistered = "PlayerRegistered";
@@ -20,6 +22,8 @@ const SMPlayerUnregistered = "PlayerUnregistered";
 const SMPlayerDied = "PlayerDied";
 const SMPlayerRespawned = "PlayerRespawned";
 const SMPlayerMoveForward = "PlayerMoveForward";
+const SMPlayerRotateLeft = "PlayerRotateLeft";
+const SMPlayerRotateRight = "PlayerRotateRight";
 
 export class PixiSpace {
     app: PIXI.Application;
@@ -78,6 +82,17 @@ export class PixiSpace {
                 case SMPlayerMoveForward: {
                     let player = this.players.find( p => p.clientID == json.id);
                     player.boosting(json.isMoving);
+                    break;
+                }
+                case SMPlayerRotateLeft: {
+                    let player = this.players.find( p => p.clientID == json.id);
+                    player.setRotationLeft(json.isRotating);
+                    break;
+                }
+                case SMPlayerRotateRight: {
+                    let player = this.players.find( p => p.clientID == json.id);
+                    player.setRotationRight(json.isRotating);
+                    break;
                 }
 
                 default:
@@ -203,18 +218,24 @@ export class PixiSpace {
                 }
             }
         } else {
-            // Keyboard
-            if (Keyboard.isKeyDown("ArrowLeft", "KeyA")) {
-                this.player.setRotation(-0.05 * delta);
-            }
-            if (Keyboard.isKeyDown("ArrowRight", "KeyD")) {
-                this.player.setRotation(0.05 * delta);
+            // Keyboard left key
+            if (Keyboard.isKeyPressed("ArrowLeft", "KeyA")) {
+                this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowLeft, keyDown: true}] );
+            } else if (Keyboard.isKeyReleased("ArrowLeft", "KeyA")) {
+                this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowLeft, keyDown: false}] );
             }
 
+            // Keyboard left right 
+            if (Keyboard.isKeyPressed("ArrowRight", "KeyD")) {
+                this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowRight, keyDown: true}] );
+            } else if (Keyboard.isKeyReleased("ArrowRight", "KeyD")) {
+                this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowRight, keyDown: false}] );
+            }
+
+            // Keyboard up right 
             if (Keyboard.isKeyPressed("ArrowUp", "KeyW")) {
                 this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowUp, keyDown: true}] );
-            } 
-            if (Keyboard.isKeyReleased("ArrowUp", "KeyW")) {
+            }  else if (Keyboard.isKeyReleased("ArrowUp", "KeyW")) {
                 this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowUp, keyDown: false}] );
             }
 
