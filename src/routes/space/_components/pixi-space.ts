@@ -12,12 +12,14 @@ import * as uuid from 'uuid';
 const CMPlayerDied = "PlayerDied";
 const CMPlayerRegister = "RegisterPlayer";
 const CMPlayerRespawn = "RespawnPlayer";
+const CMPlayerArrowUp = "PlayerKeyboardArrowUp";
 
 // server messages 
 const SMPlayerRegistered = "PlayerRegistered";
 const SMPlayerUnregistered = "PlayerUnregistered";
 const SMPlayerDied = "PlayerDied";
 const SMPlayerRespawned = "PlayerRespawned";
+const SMPlayerMoveForward = "PlayerMoveForward";
 
 export class PixiSpace {
     app: PIXI.Application;
@@ -73,6 +75,11 @@ export class PixiSpace {
                     player.destroy();
                     break;
                 }
+                case SMPlayerMoveForward: {
+                    let player = this.players.find( p => p.clientID == json.id);
+                    player.boosting(json.isMoving);
+                }
+
                 default:
             }
             //}
@@ -203,9 +210,14 @@ export class PixiSpace {
             if (Keyboard.isKeyDown("ArrowRight", "KeyD")) {
                 this.player.setRotation(0.05 * delta);
             }
-            if (Keyboard.isKeyDown("ArrowUp", "KeyW")) {
-                this.player.thrust();
+
+            if (Keyboard.isKeyPressed("ArrowUp", "KeyW")) {
+                this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowUp, keyDown: true}] );
+            } 
+            if (Keyboard.isKeyReleased("ArrowUp", "KeyW")) {
+                this.socket.sendmessages("/messages", [{ id: this.clientID, type: CMPlayerArrowUp, keyDown: false}] );
             }
+
             if (Keyboard.isKeyDown("KeyW")) {
                 this.starfield.warp();
             }

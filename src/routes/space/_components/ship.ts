@@ -23,9 +23,11 @@ export class Ship {
   recharged: boolean;
   isDestroyed: boolean;
   rechargeTime: number = 300;
+  throttle: boolean;
 
   sprite: PIXI.Sprite;
   shield: PIXI.Graphics;
+
 
   constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, radius: number = 2.5) {
     this.app = app;
@@ -37,6 +39,7 @@ export class Ship {
     this.particles = [];
     this.torpedos = [];
     this.recharged = true;
+    this.throttle = false;
 
     const sprite = PIXI.Sprite.from(image);
     // set the anchor point so the texture is centerd on the sprite
@@ -81,6 +84,7 @@ export class Ship {
   destroy(): void {
     if (this.isDestroyed) return;
 
+    this.throttle = false;
     this.isDestroyed = true;
     this.app.stage.removeChild(this.container);
 
@@ -127,6 +131,10 @@ export class Ship {
   }
 
   render(delta: number): void {
+    if (this.throttle) {
+      this.boost();
+    } 
+
     this.container.x += this.velocity.x;
     this.container.y += this.velocity.y;
     this.velocity.x *= 0.99;
@@ -180,7 +188,12 @@ export class Ship {
     }.bind(this), this.rechargeTime);
   }
 
-  thrust(): void {
+  // boost is true or false
+  boosting(boost: boolean): void {
+    this.throttle = boost;
+  }
+
+  boost(): void {
     if (this.isDestroyed) {
       return;
     }
