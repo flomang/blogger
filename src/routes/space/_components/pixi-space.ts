@@ -35,7 +35,7 @@ export class PixiSpace {
             const json = JSON.parse(evt.data);
             //for (const json of jsonres) {
             switch (json.type) {
-                case SMPlayerRegistered:
+                case SMPlayerRegistered: {
                     let player = new Ship(
                         this.app,
                         json.id,
@@ -49,8 +49,8 @@ export class PixiSpace {
                         this.player = player;
                     }
                     break;
-
-                case SMPlayerUnregistered: 
+                }
+                case SMPlayerUnregistered: {
                     for (let i = 0; i < this.players.length; ++i) {
                         if (this.players[i].clientID == json.id) {
                             this.players.splice(i, 1);
@@ -62,24 +62,17 @@ export class PixiSpace {
                         this.player == undefined;
                     }
                     break;
-
-                case SMPlayerRespawned:
-                    this.players.forEach(function (player: Ship) {
-                        if (player.clientID == json.id) {
-                            player.respawn(new PIXI.Point(json.x, json.y));
-                        }
-                    });
+                }
+                case SMPlayerRespawned: {
+                    let player = this.players.find( p => p.clientID == json.id);
+                    player.respawn(new PIXI.Point(json.x, json.y));
                     break;
-
-                case SMPlayerDied:
-                    for (let i = 0; i < this.players.length; ++i) {
-                        if (this.players[i].clientID == json.id) {
-                            this.players[i].destroy();
-                            break;
-                        }
-                    }
+                }
+                case SMPlayerDied: {
+                    let player = this.players.find( p => p.clientID == json.id);
+                    player.destroy();
                     break;
-
+                }
                 default:
             }
             //}
@@ -120,14 +113,6 @@ export class PixiSpace {
             resolution: 3
         });
 
-        // let pos = this.randomPoint(20);
-        // this.player = new Ship(
-        //     this.app,
-        //     1,
-        //     "rocket.png",
-        //     pos.x,
-        //     pos.y);
-
         const padding = 3;
         this.hud = new Hud(
             this.app,
@@ -157,13 +142,12 @@ export class PixiSpace {
 
     loop(delta: number): void {
         this.input(delta);
+        this.hud.render(delta);
+        this.starfield.render(delta);
 
         this.players.forEach(function (player: Ship) {
             player.render(delta);
         });
-        //this.player.render(delta);
-        this.hud.render(delta);
-        this.starfield.render(delta);
 
         this.asteroids.forEach(function (asteroid: Asteroid) {
             asteroid.render(delta);
@@ -174,7 +158,6 @@ export class PixiSpace {
                 let playerPos = this.player.position();
 
                 if (polyCircle(points, playerPos.x, playerPos.y, this.player.radius) && !this.player.destroyed()) {
-                    //this.player.destroy();
                     this.socket.sendmessages("/messages", [
                         {
                             id: this.clientID,
@@ -210,7 +193,6 @@ export class PixiSpace {
                             y: pos.y,
                         },
                     ]);
-
                 }
             }
         } else {
