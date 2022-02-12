@@ -7,29 +7,34 @@ export class Asteroid {
   radius: number;
   velocity: PIXI.Point;
   points: number[];
-  color: number = 0x2980b9; 
+  color: number = 0x2980b9;
 
   constructor(
     app: PIXI.Application,
     x: number,
     y: number,
     radius: number,
+    points: number[],
   ) {
     this.app = app;
     this.radius = radius,
-    this.velocity = new PIXI.Point(random(-1, 1), random(-1, 1));
+      this.velocity = new PIXI.Point(random(-1, 1), random(-1, 1));
 
-    let total = random(6, 12);
-    this.points = [];
-    for (var i = 0; i < total; i++) {
-      let angle = map(i, 0, total, 0, Math.PI * 2);
-      let offset = random(-this.radius * 0.5, this.radius * 0.5);
-      let r = this.radius + offset;
-      let x = r * Math.cos(angle);
-      let y = r * Math.sin(angle);
+    if (points == undefined) {
+      let total = random(6, 12);
+      this.points = [];
+      for (var i = 0; i < total; i++) {
+        let angle = map(i, 0, total, 0, Math.PI * 2);
+        let offset = random(-this.radius * 0.5, this.radius * 0.5);
+        let r = this.radius + offset;
+        let x = r * Math.cos(angle);
+        let y = r * Math.sin(angle);
 
-      this.points.push(x);
-      this.points.push(y);
+        this.points.push(x);
+        this.points.push(y);
+      }
+    } else {
+      this.points = points;
     }
 
     let graphics = new PIXI.Graphics();

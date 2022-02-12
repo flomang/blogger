@@ -24,6 +24,7 @@ const SMPlayerRespawned = "PlayerRespawned";
 const SMPlayerMoveForward = "PlayerMoveForward";
 const SMPlayerRotateLeft = "PlayerRotateLeft";
 const SMPlayerRotateRight = "PlayerRotateRight";
+const SMAsteroid = "Asteroid";
 
 export class PixiSpace {
     app: PIXI.Application;
@@ -94,6 +95,12 @@ export class PixiSpace {
                     player.setRotationRight(json.isRotating);
                     break;
                 }
+                case SMAsteroid: {
+                    console.log("asteroid");
+                    let pos = this.randomPoint(0);
+                    let asteroid = new Asteroid(this.app, pos.x, pos.y, json.radius, json.points);
+                    this.asteroids.push(asteroid);
+                }
 
                 default:
             }
@@ -145,12 +152,12 @@ export class PixiSpace {
 
         this.starfield = new StarField(this.app, 300);
 
-        for (let i = 0; i < 60; i++) {
-            let pos = this.randomPoint(0);
-            let radius = random(3, 21);
-            let asteroid = new Asteroid(this.app, pos.x, pos.y, radius);
-            this.asteroids.push(asteroid);
-        }
+        // for (let i = 0; i < 60; i++) {
+        //     let pos = this.randomPoint(0);
+        //     let radius = random(3, 21);
+        //     let asteroid = new Asteroid(this.app, pos.x, pos.y, radius);
+        //     this.asteroids.push(asteroid);
+        // }
 
         //Start the game loop
         this.app.ticker.add(delta => this.loop(delta));
