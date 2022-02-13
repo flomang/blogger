@@ -15,10 +15,13 @@ export class Asteroid {
     y: number,
     radius: number,
     points: number[],
+    velocityX: number,
+    velocityY: number,
   ) {
     this.app = app;
     this.radius = radius,
-      this.velocity = new PIXI.Point(random(-1, 1), random(-1, 1));
+    //this.velocity = new PIXI.Point(random(-1, 1), random(-1, 1));
+    this.velocity = new PIXI.Point(velocityX, velocityY);
 
     if (points == undefined) {
       let total = random(6, 12);

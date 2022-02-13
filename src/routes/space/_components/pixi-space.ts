@@ -98,8 +98,9 @@ export class PixiSpace {
                 }
                 case SMAsteroid: {
                     let pos = this.randomPoint(0);
-                    let asteroid = new Asteroid(this.app, pos.x, pos.y, json.radius, json.points);
+                    let asteroid = new Asteroid(this.app, pos.x, pos.y, json.radius, json.points, json.velocityX, json.velocityY);
                     this.asteroids.push(asteroid);
+                    break;
                 }
 
                 default:
