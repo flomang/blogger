@@ -48,7 +48,8 @@ export class PixiSpace {
                         json.id,
                         "rocket.png",
                         json.x,
-                        json.y);
+                        json.y,
+                        json.rotation);
 
                     this.players.push(player);
 
@@ -72,7 +73,7 @@ export class PixiSpace {
                 }
                 case SMPlayerRespawned: {
                     let player = this.players.find( p => p.clientID == json.id);
-                    player.respawn(new PIXI.Point(json.x, json.y));
+                    player.respawn(new PIXI.Point(json.x, json.y), json.rotation);
                     break;
                 }
                 case SMPlayerDied: {
@@ -96,7 +97,6 @@ export class PixiSpace {
                     break;
                 }
                 case SMAsteroid: {
-                    console.log("asteroid");
                     let pos = this.randomPoint(0);
                     let asteroid = new Asteroid(this.app, pos.x, pos.y, json.radius, json.points);
                     this.asteroids.push(asteroid);

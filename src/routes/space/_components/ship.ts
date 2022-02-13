@@ -31,7 +31,7 @@ export class Ship {
   shield: PIXI.Graphics;
 
 
-  constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, radius: number = 2.5) {
+  constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, rotation: number, radius: number = 2.5) {
     this.app = app;
     this.clientID = clientID;
     this.heading = new PIXI.Point(0, 0);
@@ -71,16 +71,16 @@ export class Ship {
     sound.volume('pop', 0.03);
     sound.volume('laser', 0.03);
 
-    this.respawn(new PIXI.Point(x, y));
+    this.respawn(new PIXI.Point(x, y), rotation);
   }
 
-  respawn(pos: PIXI.Point): void {
+  respawn(pos: PIXI.Point, rotation: number): void {
     this.isDestroyed = false;
     this.velocity = new PIXI.Point(0, 0);
     this.container.x = pos.x;
     this.container.y = pos.y;
 
-    this.setRotation(random(0, Math.PI * 2));
+    this.setRotation(rotation);
 
     this.app.stage.addChild(this.container);
   }
