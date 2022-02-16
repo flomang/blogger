@@ -97,7 +97,7 @@ export class PixiSpace {
                     break;
                 }
                 case SMAsteroid: {
-                    let pos = this.randomPoint(0);
+                    let pos = this.randomPointOffscreen();
                     let asteroid = new Asteroid(this.app, pos.x, pos.y, json.radius, json.points, json.velocityX, json.velocityY);
                     this.asteroids.push(asteroid);
                     break;
@@ -167,6 +167,12 @@ export class PixiSpace {
     randomPoint(margin: number): PIXI.Point {
         let x = random(margin, this.app.screen.width - margin);
         let y = random(margin, this.app.screen.height - margin);
+        return new PIXI.Point(x, y);
+    }
+
+    randomPointOffscreen(): PIXI.Point {
+        let x = random(0, this.app.screen.width) - this.app.screen.width;
+        let y = random(0, this.app.screen.height) - this.app.screen.height;
         return new PIXI.Point(x, y);
     }
 
