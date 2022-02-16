@@ -171,8 +171,15 @@ export class PixiSpace {
     }
 
     randomPointOffscreen(): PIXI.Point {
-        let x = random(0, this.app.screen.width) - this.app.screen.width;
-        let y = random(0, this.app.screen.height) - this.app.screen.height;
+        let x = random(0, this.app.screen.width);
+        let y = random(0, this.app.screen.height);
+
+        if (Math.random() < 0.5) {
+            x -= this.app.screen.width;
+        } else {
+            y -= this.app.screen.height;
+        }
+
         return new PIXI.Point(x, y);
     }
 
