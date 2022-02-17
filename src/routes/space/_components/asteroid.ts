@@ -71,8 +71,8 @@ export class Asteroid {
   }
 
   render(delta: number): void {
-    this.container.x += this.velocity.x;
-    this.container.y += this.velocity.y;
+    this.container.x += (this.velocity.x * delta);
+    this.container.y += (this.velocity.y * delta);
     this.edges();
   }
 

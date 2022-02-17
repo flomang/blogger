@@ -263,7 +263,7 @@ export class PixiSpace {
             if (Keyboard.isKeyDown("KeyW")) {
                 this.starfield.warp();
             }
-            if (Keyboard.isKeyDown("Space")) {
+            if (Keyboard.isKeyDown("KeyF")) {
                 this.player.fire();
             }
         }

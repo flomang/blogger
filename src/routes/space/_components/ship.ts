@@ -97,7 +97,7 @@ export class Ship {
     for (let i = 0; i < this.destroyPieceCount; ++i) {
       let angle = Math.random() * Math.PI * 2;
       let velocityX = Math.cos(angle);
-      let velocityY = Math.sin(angle); 
+      let velocityY = Math.sin(angle);
 
       var particle = new Particle(
         this.container.x,
@@ -133,13 +133,13 @@ export class Ship {
   }
 
   position(): PIXI.Point {
-    return new PIXI.Point(this.container.x, this.container.y );
+    return new PIXI.Point(this.container.x, this.container.y);
   }
 
   render(delta: number): void {
     if (this.throttle) {
       this.boost();
-    } 
+    }
 
     if (this.isTurningLeft) {
       this.setRotation(-0.05 * delta);
@@ -149,22 +149,22 @@ export class Ship {
       this.setRotation(0.05 * delta);
     }
 
-    this.container.x += this.velocity.x;
-    this.container.y += this.velocity.y;
+    this.container.x += (this.velocity.x * delta);
+    this.container.y += (this.velocity.y * delta);
     this.velocity.x *= 0.99;
     this.velocity.y *= 0.99;
 
     this.edges();
 
     for (let i = this.particles.length - 1; i >= 0; --i) {
-      this.particles[i].render();
+      this.particles[i].render(delta);
       if (this.particles[i].finished()) {
         this.app.stage.removeChild(this.particles[i].sprite);
         this.particles.splice(i, 1);
       }
     }
-    this.torpedos.forEach(function (torpedo, i) {
-      torpedo.render();
+    this.torpedos.forEach(function (torpedo: Particle, i: number) {
+      torpedo.render(delta);
       if (torpedo.offScreen(this.app.screen.width, this.app.screen.height)) {
         this.app.stage.removeChild(torpedo.sprite);
         this.torpedos.splice(i, 1);
@@ -212,8 +212,8 @@ export class Ship {
       return;
     }
 
-    this.velocity.x += this.heading.x * 0.1;
-    this.velocity.y += this.heading.y * 0.1;
+    this.velocity.x += this.heading.x * 0.03;
+    this.velocity.y += this.heading.y * 0.03;
 
     for (let i = 0; i < 5; ++i) {
       var particle = new Particle(

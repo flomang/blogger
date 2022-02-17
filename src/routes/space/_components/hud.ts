@@ -43,16 +43,16 @@ export class Hud {
     }
 
     render(delta: number):void {
-        this.ring.rotation += 0.1;
+        this.ring.rotation += (0.05 * delta);
 
         const container = this.container;
         if (container.scale.x > -1 && this.flip) {
-            container.scale.x -= 0.05;
+            container.scale.x -= (0.05 * delta);
             if (container.scale.x <= -1) {
                 this.flip = false;
             }
         } else if (container.scale.x < 1 && !this.flip) {
-            container.scale.x += 0.05;
+            container.scale.x += (0.05 * delta);
             if (container.scale.x >= 1) {
                 this.flip = true;
             }

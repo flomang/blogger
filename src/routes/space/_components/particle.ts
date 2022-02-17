@@ -37,9 +37,9 @@ export class Particle {
         return false;
     }
 
-    render(): void {
-        this.sprite.x += this.velocity.x;
-        this.sprite.y += this.velocity.y;
+    render(delta: number): void {
+        this.sprite.x += (this.velocity.x * delta) * 0.3;
+        this.sprite.y += (this.velocity.y * delta) * 0.3;
 
         if (!this.projectile) {
             this.sprite.alpha -= 0.03;
