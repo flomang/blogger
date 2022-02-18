@@ -138,10 +138,11 @@ export class PixiSpace {
         this.asteroids = [];
         this.app = new PIXI.Application({
             view: canvasElement,
-            height: window.screen.height / 9,
+            width: 1024,
+            height: 512,
             backgroundColor: 0x090f15,
             //resolution: window.devicePixelRatio || 6 
-            resolution: 3
+            resolution:  6
         });
 
         const padding = 3;

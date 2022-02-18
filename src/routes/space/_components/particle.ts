@@ -8,7 +8,7 @@ export class Particle {
     constructor(
         x: number,
         y: number,
-        velocityX: number, 
+        velocityX: number,
         velocityY: number,
         width: number,
         height: number,
@@ -28,18 +28,19 @@ export class Particle {
     }
 
     offScreen(screenWidth: number, screenHeight: number): boolean {
-        if (this.sprite.x > screenWidth || 
-            this.sprite.y > screenHeight || 
-            this.sprite.x < 0 || 
+        if (this.sprite.x > screenWidth ||
+            this.sprite.y > screenHeight ||
+            this.sprite.x < 0 ||
             this.sprite.y < 0) {
             return true;
-        } 
+        }
         return false;
     }
 
     render(delta: number): void {
-        this.sprite.x += (this.velocity.x * delta) * 0.3;
-        this.sprite.y += (this.velocity.y * delta) * 0.3;
+        let multi = (this.projectile) ? 0.7 : 0.3;
+        this.sprite.x += (this.velocity.x * delta) * multi;
+        this.sprite.y += (this.velocity.y * delta) * multi;
 
         if (!this.projectile) {
             this.sprite.alpha -= 0.03;

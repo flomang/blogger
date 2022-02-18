@@ -32,8 +32,9 @@ export class Ship {
 
   ring: PIXI.Container;
   lives: number;
+  scale: number = 0.015;
 
-  constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, rotation: number, lives: number, radius: number = 2.5) {
+  constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, rotation: number, lives: number, radius: number = 5.5) {
     this.app = app;
     this.clientID = clientID;
     this.heading = new PIXI.Point(0, 0);
@@ -53,7 +54,7 @@ export class Ship {
     sprite.x = 0;
     sprite.y = 0;
     sprite.anchor.set(0.5);
-    sprite.scale.set(0.01);
+    sprite.scale.set(this.scale);
     this.sprite = sprite;
 
     var shield = new PIXI.Graphics();
@@ -81,11 +82,11 @@ export class Ship {
     for (let i = 0; i < this.lives; i++) {
         const btcd = PIXI.Sprite.from("btc.png");
         btcd.tint = 0x7ac6fa;
-        btcd.width = this.radius * 1.3;
-        btcd.height = this.radius * 1.3;
+        btcd.width = this.radius;
+        btcd.height = this.radius;
         btcd.anchor.set(0.5);
-        btcd.x = (this.radius * 2) * Math.cos(increment * i);
-        btcd.y = (this.radius * 2) * Math.sin(increment * i);
+        btcd.x = (this.radius * 1.5) * Math.cos(increment * i);
+        btcd.y = (this.radius * 1.5) * Math.sin(increment * i);
         ring.addChild(btcd);
     }
     this.ring = ring;
