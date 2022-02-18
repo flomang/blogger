@@ -30,6 +30,7 @@ export class Ship {
   sprite: PIXI.Sprite;
   shield: PIXI.Graphics;
 
+  ring: PIXI.Container;
 
   constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, rotation: number, radius: number = 2.5) {
     this.app = app;
@@ -72,6 +73,22 @@ export class Ship {
     sound.volume('laser', 0.03);
 
     this.respawn(new PIXI.Point(x, y), rotation);
+
+    let ring = new PIXI.Container();
+    let increment = Math.PI / 3;
+    let coinCount = 6;
+    for (let i = 0; i < coinCount; i++) {
+        const btcd = PIXI.Sprite.from("btc.png");
+        btcd.tint = 0x7ac6fa;
+        btcd.width = this.radius * 1.3;
+        btcd.height = this.radius * 1.3;
+        btcd.anchor.set(0.5);
+        btcd.x = (this.radius * 2) * Math.cos(increment * i);
+        btcd.y = (this.radius * 2) * Math.sin(increment * i);
+        ring.addChild(btcd);
+    }
+    this.ring = ring;
+    this.container.addChild(ring);
   }
 
   respawn(pos: PIXI.Point, rotation: number): void {
@@ -143,11 +160,15 @@ export class Ship {
 
     if (this.isTurningLeft) {
       this.setRotation(-0.05 * delta);
+      this.ring.rotation += (0.05 * delta);
     }
 
     if (this.isTurningRight) {
       this.setRotation(0.05 * delta);
+      this.ring.rotation += (-0.05 * delta);
     }
+
+    this.ring.rotation += (0.05 * delta);
 
     this.container.x += (this.velocity.x * delta);
     this.container.y += (this.velocity.y * delta);
