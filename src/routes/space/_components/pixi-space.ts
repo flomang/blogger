@@ -49,7 +49,8 @@ export class PixiSpace {
                         "rocket.png",
                         json.x,
                         json.y,
-                        json.rotation);
+                        json.rotation,
+                        6);
 
                     this.players.push(player);
 
@@ -227,7 +228,8 @@ export class PixiSpace {
                             y: pos.y,
                         },
                     ]);
-                } else {
+                } else if (!this.player.isDead()) {
+
                     this.socket.sendmessages("/messages", [
                         {
                             id: this.clientID,

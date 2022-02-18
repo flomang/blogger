@@ -31,8 +31,9 @@ export class Ship {
   shield: PIXI.Graphics;
 
   ring: PIXI.Container;
+  lives: number;
 
-  constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, rotation: number, radius: number = 2.5) {
+  constructor(app: PIXI.Application, clientID: number, image: string, x: number, y: number, rotation: number, lives: number, radius: number = 2.5) {
     this.app = app;
     this.clientID = clientID;
     this.heading = new PIXI.Point(0, 0);
@@ -45,6 +46,7 @@ export class Ship {
     this.throttle = false;
     this.isTurningLeft = false;
     this.isTurningRight = false;
+    this.lives = lives;
 
     const sprite = PIXI.Sprite.from(image);
     // set the anchor point so the texture is centerd on the sprite
@@ -76,8 +78,7 @@ export class Ship {
 
     let ring = new PIXI.Container();
     let increment = Math.PI / 3;
-    let coinCount = 6;
-    for (let i = 0; i < coinCount; i++) {
+    for (let i = 0; i < this.lives; i++) {
         const btcd = PIXI.Sprite.from("btc.png");
         btcd.tint = 0x7ac6fa;
         btcd.width = this.radius * 1.3;
@@ -102,9 +103,18 @@ export class Ship {
     this.app.stage.addChild(this.container);
   }
 
+  isDead(): boolean {
+    if (this.lives == 0){
+      return true;
+    }
+    return false;
+  }
+
   destroy(): void {
     if (this.isDestroyed) return;
 
+    this.ring.removeChildAt(0);
+    this.lives -= 1; 
     this.throttle = false;
     this.isTurningLeft = false;
     this.isTurningRight = false;
