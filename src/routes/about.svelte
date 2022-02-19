@@ -12,6 +12,13 @@
 	// since there's no dynamic data here, we can prerender
 	// it so that it gets served as a static asset in prod
 	export const prerender = true;
+
+	const theme = {
+		calendar: {
+			width: '700px',
+			shadow: '0px 0px 30px rgba(0.0, 0.0, 0.0, .3)'
+		}
+	};
 </script>
 
 <svelte:head>
@@ -19,28 +26,17 @@
 </svelte:head>
 
 <div class="content">
-	<h1>The Fool</h1>
-
-	<p>
-		The Fool begins his journey. The empress awaits him.
-	</p>
-
-	<p>
-		The page you're looking at is purely static HTML, with no client-side interactivity needed.
-		Because of that, we don't need to load any JavaScript. Try viewing the page's source, or opening
-		the devtools network panel and reloading.
-	</p>
-
-	<p>
-		The <a href="/todos">TODOs</a> page illustrates SvelteKit's data loading and form handling. Try using
-		it with JavaScript disabled!
-	</p>
+	<img src="ouija.png" alt="fool.png"/>
+	<img src="planchette.png" alt="fool.png"/>
 </div>
 
 <style>
 	.content {
-		width: 100%;
-		max-width: var(--column-width);
-		margin: var(--column-margin-top) auto 0 auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		flex: 1;
 	}
+	
 </style>

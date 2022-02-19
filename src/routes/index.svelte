@@ -1,9 +1,26 @@
 <script context="module" lang="ts">
+	import { InlineCalendar } from "svelte-calendar";
+	import dayjs from "dayjs";
+
 	export const prerender = true;
+
+	const theme = {
+		calendar: {
+			width: "600px",
+			shadow: "0px 0px 30px rgba(0.0, 0.0, 0.0, .3)",
+			colors: {
+				background: {
+					highlight: "#333",
+				},
+			},
+		},
+	};
+
 </script>
 
 <script lang="ts">
-	import Counter from '$lib/Counter.svelte';
+	import Counter from "$lib/Counter.svelte";
+	let store;
 </script>
 
 <svelte:head>
@@ -11,20 +28,19 @@
 </svelte:head>
 
 <section>
-	<h1>
-		<div class="welcome">
-			<picture>
-				<source srcset="svelte-welcome.webp" type="image/webp" />
-				<img src="svelte-welcome.png" alt="Welcome" />
-			</picture>
-		</div>
+	<InlineCalendar bind:store {theme} />
 
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/index.svelte</strong>
-	</h2>
+	<div class="grid">
+		<button on:click={() => store.add(-1, "year")}>-1y</button>
+		<button on:click={() => store.add(-1, "month")}>-1m</button>
+		<button class="day" on:click={() => store.add(-1, "day")}>-1d</button>
+		<p class="date">
+			{dayjs($store?.selected).format("MM/DD/YYYY")}
+		</p>
+		<button class="day" on:click={() => store.add(1, "day")}>+1d</button>
+		<button on:click={() => store.add(1, "month")}>+1m</button>
+		<button on:click={() => store.add(1, "year")}>+1y</button>
+	</div>
 
 	<Counter />
 </section>
@@ -49,11 +65,29 @@
 		padding: 0 0 calc(100% * 495 / 2048) 0;
 	}
 
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
+	.grid {
+		background: #333;
+		color: #fff;
+		display: grid;
+		grid-template-columns: auto auto auto 1fr auto auto auto;
+		text-align: center;
+		align-items: center;
+		width: 600px;
+	}
+
+	.date {
+		color: #fff;
+		font-size: 1.3em;
+	}
+
+	button {
+		background: #5829d6;
+		padding: 23px 20px;
+		color: #fff;
+		font-size: 1.3em;
+		border-radius: 1px;
+		border: 0;
+		box-shadow: 4px 3px 9px rgb(0 0 0 / 20%);
+		cursor: pointer;
 	}
 </style>
