@@ -43,7 +43,7 @@
 </svelte:head>
 
 <section>
-	<InlineCalendar bind:store {theme} />
+	<InlineCalendar bind:store {theme} start={today} />
 
 	<div class="grid">
 		<button on:click={() => store.add(-1, "year") }>-1y</button>
