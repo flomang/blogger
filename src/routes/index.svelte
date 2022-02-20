@@ -15,7 +15,6 @@
 			},
 		},
 	};
-
 </script>
 
 <script lang="ts">
@@ -26,36 +25,16 @@
 	let store;
 	let count = 0;
 
-	function update_count() {
-		let next = $store?.selected.getTime();
+	// update count if calendar was selected
+	$: if ($store?.selected) {
+		let selected = $store?.selected; 
+		selected.setHours(0);
+
+		let next = selected.getTime();
 		let prev = today.getTime();
 
 		let delta = Math.round((next - prev) / 86400000);
 		count = delta;
-	}
-	function add_week() {
-		store.add(1, "week");
-		update_count()
-	}
-	function sub_week() {
-		store.add(-1, "week");
-		update_count()
-	}
-	function add_month() {
-		store.add(1, "month");
-		update_count()
-	}
-	function sub_month() {
-		store.add(-1, "month");
-		update_count()
-	}
-	function add_year() {
-		store.add(1, "year");
-		update_count()
-	}
-	function sub_year() {
-		store.add(-1, "year");
-		update_count()
 	}
 </script>
 
@@ -67,18 +46,18 @@
 	<InlineCalendar bind:store {theme} />
 
 	<div class="grid">
-		<button on:click={() => sub_year() }>-1y</button>
-		<button on:click={() => sub_month() }>-1m</button>
-		<button on:click={() => sub_week() }>-1w</button>
+		<button on:click={() => store.add(-1, "year") }>-1y</button>
+		<button on:click={() => store.add(-1, "month") }>-1m</button>
+		<button on:click={() => store.add(-1, "week") }>-1w</button>
 		<p class="date">
 			{dayjs($store?.selected).format("MM/DD/YYYY")}
 		</p>
-		<button on:click={() => add_week() }>1w</button>
-		<button on:click={() => add_month() }>+1m</button>
-		<button on:click={() => add_year() }>+1y</button>
+		<button on:click={() => store.add(1, "week") }>1w</button>
+		<button on:click={() => store.add(1, "month") }>+1m</button>
+		<button on:click={() => store.add(1, "year") }>+1y</button>
 	</div>
 
-	<Counter bind:count bind:store/>
+	<Counter bind:count bind:store />
 </section>
 
 <style>
