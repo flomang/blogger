@@ -1,12 +1,13 @@
 import * as PIXI from "pixi.js";
-import { StarField } from "./stars";
+//import { StarField } from "./stars";
 import { random } from "../../../lib/util";
 import * as uuid from 'uuid';
 
 export class Ouija {
     app: PIXI.Application;
-    starfield: StarField;
+    //starfield: StarField;
     clientID: String = uuid.v1();
+    displacementSprite;
 
     constructor({ canvas: canvasElement }) {
         this.app = new PIXI.Application({
@@ -16,8 +17,8 @@ export class Ouija {
             backgroundAlpha: 0.0,
             resolution: 6
         });
-        //const defaultIcon = "url('static/planchette.png'),auto";
-        //this.app.renderer.plugins.interaction.cursorStyles.default = defaultIcon;
+        //this.starfield = new StarField(this.app, 6000);
+
         const board = PIXI.Sprite.from("static/ouija.png");
         board.anchor.set(0.5);
         board.x = this.app.screen.width / 2;
@@ -27,11 +28,19 @@ export class Ouija {
         board.scale.set(1.30);
         this.app.stage.addChild(board);
 
-        this.starfield = new StarField(this.app, 600);
+        const displacementSprite = PIXI.Sprite.from('static/displacement_map_repeat.jpeg');
+        // Make sure the sprite is wrapping.
+        displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+        const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
+        displacementFilter.padding = 10;
+        displacementSprite.position = board.position;
+        this.app.stage.addChild(displacementSprite);
+        board.filters = [displacementFilter];
+        displacementFilter.scale.x = 60;
+        displacementFilter.scale.y = 70;
+        this.displacementSprite = displacementSprite;
 
         const planchette = PIXI.Sprite.from("static/planchette.png");
-        //planchette.x = this.app.screen.width / 2;
-        //planchette.y = this.app.screen.height / 2;
         planchette.x = 706;
         planchette.y = 367;
         planchette.scale.set(0.60);
@@ -72,6 +81,11 @@ export class Ouija {
     destroy() { }
 
     loop(delta: number): void {
-        this.starfield.render(delta);
+        //this.starfield.render(delta);
+
+        // Offset the sprite position to make vFilterCoord update to larger value. Repeat wrapping makes sure there's still pixels on the coordinates.
+        this.displacementSprite.x++;
+        // Reset x to 0 when it's over width to keep values from going to very huge numbers.
+        if (this.displacementSprite.x > this.displacementSprite.width) this.displacementSprite.x = 0;
     }
 }
