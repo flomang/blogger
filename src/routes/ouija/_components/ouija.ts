@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
-import Keyboard from "pixi.js-keyboard";
 import { StarField } from "./stars";
-import { random } from "./util";
+import { random } from "../../../lib/util";
 import * as uuid from 'uuid';
 
 export class Ouija {
@@ -31,15 +30,15 @@ export class Ouija {
         this.starfield = new StarField(this.app, 600);
 
         const planchette = PIXI.Sprite.from("static/planchette.png");
-        planchette.x = this.app.screen.width / 2;
-        planchette.y = this.app.screen.height / 2;
+        //planchette.x = this.app.screen.width / 2;
+        //planchette.y = this.app.screen.height / 2;
+        planchette.x = 706;
+        planchette.y = 367;
         planchette.scale.set(0.60);
         planchette.anchor.set(0.5);
         planchette.interactive = true;
         planchette.buttonMode = true;
         planchette.on('pointerdown', onDragStart)
-        //planchette.on('pointerup', onDragEnd)
-        //planchette.on('pointerupoutside', onDragEnd)
         planchette.on('pointermove', onDragMove);
         this.app.stage.addChild(planchette);
 
@@ -59,21 +58,15 @@ export class Ouija {
                 this.alpha = 1.0;
         }
 
-        function onDragEnd() {
-            this.alpha = 1;
-            this.dragging = false;
-            // set the interaction data to null
-            this.data = null;
-        }
-
         function onDragMove() {
             if (this.dragging) {
                 const newPosition = this.data.getLocalPosition(this.parent);
                 this.x = newPosition.x;
                 this.y = newPosition.y;
+                console.log(this.x);
+                console.log(this.y);
             }
         }
-
     }
 
     destroy() { }

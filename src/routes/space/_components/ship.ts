@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Particle } from "./particle";
-import { random } from "./util";
+import { random } from "../../../lib/util";
 import { sound } from '@pixi/sound';
 
 const RADIAN_OFFSET = Math.PI / 2;

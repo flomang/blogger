@@ -4,7 +4,7 @@ import { Ship } from "./ship";
 import { Hud } from "./hud";
 import { StarField } from "./stars";
 import { Asteroid } from "./asteroid";
-import { random, polyCircle } from "./util";
+import { random, polyCircle } from "../../../lib/util";
 import { GameSocket } from "./socket";
 import * as uuid from 'uuid';
 

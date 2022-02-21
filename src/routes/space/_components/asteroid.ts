@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { map, random } from "./util";
+import { map, random } from "../../../lib/util";
 
 export class Asteroid {
   app: PIXI.Application;
