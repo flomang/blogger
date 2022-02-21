@@ -15,9 +15,9 @@
 					Home
 				</a>
 			</li>
-			<li class:active={$page.url.pathname === "/about"}>
-				<a sveltekit:prefetch href="/about">
-					About
+			<li class:active={$page.url.pathname === "/ouija"}>
+				<a sveltekit:prefetch href="/ouija">
+				    Ouija	
 				</a>
 			</li>
 			<li class:active={$page.url.pathname === "/todos"}>
