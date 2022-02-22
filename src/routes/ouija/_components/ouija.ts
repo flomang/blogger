@@ -32,13 +32,15 @@ export class Ouija {
         const displacementSprite = PIXI.Sprite.from('static/displacement_map_repeat.jpeg');
         // Make sure the sprite is wrapping.
         displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+
         const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
         displacementFilter.padding = 10;
         displacementSprite.position = board.position;
-        this.app.stage.addChild(displacementSprite);
-        board.filters = [displacementFilter];
         displacementFilter.scale.x = 60;
         displacementFilter.scale.y = 70;
+
+        this.app.stage.addChild(displacementSprite);
+        board.filters = [displacementFilter];
         this.displacementSprite = displacementSprite;
 
         const planchette = PIXI.Sprite.from("static/planchette.png");
@@ -71,6 +73,13 @@ export class Ouija {
         input.y = -board.height / 2 + 30; 
         input.pivot.x = input.width/2;
         input.pivot.y = input.height/2;
+        input.on('keydown', (keycode: number) => {
+            // blur on enter
+            if (keycode == 13) {
+                input.blur();
+            }
+        })
+
         board.addChild(input);
 
         function onDragStart(event) {
