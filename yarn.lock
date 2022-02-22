@@ -791,6 +791,11 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.2, picomatch@^2.2.3:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
 
+pixi-text-input@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/pixi-text-input/-/pixi-text-input-1.0.6.tgz#d826de4f2d1db9da3dc59fcdf7e4c2c755e3ac57"
+  integrity sha512-R2tiJd7XL3nMCIuF0lJBIJFDBry+Iv+hHg8anzcAPPOcWQrwvibKfskY2WrT8SQpvQDMeWoMwHDrbitNJcH13g==
+
 pixi.js-keyboard@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/pixi.js-keyboard/-/pixi.js-keyboard-1.1.6.tgz#de7497ee3edc2c3fc5826998b236ffbe11c9df9e"
