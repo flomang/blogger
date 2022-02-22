@@ -42,15 +42,15 @@ export class Ouija {
         this.displacementSprite = displacementSprite;
 
         const planchette = PIXI.Sprite.from("static/planchette.png");
-        planchette.x = 706;
-        planchette.y = 367;
+        planchette.x = 0;
+        planchette.y = 0;
         planchette.scale.set(0.60);
         planchette.anchor.set(0.5);
         planchette.interactive = true;
         planchette.buttonMode = true;
         planchette.on('pointerdown', onDragStart)
         planchette.on('pointermove', onDragMove);
-        this.app.stage.addChild(planchette);
+        board.addChild(planchette);
 
         //Start the game loop
         this.app.ticker.add(delta => this.loop(delta));
@@ -66,12 +66,12 @@ export class Ouija {
             box: generateBox
         })
         
-        input.placeholder = 'Enter your question...'
-        input.x = 500
-        input.y = 30
-        input.pivot.x = input.width/2
-        input.pivot.y = input.height/2
-        this.app.stage.addChild(input)
+        input.placeholder = 'Enter your question...';
+        input.x = 0;
+        input.y = -board.height / 2 + 30; 
+        input.pivot.x = input.width/2;
+        input.pivot.y = input.height/2;
+        board.addChild(input);
 
         function onDragStart(event) {
             // store a reference to the data
