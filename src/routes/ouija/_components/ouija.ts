@@ -11,22 +11,22 @@ export class Ouija {
     displacementSprite: PIXI.Sprite;
 
     constructor({ canvas: canvasElement }) {
+        let padding = 33;
+
         this.app = new PIXI.Application({
             view: canvasElement,
             width: 1024,
-            height: 512,
+            height: 512 + padding,
             backgroundAlpha: 0.0,
             resolution: 1
         });
         //this.starfield = new StarField(this.app, 6000);
-
         const board = PIXI.Sprite.from("static/ouija.png");
         board.anchor.set(0.5);
         board.x = this.app.screen.width / 2;
-        board.y = this.app.screen.height / 2 + 30;
-        board.height = this.app.screen.height;
-        board.width = this.app.screen.width;
-        board.scale.set(1.30);
+        board.y = this.app.screen.height / 2 + padding;
+        board.height = this.app.screen.height - padding;
+        board.width = this.app.screen.width - padding;
         this.app.stage.addChild(board);
 
         const displacementSprite = PIXI.Sprite.from('static/displacement_map_repeat.jpeg');
@@ -44,8 +44,6 @@ export class Ouija {
         this.displacementSprite = displacementSprite;
 
         const planchette = PIXI.Sprite.from("static/planchette.png");
-        planchette.x = 0;
-        planchette.y = 0;
         planchette.scale.set(0.60);
         planchette.anchor.set(0.5);
         planchette.interactive = true;
@@ -60,9 +58,10 @@ export class Ouija {
         const input = new TextInput({
             input: {
                 fontFamily: 'Arial',
-                fontSize: '17px',
-                padding: '14px 24px',
-                width: '300px',
+                fontSize: '12px',
+                padding: '17px 12px',
+                width: '175px',
+                height: '3px',
                 color: 'white'
             },
             box: generateBox
@@ -70,7 +69,7 @@ export class Ouija {
         
         input.placeholder = 'Enter your question...';
         input.x = 0;
-        input.y = -board.height / 2 + 30; 
+        input.y = -185; 
         input.pivot.x = input.width/2;
         input.pivot.y = input.height/2;
         input.on('keydown', (keycode: number) => {
@@ -131,7 +130,7 @@ export class Ouija {
         }
     }
 
-    destroy() { }
+    destroy() {}
 
     loop(delta: number): void {
         //this.starfield.render(delta);
