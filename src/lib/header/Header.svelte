@@ -20,6 +20,11 @@
 				    Ouija	
 				</a>
 			</li>
+			<li class:active={$page.url.pathname === "/fountain"}>
+				<a sveltekit:prefetch href="/fountain">
+				    Fountain	
+				</a>
+			</li>
 			<li class:active={$page.url.pathname === "/todos"}>
 				<a sveltekit:prefetch href="/todos">
 					Todo
