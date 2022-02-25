@@ -21,6 +21,7 @@
     import Counter from "$lib/Counter.svelte";
     import { onMount } from "svelte";
     import SunCalc from "suncalc";
+    import moment from "moment";
 
     let today = new Date();
     today.setHours(0);
@@ -48,29 +49,76 @@
 
     let sunrise: Date;
     let sunset: Date;
+    let dayhours = [];
+    let nighthours = [];
+    let days = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
+    let chaldean = [
+        "Saturn",
+        "Jupiter",
+        "Mars",
+        "Sun",
+        "Venus",
+        "Mercury",
+        "Moon",
+    ];
 
     onMount(async () => {
         navigator.geolocation.getCurrentPosition(function (position) {
-            var times = SunCalc.getTimes(
-                new Date(),
+            var today = new Date();
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            var times1 = SunCalc.getTimes(
+                today,
                 position.coords.latitude,
                 position.coords.longitude
             );
-            sunrise = times.sunrise;
-            sunset = times.sunset;
+            var times2 = SunCalc.getTimes(
+                tomorrow,
+                position.coords.latitude,
+                position.coords.longitude
+            );
+            sunrise = times1.sunrise;
+            sunset = times1.sunset;
+            let sunrise2 = times2.sunrise;
 
             let daylight_milliseconds = sunset.getTime() - sunrise.getTime();
             let daylight_milliseconds_hour = daylight_milliseconds / 12;
 
-            for (let hour = 0; hour < 12; ++hour) {
-                var numberOfMlSeconds = sunrise.getTime();
-                var start = new Date(numberOfMlSeconds + (daylight_milliseconds_hour * hour));
-                var end = new Date(numberOfMlSeconds + (daylight_milliseconds_hour * (hour + 1)));
-                console.log(start);
-                console.log(end);
-            }
-        });
+            let night_milliseconds = sunrise2.getTime() - sunset.getTime();
+            let night_milliseconds_hour = night_milliseconds / 12;
 
+            let daytimes = [];
+            let nighttimes = [];
+            let ruler = days[today.getDay()];
+            let index = chaldean.findIndex(function (c) {
+                return ruler == c;
+            });
+
+            for (let hour = 0; hour < 12; ++hour) {
+                var i = (index + hour) % 7;
+                var numberOfMlSeconds = sunrise.getTime();
+                var start = new Date(
+                    numberOfMlSeconds + daylight_milliseconds_hour * hour
+                );
+                var end = new Date(
+                    numberOfMlSeconds + daylight_milliseconds_hour * (hour + 1)
+                );
+                daytimes.push({ hour: hour + 1, start: start, end: end, ruler: chaldean[i] });
+
+                var i2 = (index + hour + 12) % 7;
+                var numberOfMlSeconds2 = sunset.getTime();
+                var n1 = new Date(
+                    numberOfMlSeconds2 + night_milliseconds_hour * hour
+                );
+                var n2 = new Date(
+                    numberOfMlSeconds2 + night_milliseconds_hour * (hour + 1)
+                );
+                nighttimes.push({ hour: hour + 13, start: n1, end: n2, ruler: chaldean[i2] });
+            }
+            dayhours = daytimes;
+            nighthours = nighttimes;
+        });
     });
 </script>
 
@@ -94,8 +142,31 @@
     </div>
 
     <Counter bind:count bind:store />
-    <p>Sunrise: {sunrise}</p>
-    <p>Sunset: {sunset}</p>
+    <div>
+        day:
+        {#each dayhours as hour, index (hour.hour)}
+            <p>
+                {hour.hour}
+                {hour.ruler}
+                {moment(hour.start).day()}
+                {moment(hour.start).format("h:mm:ss A")} - {moment(
+                    hour.end
+                ).format("h:mm:ss A")}
+            </p>
+        {/each}
+    </div>
+    <div>
+        night:
+        {#each nighthours as hour, index (hour.hour)}
+            <p>
+                {hour.hour}
+                {hour.ruler}
+                {moment(hour.start).format("h:mm:ss A")} - {moment(
+                    hour.end
+                ).format("h:mm:ss A")}
+            </p>
+        {/each}
+    </div>
 </section>
 
 <style>
