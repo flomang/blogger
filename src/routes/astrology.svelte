@@ -39,6 +39,7 @@
 
         let delta = Math.round((next - prev) / 86400000);
         count = delta;
+        planet_hours(selected);
     }
 
     function toLocalTime(time: Date): Date {
@@ -61,63 +62,78 @@
         "Mercury",
         "Moon",
     ];
+    let latitude;
+    let longitude;
+
+    function planet_hours(date) {
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        console.log(date);
+        var times1 = SunCalc.getTimes(date, latitude, longitude);
+        var times2 = SunCalc.getTimes(tomorrow, latitude, longitude);
+        sunrise = times1.sunrise;
+        sunset = times1.sunset;
+        let sunrise2 = times2.sunrise;
+
+        let daylight_milliseconds = sunset.getTime() - sunrise.getTime();
+        let daylight_milliseconds_hour = daylight_milliseconds / 12;
+
+        let night_milliseconds = sunrise2.getTime() - sunset.getTime();
+        let night_milliseconds_hour = night_milliseconds / 12;
+
+        let daytimes = [];
+        let nighttimes = [];
+        let ruler = days[date.getDay()];
+        let index = chaldean.findIndex(function (c) {
+            return ruler == c;
+        });
+
+        for (let hour = 0; hour < 12; ++hour) {
+            var i = (index + hour) % 7;
+            var numberOfMlSeconds = sunrise.getTime();
+            var start = new Date(
+                numberOfMlSeconds + daylight_milliseconds_hour * hour
+            );
+            var end = new Date(
+                numberOfMlSeconds + daylight_milliseconds_hour * (hour + 1)
+            );
+            daytimes.push({
+                hour: hour + 1,
+                start: start,
+                end: end,
+                ruler: chaldean[i],
+            });
+
+            var i2 = (index + hour + 12) % 7;
+            var numberOfMlSeconds2 = sunset.getTime();
+            var n1 = new Date(
+                numberOfMlSeconds2 + night_milliseconds_hour * hour
+            );
+            var n2 = new Date(
+                numberOfMlSeconds2 + night_milliseconds_hour * (hour + 1)
+            );
+            nighttimes.push({
+                hour: hour + 13,
+                start: n1,
+                end: n2,
+                ruler: chaldean[i2],
+            });
+        }
+        dayhours = daytimes;
+        nighthours = nighttimes;
+    }
 
     onMount(async () => {
         navigator.geolocation.getCurrentPosition(function (position) {
-            var today = new Date();
-            var tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
+            latitude = position.coords.latitude;
+            longitude = position.coords.longitude;
 
-            var times1 = SunCalc.getTimes(
-                today,
-                position.coords.latitude,
-                position.coords.longitude
-            );
-            var times2 = SunCalc.getTimes(
-                tomorrow,
-                position.coords.latitude,
-                position.coords.longitude
-            );
-            sunrise = times1.sunrise;
-            sunset = times1.sunset;
-            let sunrise2 = times2.sunrise;
-
-            let daylight_milliseconds = sunset.getTime() - sunrise.getTime();
-            let daylight_milliseconds_hour = daylight_milliseconds / 12;
-
-            let night_milliseconds = sunrise2.getTime() - sunset.getTime();
-            let night_milliseconds_hour = night_milliseconds / 12;
-
-            let daytimes = [];
-            let nighttimes = [];
-            let ruler = days[today.getDay()];
-            let index = chaldean.findIndex(function (c) {
-                return ruler == c;
-            });
-
-            for (let hour = 0; hour < 12; ++hour) {
-                var i = (index + hour) % 7;
-                var numberOfMlSeconds = sunrise.getTime();
-                var start = new Date(
-                    numberOfMlSeconds + daylight_milliseconds_hour * hour
-                );
-                var end = new Date(
-                    numberOfMlSeconds + daylight_milliseconds_hour * (hour + 1)
-                );
-                daytimes.push({ hour: hour + 1, start: start, end: end, ruler: chaldean[i] });
-
-                var i2 = (index + hour + 12) % 7;
-                var numberOfMlSeconds2 = sunset.getTime();
-                var n1 = new Date(
-                    numberOfMlSeconds2 + night_milliseconds_hour * hour
-                );
-                var n2 = new Date(
-                    numberOfMlSeconds2 + night_milliseconds_hour * (hour + 1)
-                );
-                nighttimes.push({ hour: hour + 13, start: n1, end: n2, ruler: chaldean[i2] });
+            if ($store?.selected) {
+                planet_hours($store?.selected);
+            } else {
+                planet_hours(new Date());
             }
-            dayhours = daytimes;
-            nighthours = nighttimes;
         });
     });
 </script>
@@ -146,12 +162,13 @@
         day:
         {#each dayhours as hour, index (hour.hour)}
             <p>
-                {hour.hour}
+                ({("0" + hour.hour).slice(-2)})
+                <b>
+                    {moment(hour.start).format("hh:mm:ss A")} - {moment(
+                        hour.end
+                    ).format("hh:mm:ss A")}
+                </b>
                 {hour.ruler}
-                {moment(hour.start).day()}
-                {moment(hour.start).format("h:mm:ss A")} - {moment(
-                    hour.end
-                ).format("h:mm:ss A")}
             </p>
         {/each}
     </div>
@@ -159,11 +176,13 @@
         night:
         {#each nighthours as hour, index (hour.hour)}
             <p>
-                {hour.hour}
+                ({("0" + hour.hour).slice(-2)})
+                <b>
+                    {moment(hour.start).format("hh:mm:ss A")} - {moment(
+                        hour.end
+                    ).format("hh:mm:ss A")}
+                </b>
                 {hour.ruler}
-                {moment(hour.start).format("h:mm:ss A")} - {moment(
-                    hour.end
-                ).format("h:mm:ss A")}
             </p>
         {/each}
     </div>
