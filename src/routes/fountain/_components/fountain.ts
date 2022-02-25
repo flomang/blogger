@@ -14,7 +14,7 @@ export class Fountain {
             view: canvasElement,
             width: 1024,
             height: 512,
-            backgroundAlpha: 0.0,
+            //backgroundAlpha: 0.0,
             resolution: 1
         });
 
@@ -30,13 +30,13 @@ export class Fountain {
         main.addChild(heart);
         this.heart = heart;
 
-        const charity = PIXI.Sprite.from("static/humane_society.png");
-        charity.anchor.set(0.5);
-        charity.x = this.app.screen.width / 2;
-        charity.y = this.app.screen.height / 2;
-        charity.height = 233;
-        charity.width = 333;
-        main.addChild(charity);
+        // const charity = PIXI.Sprite.from("static/humane_society.png");
+        // charity.anchor.set(0.5);
+        // charity.x = this.app.screen.width / 2;
+        // charity.y = this.app.screen.height / 2;
+        // charity.height = 233;
+        // charity.width = 333;
+        // main.addChild(charity);
 
         const displacementSprite = PIXI.Sprite.from('static/displacement_map_repeat.jpeg');
         // Make sure the sprite is wrapping.
@@ -60,7 +60,7 @@ export class Fountain {
 
     loop(delta: number): void {
         //this.starfield.render(delta);
-        this.heart.rotation += delta * 0.0003;
+        this.heart.rotation -= delta * 0.0003;
 
         // Offset the sprite position to make vFilterCoord update to larger value. Repeat wrapping makes sure there's still pixels on the coordinates.
         this.displacementSprite.x++;
