@@ -106,8 +106,8 @@
             nightHrs.push({
                 hour: hour + 13,
                 ruler: chaldean[i],
-                start: new Date(night_milliseconds_hour * hour + sunsetMls),
-                end: new Date(night_milliseconds_hour * (hour + 1) + sunsetMls),
+                start: new Date(sunsetMls + night_milliseconds_hour * hour),
+                end: new Date(sunsetMls + night_milliseconds_hour * (hour + 1)),
             });
         }
         dayHours = dayHrs;
