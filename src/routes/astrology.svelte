@@ -48,10 +48,6 @@
         return n;
     }
 
-    let sunrise: Date;
-    let sunset: Date;
-    let dayhours = [];
-    let nighthours = [];
     let days = ["Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"];
     let chaldean = [
         "Saturn",
@@ -64,64 +60,58 @@
     ];
     let latitude;
     let longitude;
+    let dayHours = [];
+    let nightHours = [];
 
-    function planet_hours(date) {
-        var tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
+    function planet_hours(date: Date) {
+        let nextDay = new Date().setDate(date.getDate() + 1);
 
-        console.log(date);
-        var times1 = SunCalc.getTimes(date, latitude, longitude);
-        var times2 = SunCalc.getTimes(tomorrow, latitude, longitude);
-        sunrise = times1.sunrise;
-        sunset = times1.sunset;
-        let sunrise2 = times2.sunrise;
+        let suncalc1 = SunCalc.getTimes(date, latitude, longitude);
+        let suncalc2 = SunCalc.getTimes(nextDay, latitude, longitude);
+
+        let sunrise = suncalc1.sunrise;
+        let sunset = suncalc1.sunset;
 
         let daylight_milliseconds = sunset.getTime() - sunrise.getTime();
         let daylight_milliseconds_hour = daylight_milliseconds / 12;
 
-        let night_milliseconds = sunrise2.getTime() - sunset.getTime();
+        let night_milliseconds = suncalc2.sunrise.getTime() - sunset.getTime();
         let night_milliseconds_hour = night_milliseconds / 12;
 
-        let daytimes = [];
-        let nighttimes = [];
         let ruler = days[date.getDay()];
         let index = chaldean.findIndex(function (c) {
             return ruler == c;
         });
 
+        var sunriseMls = sunrise.getTime();
+        var sunsetMls = sunset.getTime();
+
+        let dayHrs = [];
+        let nightHrs = [];
+
         for (let hour = 0; hour < 12; ++hour) {
             var i = (index + hour) % 7;
-            var numberOfMlSeconds = sunrise.getTime();
-            var start = new Date(
-                numberOfMlSeconds + daylight_milliseconds_hour * hour
-            );
-            var end = new Date(
-                numberOfMlSeconds + daylight_milliseconds_hour * (hour + 1)
-            );
-            daytimes.push({
+
+            dayHrs.push({
                 hour: hour + 1,
-                start: start,
-                end: end,
                 ruler: chaldean[i],
+                start: new Date(sunriseMls + daylight_milliseconds_hour * hour),
+                end: new Date(
+                    sunriseMls + daylight_milliseconds_hour * (hour + 1)
+                ),
             });
 
-            var i2 = (index + hour + 12) % 7;
-            var numberOfMlSeconds2 = sunset.getTime();
-            var n1 = new Date(
-                numberOfMlSeconds2 + night_milliseconds_hour * hour
-            );
-            var n2 = new Date(
-                numberOfMlSeconds2 + night_milliseconds_hour * (hour + 1)
-            );
-            nighttimes.push({
+            i = (i + 12) % 7;
+
+            nightHrs.push({
                 hour: hour + 13,
-                start: n1,
-                end: n2,
-                ruler: chaldean[i2],
+                ruler: chaldean[i],
+                start: new Date(night_milliseconds_hour * hour + sunsetMls),
+                end: new Date(night_milliseconds_hour * (hour + 1) + sunsetMls),
             });
         }
-        dayhours = daytimes;
-        nighthours = nighttimes;
+        dayHours = dayHrs;
+        nightHours = nightHrs;
     }
 
     onMount(async () => {
@@ -143,61 +133,73 @@
 </svelte:head>
 
 <section>
-    <InlineCalendar bind:store {theme} start={today} />
+    <div class="calendar">
+        <InlineCalendar bind:store {theme} start={today} />
 
-    <div class="grid">
-        <button on:click={() => store.add(-1, "year")}>-1y</button>
-        <button on:click={() => store.add(-1, "month")}>-1m</button>
-        <button on:click={() => store.add(-1, "week")}>-1w</button>
-        <p class="date">
-            {dayjs($store?.selected).format("MM/DD/YYYY")}
-        </p>
-        <button on:click={() => store.add(1, "week")}>1w</button>
-        <button on:click={() => store.add(1, "month")}>+1m</button>
-        <button on:click={() => store.add(1, "year")}>+1y</button>
+        <div class="grid">
+            <button on:click={() => store.add(-1, "year")}>-1y</button>
+            <button on:click={() => store.add(-1, "month")}>-1m</button>
+            <button on:click={() => store.add(-1, "week")}>-1w</button>
+            <p class="date">
+                {dayjs($store?.selected).format("MM/DD/YYYY")}
+            </p>
+            <button on:click={() => store.add(1, "week")}>1w</button>
+            <button on:click={() => store.add(1, "month")}>+1m</button>
+            <button on:click={() => store.add(1, "year")}>+1y</button>
+        </div>
+
+        <Counter bind:count bind:store />
     </div>
-
-    <Counter bind:count bind:store />
-    <div>
-        day:
-        {#each dayhours as hour, index (hour.hour)}
-            <p>
-                ({("0" + hour.hour).slice(-2)})
-                <b>
+    <div class="hours">
+        <div class="day">
+            <h3>Day</h3>
+            {#each dayHours as hour, index (hour.hour)}
+                <div>
+                    ({("0" + hour.hour).slice(-2)})
                     {moment(hour.start).format("hh:mm:ss A")} - {moment(
                         hour.end
                     ).format("hh:mm:ss A")}
-                </b>
-                {hour.ruler}
-            </p>
-        {/each}
-    </div>
-    <div>
-        night:
-        {#each nighthours as hour, index (hour.hour)}
-            <p>
-                ({("0" + hour.hour).slice(-2)})
-                <b>
+                    <b>{hour.ruler}</b>
+                </div>
+            {/each}
+        </div>
+        <div class="night">
+            <h3>Night</h3>
+            {#each nightHours as hour, index (hour.hour)}
+                <div>
+                    ({("0" + hour.hour).slice(-2)})
                     {moment(hour.start).format("hh:mm:ss A")} - {moment(
                         hour.end
                     ).format("hh:mm:ss A")}
-                </b>
-                {hour.ruler}
-            </p>
-        {/each}
+                    <b>{hour.ruler}</b>
+                </div>
+            {/each}
+        </div>
     </div>
 </section>
 
 <style>
     section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .calendar {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        flex: 1;
+        float: left,
     }
 
-    h1 {
+    .hours {
+        padding: 0 15px;
+    }
+
+    h3 {
+        justify-content: center;
+        display: flex;
         width: 100%;
     }
 
