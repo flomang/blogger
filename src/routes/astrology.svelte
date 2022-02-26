@@ -32,7 +32,6 @@
     // update count if calendar was selected
     $: if ($store?.selected) {
         let selected = $store?.selected;
-        selected.setHours(0);
 
         let next = selected.getTime();
         let prev = today.getTime();
@@ -64,18 +63,28 @@
     let nightHours = [];
 
     function planet_hours(date: Date) {
-        let nextDay = new Date().setDate(date.getDate() + 1);
+        let nextDay = new Date();
+        nextDay.setDate(date.getDate() + 1);
+        date.setMinutes(nextDay.getMinutes());
 
         let suncalc1 = SunCalc.getTimes(date, latitude, longitude);
         let suncalc2 = SunCalc.getTimes(nextDay, latitude, longitude);
 
         let sunrise = suncalc1.sunrise;
         let sunset = suncalc1.sunset;
+        let sunrise2 = suncalc2.sunrise;
 
         let daylight_milliseconds = sunset.getTime() - sunrise.getTime();
         let daylight_milliseconds_hour = daylight_milliseconds / 12;
 
-        let night_milliseconds = suncalc2.sunrise.getTime() - sunset.getTime();
+        console.log(date);
+        console.log(nextDay);
+
+        console.log(sunrise);
+        console.log(sunset);
+        console.log(sunrise2);
+
+        let night_milliseconds = sunrise2.getTime() - sunset.getTime();
         let night_milliseconds_hour = night_milliseconds / 12;
 
         let ruler = days[date.getDay()];
@@ -110,6 +119,8 @@
                 end: new Date(sunsetMls + night_milliseconds_hour * (hour + 1)),
             });
         }
+        dayHours = [];
+        nightHours = [];
         dayHours = dayHrs;
         nightHours = nightHrs;
     }
@@ -121,9 +132,7 @@
 
             if ($store?.selected) {
                 planet_hours($store?.selected);
-            } else {
-                planet_hours(new Date());
-            }
+            } 
         });
     });
 </script>
