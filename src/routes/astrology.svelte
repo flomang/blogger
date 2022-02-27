@@ -39,6 +39,8 @@
         let delta = Math.round((next - prev) / 86400000);
         count = delta;
         planet_hours(selected);
+
+        moon = SunCalc.getMoonIllumination(selected);
     }
 
     function toLocalTime(time: Date): Date {
@@ -61,6 +63,28 @@
     let longitude;
     let dayHours = [];
     let nightHours = [];
+    let moon;
+
+    function moon_phase(phase: number): string {
+        if (phase == 0.0) {
+            return "New Moon";
+        } else if (phase > 0.0 && phase < 0.25) {
+            return "Waxing Cresent";
+        } else if (phase == 0.25) {
+            return "First Quarter";
+        } else if (phase > 0.25 && phase < 0.5) {
+            return "Waxing Gibbous";
+        } else if (phase == 0.5) {
+            return "Full Moon";
+        } else if (phase > 0.5 && phase < 0.75) {
+            return "Waning Gibbous";
+        } else if (phase == 0.75) {
+            return "Last Quarter";
+        } else if (phase > 0.75) {
+            return "Waning Cresent";
+        }
+        return "N/A";
+    }
 
     function planet_hours(date: Date) {
         let nextDay = new Date();
@@ -76,13 +100,6 @@
 
         let daylight_milliseconds = sunset.getTime() - sunrise.getTime();
         let daylight_milliseconds_hour = daylight_milliseconds / 12;
-
-        console.log(date);
-        console.log(nextDay);
-
-        console.log(sunrise);
-        console.log(sunset);
-        console.log(sunrise2);
 
         let night_milliseconds = sunrise2.getTime() - sunset.getTime();
         let night_milliseconds_hour = night_milliseconds / 12;
@@ -132,7 +149,7 @@
 
             if ($store?.selected) {
                 planet_hours($store?.selected);
-            } 
+            }
         });
     });
 </script>
@@ -160,6 +177,14 @@
         <Counter bind:count bind:store />
     </div>
     <div class="hours">
+        {#if moon != undefined}
+            <div class="moon">
+                <h3>Moon</h3>
+                <div>Illuminated: {(moon.fraction * 100).toFixed(2)} %</div>
+                <div>Phase: {moon_phase(moon.phase)}</div>
+                <div>Angle: {moon.angle}</div>
+            </div>
+        {/if}
         <div class="day">
             <h3>Day</h3>
             {#each dayHours as hour, index (hour.hour)}
@@ -193,13 +218,13 @@
         display: flex;
         justify-content: center;
     }
-    
+
     .calendar {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        float: left,
+        float: left;
     }
 
     .hours {
