@@ -24,6 +24,7 @@
     "svelte-calendar": "^3.1.6",
     "svelte-check": "^2.2.6",
     "svelte-preprocess": "^4.9.4",
+    "svelte-tiny-linked-charts": "^1.1.2",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3",
     "uuid": "^8.3.2"

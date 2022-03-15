@@ -1024,6 +1024,11 @@ svelte-preprocess@^4.0.0, svelte-preprocess@^4.9.4:
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
 
+svelte-tiny-linked-charts@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/svelte-tiny-linked-charts/-/svelte-tiny-linked-charts-1.1.2.tgz#24db1af2689a105b3d78c304189a89eb08d56224"
+  integrity sha512-RCcBN0ukH1OpwlelrGRyFLSAVKrvXdZU5gS8G66Q02WvaXbJ8rg2s+YKa+zTOa93I/1unORe/jwsUQkzPxQBTw==
+
 svelte@^3.44.0:
   version "3.46.3"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.46.3.tgz#31202b0c795f276726d95b648b6dd413116257ac"
