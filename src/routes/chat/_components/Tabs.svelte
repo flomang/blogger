@@ -1,17 +1,7 @@
 <script>
   import Chat from "./Chat.svelte";
-
+  // TODO session user
   export let user;
-
-  let selected = "trollbox";
-  let scroll = false;
-  let handleSelection = selection => {
-    selected = selection;
-
-    if (selected == "trollbox") {
-      scroll = true;
-    }
-  };
 </script>
 
 <style>
@@ -44,7 +34,7 @@
   <div class="trollbox-header">
     <span
       class="trollbox-header-title">
-      trollbox
+      trollbox 
     </span>
   </div>
   <div>

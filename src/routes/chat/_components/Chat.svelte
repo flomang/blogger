@@ -3,12 +3,6 @@
   import { beforeUpdate, afterUpdate } from "svelte";
   import Textfield from "@smui/textfield";
   import { fade } from "svelte/transition";
-  // import { mutate, subscribe } from "svelte-apollo";
-  // import { POST_MESSAGE } from "../../_graphql/mutations.js";
-  // import { MESSAGE_POSTED } from "../../_graphql/subscriptions.js";
-  // import { MESSAGES } from "../../_graphql/queries.js";
-  // import { wsClient } from "../../_graphql/client.js";
-  //import { onMount } from "svelte";
   import ElizaBot from "elizabot";
 
   export let user;
@@ -52,42 +46,6 @@
       });
   }
 
-  // onMount(async () => {
-  //   // get all messages
-  //   let response = await wsClient(session).query({ query: MESSAGES });
-
-  //   if (response.data && response.data.messages) {
-  //     const messages = response.data.messages.reverse();
-
-  //     messages.forEach(msg => {
-  //       comments = comments.concat({
-  //         username: msg.username,
-  //         profileImage: msg.avatarURL ? msg.avatarURL : defaultAvatar,
-  //         text: msg.text,
-  //         type: "comment"
-  //       });
-  //     });
-  //   }
-
-  //   // subscribe to message posted
-  //   wsClient(session)
-  //     .subscribe({
-  //       query: MESSAGE_POSTED,
-  //       variables: { user: user.username }
-  //     })
-  //     .subscribe(result => {
-  //       if (result.data.messagePosted) {
-  //         const data = result.data.messagePosted;
-  //         comments = comments.concat({
-  //           username: data.username,
-  //           profileImage: data.avatarURL ? data.avatarURL : defaultAvatar,
-  //           text: data.text,
-  //           type: "comment"
-  //         });
-  //       }
-  //     });
-  // });
-
   beforeUpdate(() => {
     autoscroll =
       scrollableDiv &&
@@ -113,17 +71,6 @@
          text: text,
          type: "comment"
       });
-      // mutate(wsClient($session), {
-      //   mutation: POST_MESSAGE,
-      //   variables: {
-      //     input: {
-      //       userID: user.id,
-      //       username: user.username,
-      //       text: text,
-      //       avatarURL: user.avatarURL
-      //     }
-      //   }
-      // });
 
       scrollableDiv.scrollTo(0, scrollableDiv.scrollHeight);
       event.target.value = "";
@@ -181,13 +128,6 @@
     margin-right: 1em;
   }
 
-  .trollbox-input-btn {
-    height: 30px;
-    width: 30px;
-    margin-right: 10px;
-    margin-top: 16px;
-  }
-
   .comment-container {
     display: flex;
   }
@@ -213,7 +153,7 @@
 </style>
 
 <svelte:head>
-  <title>trolling</title>
+  <title>chat</title>
 </svelte:head>
 
 <div class="trollbox" transition:fade>
