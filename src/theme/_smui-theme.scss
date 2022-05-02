@@ -1,0 +1,16 @@
+// Nothing here. Just use the default theme.
+@import "@material/theme/color-palette";
+
+// Svelte Colors!
+//$mdc-theme-primary: #081e3e;
+$mdc-theme-primary: rgb(255,237,54);
+$mdc-theme-secondary: #676778;
+
+//$mdc-theme-secondary: #ff3e00;
+//$mdc-theme-primary: #ff3e00;
+// Other Svelte color: #40b3ff
+
+$mdc-theme-background: rgb(15, 15, 15);
+$mdc-theme-surface: rgb(15, 15, 15);
+
+$mdc-theme-error: $material-color-red-900;

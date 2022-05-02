@@ -14,7 +14,6 @@
   let scrollableDiv;
   let textInput = "";
   let autoscroll;
-  let scrollWidth = 0;
   let defaultAvatar = "aces.png";
 
   let users = [
