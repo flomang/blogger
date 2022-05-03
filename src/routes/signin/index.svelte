@@ -128,6 +128,11 @@
   </p>
 
   <div class="margins">
+    <Textfield variant="outlined" bind:value={email} label="Leading Icon">
+      <Icon class="material-icons" slot="leadingIcon">email</Icon>
+    </Textfield>
+
+
     <Textfield
       invalid={emailInvalid}
       variant="filled"
