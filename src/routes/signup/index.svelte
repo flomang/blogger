@@ -12,7 +12,7 @@
 
   let handleEmail = () => {
     emailLabel = "email";
-    invalidEmail = true;
+    invalidEmail = false;
   };
 
   async function submit(event) {
@@ -54,7 +54,7 @@
 </script>
 
 <svelte:head>
-  <title>Sign up • joos</title>
+  <title>Sign up • crypto-fish</title>
 </svelte:head>
 
 <div class="content" >
@@ -65,7 +65,7 @@
 
   <div class="margins">
     <Textfield
-      variant="filled"
+      variant="outlined"
       bind:value={email}
       label={emailLabel}
       invalid={invalidEmail}
@@ -79,7 +79,7 @@
 
   <div class="margins">
     <Textfield
-      variant="filled"
+      variant="outlined"
       bind:value={password}
       type="password"
       label="password"

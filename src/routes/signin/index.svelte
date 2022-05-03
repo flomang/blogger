@@ -118,7 +118,7 @@
 </style>
 
 <svelte:head>
-  <title>Sign in • crypto-fishing</title>
+  <title>Sign in • crypto-fish</title>
 </svelte:head>
 
 <div class="content">
@@ -128,14 +128,9 @@
   </p>
 
   <div class="margins">
-    <Textfield variant="outlined" bind:value={email} label="Leading Icon">
-      <Icon class="material-icons" slot="leadingIcon">email</Icon>
-    </Textfield>
-
-
     <Textfield
       invalid={emailInvalid}
-      variant="filled"
+      variant="outlined"
       bind:value={email}
       on:keyup={handleInput}
       label={emailLabel}
@@ -146,7 +141,7 @@
   <div class="margins">
     <Textfield
       invalid={passwordInvalid}
-      variant="filled"
+      variant="outlined"
       bind:value={password}
       on:keyup={handleInput}
       label={passwordLabel}
