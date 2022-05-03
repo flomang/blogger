@@ -163,7 +163,7 @@
   .trollbox-input-profile {
     height: 30px;
     width: 30px;
-    margin-top: 40px;
+    margin-top: 46px;
     margin-right: 1em;
   }
 
@@ -175,7 +175,7 @@
     height: 30px;
     width: 30px;
     position: relative;
-    top: -3px;
+    top: -6px;
     margin-right: 1em;
   }
 

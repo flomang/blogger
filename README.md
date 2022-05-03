@@ -27,12 +27,6 @@ npm run dev
 npm run dev -- --open
 ```
 
-## Building
+## Adding More SMUI Packages 
 
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
-
-```bash
-npm run build
-```
-
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+Whenever you add a new SMUI package, run npm run prepare again to rebuild your CSS file with the new component’s styles included.
