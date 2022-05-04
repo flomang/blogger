@@ -1,76 +1,114 @@
 <script>
-  //import { goto, stores } from "@sapper/app";
+  import { goto } from '$app/navigation';
   import ListErrors from "../_components/ListErrors.svelte";
   import Textfield from "@smui/textfield";
   import Checkbox from "@smui/checkbox";
   import FormField from "@smui/form-field";
-  import Icon from '@smui/textfield/icon';
+  import Icon from "@smui/textfield/icon";
   import Button, { Label } from "@smui/button";
+  import { session } from '../../stores/stores.js';
+
 
   //const { session } = stores();
   let email = "";
   let password = "";
   let remember = false;
-  let emailLabel = "email";
-  let emailInvalid = false;
-  let passwordLabel = "password";
-  let passwordInvalid = false;
+  let unauthorized = false;
   let disableSubmit = false;
 
   let handleInput = () => {
-    passwordLabel = "password";
-    passwordInvalid = false;
-    emailLabel = "email";
-    emailInvalid = false;
+    unauthorized = false;
   };
 
-  let valueA = '';
-
   async function submit(event) {
-    let creds =  { email: email, password: password, remember: remember };
+    let creds = { email: email, password: password, remember: remember };
     console.log(creds);
-    // try {
-    //   let response = await mutate(wsClient($session), {
-    //     mutation: SIGN_IN,
-    //     variables: { email: email, password: password, remember: remember }
-    //   });
 
-    //   if (response.data && response.data.signin) {
-    //     const signin = response.data.signin;
+    await fetch("http://localhost:3000/api/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        "Origin": "localhost:3001",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
 
-    //     // post the user and token to the server session
-    //     await post(`auth/signin`, { user: signin.user, token: signin.token });
-
-    //     // update client session
-    //     $session.user = response.data.signin.user;
-    //     $session.token = response.data.signin.token;
-    //   }
-
-    //   disableSubmit = true;
-    //   setTimeout(function() {
-    //     goto("/messages");
-    //   }, 2000);
-    // } catch (error) {
-    //   const msg = error.message;
-
-    //   switch (true) {
-    //     case msg.includes("incorrect password/email"):
-    //       passwordInvalid = true;
-    //       passwordLabel = "you cannot pass!";
-    //       emailInvalid = true;
-    //       emailLabel = "email/password incorrect";
-    //       break;
-    //     case msg.includes("email account not verified"):
-    //       emailInvalid = true;
-    //       emailLabel = "email unverified";
-    //       break;
-    //     default:
-    //       console.log(error);
-    //   }
-    //   // TODO
-    // }
+        if (json == "Unauthorized") {
+          unauthorized = true;
+        }
+        session.update( () => json);
+        console.log(json);
+        goto("/chat");
+      });
   }
 </script>
+
+<svelte:head>
+  <title>Sign in • crypto-fish</title>
+</svelte:head>
+
+<div class="content">
+  <h1 class="text-xs-center">Sign In</h1>
+  <p class="text-xs-center">
+    <a href="/signup">Need an account?</a>
+  </p>
+
+  <div class="margins">
+    <Textfield
+      invalid={unauthorized}
+      variant="outlined"
+      bind:value={email}
+      on:keyup={handleInput}
+      label="email"
+      type="email"
+    >
+      <Icon class="material-icons" slot="leadingIcon">email</Icon>
+    </Textfield>
+  </div>
+  <div class="margins">
+    <Textfield
+      invalid={unauthorized}
+      variant="outlined"
+      bind:value={password}
+      on:keyup={handleInput}
+      label="password"
+      type="password"
+    >
+      <Icon class="material-icons" slot="leadingIcon">lock</Icon>
+    </Textfield>
+  </div>
+  <div class="margins">
+    <FormField>
+      <span slot="label">Remember me.</span>
+      <Checkbox bind:checked={remember} />
+    </FormField>
+  </div>
+
+  {#if !disableSubmit}
+    <div>
+      <Button
+        action="submit"
+        disabled={!email || !password || unauthorized}
+        on:click={submit}
+        variant="raised"
+      >
+        <Label>sign in</Label>
+      </Button>
+    </div>
+  {:else}
+    <div class="lds-ring">
+      <div />
+      <div />
+      <div />
+      <div />
+    </div>
+  {/if}
+</div>
 
 <style>
   .content {
@@ -116,62 +154,3 @@
     margin: 5px 0px 3px;
   }
 </style>
-
-<svelte:head>
-  <title>Sign in • crypto-fish</title>
-</svelte:head>
-
-<div class="content">
-  <h1 class="text-xs-center">Sign In</h1>
-  <p class="text-xs-center">
-    <a href="/signup">Need an account?</a>
-  </p>
-
-  <div class="margins">
-    <Textfield
-      invalid={emailInvalid}
-      variant="outlined"
-      bind:value={email}
-      on:keyup={handleInput}
-      label={emailLabel}
-      type="email">
-      <Icon class="material-icons" slot="leadingIcon">email</Icon>
-    </Textfield>
-  </div>
-  <div class="margins">
-    <Textfield
-      invalid={passwordInvalid}
-      variant="outlined"
-      bind:value={password}
-      on:keyup={handleInput}
-      label={passwordLabel}
-      type="password">
-      <Icon class="material-icons" slot="leadingIcon">lock</Icon>
-    </Textfield>
-  </div>
-  <div class="margins">
-    <FormField>
-      <span slot="label">Remember me.</span>
-      <Checkbox bind:checked={remember} />
-    </FormField>
-  </div>
-
-  {#if !disableSubmit}
-    <div>
-      <Button
-        action="submit"
-        disabled={!email || !password || passwordInvalid || emailInvalid}
-        on:click={submit}
-        variant="raised">
-        <Label>sign in</Label>
-      </Button>
-    </div>
-  {:else}
-    <div class="lds-ring">
-      <div />
-      <div />
-      <div />
-      <div />
-    </div>
-  {/if}
-</div>

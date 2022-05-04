@@ -2,7 +2,7 @@
   "name": "blogger",
   "version": "0.0.1",
   "scripts": {
-    "dev": "svelte-kit dev",
+    "dev": "svelte-kit dev --port 3001",
     "build": "svelte-kit build",
     "package": "svelte-kit package",
     "prepare": "svelte-kit sync && npm run smui-theme-light && npm run smui-theme-dark",

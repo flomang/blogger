@@ -4,6 +4,7 @@
   import Textfield from "@smui/textfield";
   import { fade } from "svelte/transition";
   import ElizaBot from "elizabot";
+  import { session } from "../../../stores/stores";
 
   export let user;
 
@@ -29,7 +30,11 @@
     { username: "luv child", profileImage: "hearts.png" },
     { username: "cannibis420", profileImage: "cannabis-512.png" },
   ];
-  user = users[2];
+  
+  session.subscribe((value) => {
+    user = users[2];
+    user.username = value.email;
+  });
 
   // add random comments
   let seed = eliza.getInitial();
