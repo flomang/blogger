@@ -1,7 +1,9 @@
 <script context="module">
   // https://sapper.svelte.dev/docs/#this_redirect
   export async function preload(page, session) {
+    console.log("preload" + session);
     const { user } = session;
+
 
     if (!user) {
       return this.redirect(302, "signin");
@@ -13,8 +15,7 @@
 
 <script>
   import Tabs from "./_components/Tabs.svelte";
-
-  export let user;
+  import { session } from "../../stores/stores";
 </script>
 
 <style>
@@ -30,6 +31,6 @@
 
 <div class="content">
   <div class="channel-content">
-    <Tabs {user} />
+    <Tabs />
   </div>
 </div>

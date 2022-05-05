@@ -1,6 +1,5 @@
 <script>
   import { goto } from '$app/navigation';
-  import ListErrors from "../_components/ListErrors.svelte";
   import Textfield from "@smui/textfield";
   import Checkbox from "@smui/checkbox";
   import FormField from "@smui/form-field";
@@ -8,8 +7,6 @@
   import Button, { Label } from "@smui/button";
   import { session } from '../../stores/stores.js';
 
-
-  //const { session } = stores();
   let email = "";
   let password = "";
   let remember = false;
@@ -43,7 +40,7 @@
           unauthorized = true;
         }
         // write json blob to session store
-        session.update( () => json);
+        session.set(json);
         console.log(json);
         goto("/chat");
       });

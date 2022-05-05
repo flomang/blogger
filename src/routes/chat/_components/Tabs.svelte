@@ -1,7 +1,7 @@
 <script>
   import Chat from "./Chat.svelte";
   // TODO session user
-  export let user;
+  //export let user;
 </script>
 
 <style>
@@ -38,6 +38,6 @@
     </span>
   </div>
   <div>
-    <Chat {user} />
+    <Chat />
   </div>
 </div>
