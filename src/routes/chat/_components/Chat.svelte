@@ -1,21 +1,17 @@
 <script>
-  //import { stores } from "@sapper/app";
   import { beforeUpdate, afterUpdate } from "svelte";
   import Textfield from "@smui/textfield";
   import { fade } from "svelte/transition";
   import ElizaBot from "elizabot";
   import { session } from "../../../stores/stores";
 
-  export let user;
-
-  //const { session } = stores();
   const eliza = new ElizaBot();
 
   let comments = [];
   let scrollableDiv;
   let textInput = "";
   let autoscroll;
-  let defaultAvatar = "aces.png";
+  let defaultAvatar = "doge.png";
 
   let users = [
     { username: "eliza", profileImage: "great-success.png" },
@@ -25,16 +21,10 @@
     { username: "Satoshi Bum", profileImage: "btc.png" },
     { username: "porky pig", profileImage: "porky.png" },
     { username: "pillboi", profileImage: "pill.png" },
-    { username: "doge bot", profileImage: "doge.png" },
     { username: "joker", profileImage: "joker-card.png" },
     { username: "luv child", profileImage: "hearts.png" },
     { username: "cannibis420", profileImage: "cannabis-512.png" },
   ];
-  
-  session.subscribe((value) => {
-    user = users[2];
-    user.username = value.email;
-  });
 
   // add random comments
   let seed = eliza.getInitial();
@@ -70,8 +60,8 @@
 
       // FOR TEST
       comments = comments.concat({
-        username: user.username,
-        profileImage: user.profileImage ? user.profileImage : defaultAvatar,
+        username: $session.username,
+        profileImage: $session.avatar_url ? $session.avatar_url : defaultAvatar,
         text: text,
         type: "comment",
       });
@@ -120,11 +110,11 @@
       <img
         class="trollbox-input-profile"
         alt=""
-        src={user.profileImage ? user.profileImage : defaultAvatar}
+        src={$session.avatar_url ? $session.avatar_url : defaultAvatar}
       />
     </div>
     <div class="trollbox-input-container">
-      <span class="comment-username">{user.username}</span>
+      <span class="comment-username">{$session.username}</span>
       <Textfield
         bind:value={textInput}
         on:keydown={handleKeydown}

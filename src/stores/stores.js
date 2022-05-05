@@ -1,3 +1,5 @@
 import { writable } from 'svelte/store';
 
-export const session = writable({email:null, id:null});
+// user login session: username, email, etc
+// the server login shall return this object
+export const session = writable({email:null, username: null, avatar_url: null, id:null});

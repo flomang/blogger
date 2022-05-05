@@ -22,8 +22,9 @@
 
   async function submit(event) {
     let creds = { email: email, password: password, remember: remember };
-    console.log(creds);
 
+    // TODO move these hardcoded values to config file
+    // TODO implement remember me
     await fetch("http://localhost:3000/api/login", {
       method: "POST",
       body: JSON.stringify({
@@ -41,6 +42,7 @@
         if (json == "Unauthorized") {
           unauthorized = true;
         }
+        // write json blob to session store
         session.update( () => json);
         console.log(json);
         goto("/chat");

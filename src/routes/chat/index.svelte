@@ -3,9 +3,9 @@
   export async function preload(page, session) {
     const { user } = session;
 
-    //if (!user) {
-    //  return this.redirect(302, "signin");
-    //}
+    if (!user) {
+      return this.redirect(302, "signin");
+    }
 
     return { user };
   }
