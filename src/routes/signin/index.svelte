@@ -5,7 +5,7 @@
   import FormField from "@smui/form-field";
   import Icon from "@smui/textfield/icon";
   import Button, { Label } from "@smui/button";
-  import { session } from '../../stores/stores.js';
+  import { user } from '../../stores';
 
   let email = "";
   let password = "";
@@ -39,8 +39,8 @@
         if (json == "Unauthorized") {
           unauthorized = true;
         }
-        // write json blob to session store
-        session.set(json);
+        // write json blob to user store
+        user.set(json);
         console.log(json);
         goto("/chat");
       });

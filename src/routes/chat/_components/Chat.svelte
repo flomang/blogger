@@ -3,7 +3,8 @@
   import Textfield from "@smui/textfield";
   import { fade } from "svelte/transition";
   import ElizaBot from "elizabot";
-  import { session } from "../../../stores/stores";
+
+  export let user;
 
   const eliza = new ElizaBot();
 
@@ -29,13 +30,13 @@
   // add random comments
   let seed = eliza.getInitial();
   for (let i = 0; i < 10; ++i) {
-    const user = users[Math.floor(Math.random() * users.length)];
+    const u = users[Math.floor(Math.random() * users.length)];
     comments = comments
       .filter((comment) => !comment.placeholder)
       .concat({
-        username: user.username,
+        username: u.username,
         text: eliza.transform(seed),
-        profileImage: user.profileImage,
+        profileImage: u.profileImage,
         type: "comment-text",
       });
   }
@@ -60,8 +61,8 @@
 
       // FOR TEST
       comments = comments.concat({
-        username: $session.username,
-        profileImage: $session.avatar_url ? $session.avatar_url : defaultAvatar,
+        username: user.username,
+        profileImage: user.avatar_url ? user.avatar_url : defaultAvatar,
         text: text,
         type: "comment",
       });
@@ -110,11 +111,11 @@
       <img
         class="trollbox-input-profile"
         alt=""
-        src={$session.avatar_url ? $session.avatar_url : defaultAvatar}
+        src={user.avatar_url ? user.avatar_url : defaultAvatar}
       />
     </div>
     <div class="trollbox-input-container">
-      <span class="comment-username">{$session.username}</span>
+      <span class="comment-username">{user.username ? user.username : "" }</span>
       <Textfield
         bind:value={textInput}
         on:keydown={handleKeydown}
