@@ -6,13 +6,11 @@
 
   export let user;
 
-  const eliza = new ElizaBot();
-
   let comments = [];
+  let autoscroll;
   let scrollableDiv;
   let textInput = "";
-  let autoscroll;
-  let defaultAvatar = "doge.png";
+  const defaultAvatar = "great-success.png";
 
   let users = [
     { username: "eliza", profileImage: "great-success.png" },
@@ -27,16 +25,17 @@
     { username: "cannibis420", profileImage: "cannabis-512.png" },
   ];
 
+  const eliza = new ElizaBot();
   // add random comments
   let seed = eliza.getInitial();
   for (let i = 0; i < 10; ++i) {
-    const u = users[Math.floor(Math.random() * users.length)];
+    const usr = users[Math.floor(Math.random() * users.length)];
     comments = comments
       .filter((comment) => !comment.placeholder)
       .concat({
-        username: u.username,
+        username: usr.username,
         text: eliza.transform(seed),
-        profileImage: u.profileImage,
+        profileImage: usr.profileImage,
         type: "comment-text",
       });
   }
@@ -56,14 +55,13 @@
 
   let handleKeydown = (event) => {
     if (event.key === "Enter") {
-      const text = event.target.value;
-      if (!text) return;
+      if (!textInput) return;
 
       // FOR TEST
       comments = comments.concat({
         username: user.username,
         profileImage: user.avatar_url ? user.avatar_url : defaultAvatar,
-        text: text,
+        text: textInput,
         type: "comment",
       });
 
@@ -72,7 +70,7 @@
       textInput = "";
 
       setTimeout(() => {
-        const reply = eliza.transform(text);
+        const reply = eliza.transform(textInput);
         const user = users[Math.floor(Math.random() * users.length)];
         comments = comments
           .filter((comment) => !comment.placeholder)
