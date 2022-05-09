@@ -1,4 +1,4 @@
-<script context="module">
+<!-- <script context="module">
 	// https://sapper.svelte.dev/docs/#this_redirect
 	export async function preload(page, session) {
 	  const { user } = session;
@@ -9,7 +9,7 @@
   
 	  return;
 	}
-  </script>
+  </script> -->
   
   <script>
 	import { onMount } from "svelte";

@@ -14,14 +14,14 @@ export class Fountain {
             view: canvasElement,
             width: 1024,
             height: 512,
-            //backgroundAlpha: 0.0,
+            backgroundAlpha: 0.0,
             resolution: 1
         });
 
         let main = new PIXI.Container();
         this.app.stage.addChild(main);
 
-        const heart = PIXI.Sprite.from("static/heartchakra.png");
+        const heart = PIXI.Sprite.from("heartchakra.png");
         heart.anchor.set(0.5);
         heart.x = this.app.screen.width / 2;
         heart.y = this.app.screen.height / 2;
@@ -30,15 +30,7 @@ export class Fountain {
         main.addChild(heart);
         this.heart = heart;
 
-        // const charity = PIXI.Sprite.from("static/humane_society.png");
-        // charity.anchor.set(0.5);
-        // charity.x = this.app.screen.width / 2;
-        // charity.y = this.app.screen.height / 2;
-        // charity.height = 233;
-        // charity.width = 333;
-        // main.addChild(charity);
-
-        const displacementSprite = PIXI.Sprite.from('static/displacement_map_repeat.jpeg');
+        const displacementSprite = PIXI.Sprite.from('displacement_map_repeat.jpeg');
         // Make sure the sprite is wrapping.
         displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
 
