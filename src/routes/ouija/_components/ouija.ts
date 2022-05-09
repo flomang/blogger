@@ -21,7 +21,7 @@ export class Ouija {
             resolution: 1
         });
         //this.starfield = new StarField(this.app, 6000);
-        const board = PIXI.Sprite.from("static/ouija.png");
+        const board = PIXI.Sprite.from("ouija.png");
         board.anchor.set(0.5);
         board.x = this.app.screen.width / 2;
         board.y = this.app.screen.height / 2 + padding;
@@ -29,7 +29,7 @@ export class Ouija {
         board.width = this.app.screen.width - padding;
         this.app.stage.addChild(board);
 
-        const displacementSprite = PIXI.Sprite.from('static/displacement_map_repeat.jpeg');
+        const displacementSprite = PIXI.Sprite.from('displacement_map_repeat.jpeg');
         // Make sure the sprite is wrapping.
         displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
 
@@ -43,7 +43,7 @@ export class Ouija {
         board.filters = [displacementFilter];
         this.displacementSprite = displacementSprite;
 
-        const planchette = PIXI.Sprite.from("static/planchette.png");
+        const planchette = PIXI.Sprite.from("planchette.png");
         planchette.scale.set(0.60);
         planchette.anchor.set(0.5);
         planchette.interactive = true;
