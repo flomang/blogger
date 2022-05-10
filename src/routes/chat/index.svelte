@@ -7,15 +7,9 @@
   .content {
     display: flex;
   }
-
-  .channel-content {
-    width: 100%;
-  }
 </style>
 
 
 <div class="content">
-  <div class="channel-content">
-    <Tabs user={$user} />
-  </div>
+  <Tabs user={$user} />
 </div>

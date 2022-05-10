@@ -125,11 +125,10 @@
 
 <style>
   .trollbox {
-    width: 30%;
+    width: 50%;
   }
 
   .trollbox-scrollable {
-    width: 100%;
     position: absolute;
     top: 50px;
     margin: 0 0 0.5em 0;
@@ -140,7 +139,6 @@
 
   .trollbox-input {
     height: 100px;
-    width: 100%;
     position: absolute;
     bottom: 0;
     padding-left: 30px;
