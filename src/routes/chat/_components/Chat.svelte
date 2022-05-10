@@ -134,7 +134,7 @@
     margin: 0 0 0.5em 0;
     padding-left: 30px;
     overflow-y: auto;
-    height: 585px;
+    height: 80%;
   }
 
   .trollbox-input {

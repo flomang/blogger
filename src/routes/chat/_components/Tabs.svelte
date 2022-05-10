@@ -1,6 +1,18 @@
 <script>
   import Chat from "./Chat.svelte";
+  import { onMount, onDestroy } from "svelte";
+  import { Tank } from "./tank";
+
   export let user;
+  // bind the canvas element i.e bind:this={canvas} 
+  let sketch;
+  let canvas;
+  onMount(() => {
+    // must only load this on the client because pixijs is a client only library
+    sketch = new Tank({canvas: canvas});
+  });
+
+  //onDestroy(() => sketch.destroy());
 </script>
 
 <div class="trollbox">
@@ -8,7 +20,7 @@
     <span class="trollbox-header-title"> trollbox </span>
   </div>
   <div class="content">
-    <div class="fish-tank">fish tank here</div>
+    <canvas class="fish-tank" bind:this={canvas} />
     <div class="chat">
       <Chat {user} />
     </div>
@@ -21,7 +33,6 @@
     flex-direction: column;
     width: 100%;
     text-align: left;
-    height: 700px;
     border-style: solid;
     border-width: 1px;
     border-color: rgb(0, 0, 0);

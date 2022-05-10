@@ -29,7 +29,7 @@
     "moment": "^2.29.1",
     "node-fetch": "^3.2.4",
     "pixi-text-input": "^1.0.6",
-    "pixi.js": "^6.2.2",
+    "pixi.js": "^6.3.2",
     "pixi.js-keyboard": "^1.1.6",
     "qrcode": "^1.5.0",
     "smui-theme": "^6.0.0-beta.16",
