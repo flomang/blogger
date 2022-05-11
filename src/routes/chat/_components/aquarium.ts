@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { StarField } from "./stars";
 import * as uuid from 'uuid';
 
-export class Tank {
+export class Aquarium {
     app: PIXI.Application;
     starfield: StarField;
     clientID: String = uuid.v1();

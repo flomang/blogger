@@ -85,11 +85,7 @@
   };
 </script>
 
-<svelte:head>
-  <title>chat</title>
-</svelte:head>
-
-<div class="trollbox" transition:fade>
+<div transition:fade>
   <div class="trollbox-scrollable" bind:this={scrollableDiv}>
     {#each comments as comment}
       <div class="comment-container">
@@ -113,7 +109,7 @@
       />
     </div>
     <div class="trollbox-input-container">
-      <span class="comment-username">{user.username ? user.username : "" }</span>
+      <span class="comment-username">{user.username ? user.username : ""}</span>
       <Textfield
         bind:value={textInput}
         on:keydown={handleKeydown}
@@ -124,10 +120,6 @@
 </div>
 
 <style>
-  .trollbox {
-    width: 50%;
-  }
-
   .trollbox-scrollable {
     position: absolute;
     top: 50px;

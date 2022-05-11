@@ -10,6 +10,10 @@
 </style>
 
 
+<svelte:head>
+  <title>fish</title>
+</svelte:head>
+
 <div class="content">
   <Tabs user={$user} />
 </div>
