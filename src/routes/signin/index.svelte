@@ -1,11 +1,11 @@
 <script>
-  import { goto } from '$app/navigation';
+  import { goto } from "$app/navigation";
   import Textfield from "@smui/textfield";
   import Checkbox from "@smui/checkbox";
   import FormField from "@smui/form-field";
   import Icon from "@smui/textfield/icon";
   import Button, { Label } from "@smui/button";
-  import { user } from '../../stores';
+  import { user } from "../../stores";
 
   let email = "";
   let password = "";
@@ -18,24 +18,21 @@
   };
 
   async function submit(event) {
-    let creds = { email: email, password: password, remember: remember };
-
-    // TODO move these hardcoded values to config file
     // TODO implement remember me
     await fetch(import.meta.env.VITE_LOGIN, {
       method: "POST",
       body: JSON.stringify({
         email: email,
         password: password,
+        remember: remember,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
-        "Origin": import.meta.env.VITE_ORIGIN,
+        Origin: import.meta.env.VITE_ORIGIN,
       },
     })
       .then((response) => response.json())
       .then((json) => {
-
         if (json == "Unauthorized") {
           unauthorized = true;
         }
