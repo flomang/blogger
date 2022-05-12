@@ -38,7 +38,6 @@
         }
         // write json blob to user store
         user.set(json);
-        console.log(json);
         goto("/chat");
       });
   }
