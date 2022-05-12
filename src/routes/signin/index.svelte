@@ -22,7 +22,7 @@
 
     // TODO move these hardcoded values to config file
     // TODO implement remember me
-    await fetch("http://localhost:3000/api/login", {
+    await fetch(import.meta.env.VITE_LOGIN, {
       method: "POST",
       body: JSON.stringify({
         email: email,
@@ -30,7 +30,7 @@
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
-        "Origin": "localhost:3001",
+        "Origin": import.meta.env.VITE_ORIGIN,
       },
     })
       .then((response) => response.json())
