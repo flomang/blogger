@@ -1,8 +1,6 @@
 import * as PIXI from "pixi.js";
 import * as uuid from 'uuid';
 import { Fish } from "./fish";
-import Keyboard from "pixi.js-keyboard";
-import { PI_2 } from "pixi.js";
 
 export class Aquarium {
     app: PIXI.Application;
@@ -31,30 +29,8 @@ export class Aquarium {
     }
 
     loop(delta: number): void {
-        this.input(delta);
         this.player.render(delta);
     }
-
-    input(delta: number): void {
-        // Keyboard left key
-        if (Keyboard.isKeyPressed("ArrowLeft")) {
-            console.log("left");
-        } 
-
-        // Keyboard left right 
-        if (Keyboard.isKeyPressed("ArrowRight")) {
-            console.log("right");
-        }
-
-        // Keyboard up right 
-        if (Keyboard.isKeyPressed("ArrowUp")) {
-            console.log("up");
-        }
-
-        if (Keyboard.isKeyPressed("ArrowDown")) {
-            console.log("down");
-        }
-
-        Keyboard.update();
-    }
 }
+
+
