@@ -25,7 +25,7 @@ export type Todo = {
 
 const base = 'https://api.svelte.dev';
 
-export async function api(event: RequestEvent<Locals>, resource: string, data?: Todo) {
+export async function api(event: RequestEvent<Locals>, resource: string, data?: Todo): Promise<EndpointOutput> {
 	// user must have a cookie set
 	let request = event.request;
 	if (!event.locals.userid) {
