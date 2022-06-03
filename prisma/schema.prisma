@@ -11,6 +11,7 @@ datasource db {
 }
 
 model Todo {
+  @@map("todos")
   uid            String   @id @default(cuid())
   created_at     DateTime
   text           String
