@@ -25,7 +25,7 @@ export type Todo = {
 
 const base = 'https://api.svelte.dev';
 
-export async function api(event: RequestEvent<Locals>, resource: string, data?: Todo): Promise<EndpointOutput> {
+export async function api(event: RequestEvent<Locals>, resource: string, data?: Todo) {
 	// user must have a cookie set
 	let request = event.request;
 	if (!event.locals.userid) {
@@ -40,7 +40,7 @@ export async function api(event: RequestEvent<Locals>, resource: string, data?: 
 				where: {
 					uid: resource.split("/").pop()
 				}
-			})
+			});
 			status = 200;
 			break;
 		case "GET":
@@ -56,7 +56,7 @@ export async function api(event: RequestEvent<Locals>, resource: string, data?: 
 				where: {
 					uid: resource.split("/").pop()
 				}
-			})
+			});
 			status = 200;
 			break;
 		case "POST":
@@ -66,7 +66,7 @@ export async function api(event: RequestEvent<Locals>, resource: string, data?: 
 					done: false,
 					text: data.text,
 				}
-			})
+			});
 			status = 201;
 			break;
 	}
@@ -75,14 +75,14 @@ export async function api(event: RequestEvent<Locals>, resource: string, data?: 
 	// behaviour is to show the URL corresponding to the form's "action"
 	// attribute. in those cases, we want to redirect them back to the
 	// /todos page, rather than showing the response
-	if (request.method !== 'GET' && request.headers.accept !== 'application/json') {
-		return {
-			status: 303,
-			headers: {
-				location: '/todos'
-			}
-		};
-	}
+	// if (request.method.toUpperCase() !== 'GET' && request.headers.accept !== 'application/json') {
+	// 	return {
+	// 		status: 303,
+	// 		headers: {
+	// 			location: '/todos'
+	// 		}
+	// 	};
+	// }
 
 	return {
 		status,

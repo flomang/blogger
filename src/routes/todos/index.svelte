@@ -23,9 +23,9 @@
 </script>
 
 <script lang="ts">
+	import type { Todo } from "./_api";
 	import { scale } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
-	import type { Todo } from './_api';
 
 	export let todos: Todo[];
 
@@ -54,7 +54,6 @@
 			result: async (res, form) => {
 				const created = await res.json();
 				todos = [...todos, created];
-
 				form.reset();
 			}
 		}}
@@ -70,7 +69,7 @@
 			animate:flip={{ duration: 200 }}
 		>
 			<form
-				action="/todos/{todo.uid}.json?_method=PATCH"
+				action="/todos/{todo.uid}.json?_method=patch"
 				method="post"
 				use:enhance={{
 					pending: (data) => {
@@ -85,7 +84,7 @@
 
 			<form
 				class="text"
-				action="/todos/{todo.uid}.json?_method=PATCH"
+				action="/todos/{todo.uid}.json?_method=patch"
 				method="post"
 				use:enhance={{
 					result: patch
@@ -96,16 +95,15 @@
 			</form>
 
 			<form
-				action="/todos/{todo.uid}.json?_method=DELETE"
+				action="/todos/{todo.uid}.json?_method=delete"
 				method="post"
 				use:enhance={{
-					pending: () => (todo.pending_delete = true),
 					result: () => {
 						todos = todos.filter((t) => t.uid !== todo.uid);
 					}
 				}}
 			>
-				<button class="delete" aria-label="Delete todo" disabled={todo.pending_delete} />
+				<button class="delete" aria-label="Delete todo" />
 			</form>
 		</div>
 	{/each}
