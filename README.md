@@ -1,6 +1,6 @@
-# create-svelte
+# blogger 
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+Useful things...
 
 ## Creating a project
 
@@ -15,6 +15,15 @@ npm init svelte@next my-app
 ```
 
 > Note: the `@next` is temporary
+
+## Prisma 
+To push prisma/schema.prisma changes to the DB
+```
+npx prisma db push
+``` 
+
+https://www.prisma.io/docs/concepts/components/prisma-schema
+
 
 ## Developing
 
