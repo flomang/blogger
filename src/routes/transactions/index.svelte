@@ -39,8 +39,6 @@
 </script>
 
 <script lang="ts">
-	import { scale, type TransitionConfig } from "svelte/transition";
-	import { flip } from "svelte/animate";
 	import Textfield from "@smui/textfield";
 	import Icon from "@smui/textfield/icon";
 	import Dialog, { Title, Content, Actions } from "@smui/dialog";
@@ -130,6 +128,35 @@
 	$: if ($store?.selected) {
 		date = dayjs($store?.selected).format("MM/DD/YYYY");
 	}
+
+	async function handleSubmit() {
+		// TODO implement remember me
+		let body = JSON.stringify({
+			date: date,
+			amount: amount,
+			title: title,
+			description: description,
+		});
+
+		try {
+			const res = await fetch("/transactions.json", {
+				method: "POST",
+				body: body,
+			});
+
+			if (res.ok) {
+				let transaction = await res.json();
+				console.log(transaction);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+
+		// 	.then((response) => response.json())
+		// 	.then((json) => {
+		// 		console.log(json);
+		// 	});
+	}
 </script>
 
 <svelte:head>
@@ -138,52 +165,53 @@
 
 <div class="todos">
 	<h1>Transactions</h1>
-	<Dialog
-		bind:open
-		aria-labelledby="simple-title"
-		aria-describedby="simple-content"
-		surface$style="width: 650px; max-width: calc(100vw - 32px);"
+	<form on:submit|preventDefault={handleSubmit}>
+		<Dialog
+			bind:open
+			aria-labelledby="simple-title"
+			aria-describedby="simple-content"
+			surface$style="width: 650px; max-width: calc(100vw - 32px);"
+		>
+			<!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+			<Title id="simple-title">Add Transaction</Title>
+			<Content id="simple-content">
+				<div>
+					<InlineCalendar bind:store {theme} />
 
-	>
-		<!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-		<Title id="simple-title">Add Transaction</Title>
-		<Content id="simple-content">
-			<div>
-				<InlineCalendar bind:store {theme} />
-
-				<div class="grid">
-					<Textfield disabled bind:value={date} label="Date">
-						<Icon class="material-icons" slot="leadingIcon"
-							>event</Icon
-						>
-					</Textfield>
-					<Textfield bind:value={amount} label="Amount">
-						<Icon class="material-icons" slot="leadingIcon"
-							>paid</Icon
-						>
-					</Textfield>
-					<Textfield bind:value={title} label="Title">
-						<Icon class="material-icons" slot="leadingIcon"
-							>label</Icon
-						>
-					</Textfield>
-					<Textfield bind:value={description} label="Description">
-						<Icon class="material-icons" slot="leadingIcon"
-							>article</Icon
-						>
-					</Textfield>
+					<div class="grid">
+						<Textfield disabled bind:value={date} label="Date">
+							<Icon class="material-icons" slot="leadingIcon"
+								>event</Icon
+							>
+						</Textfield>
+						<Textfield bind:value={amount} label="Amount">
+							<Icon class="material-icons" slot="leadingIcon"
+								>paid</Icon
+							>
+						</Textfield>
+						<Textfield bind:value={title} label="Title">
+							<Icon class="material-icons" slot="leadingIcon"
+								>label</Icon
+							>
+						</Textfield>
+						<Textfield bind:value={description} label="Description">
+							<Icon class="material-icons" slot="leadingIcon"
+								>article</Icon
+							>
+						</Textfield>
+					</div>
 				</div>
-			</div>
-		</Content>
-		<Actions>
-			<Button on:click={() => (clicked = "No")}>
-				<Label>Cancel</Label>
-			</Button>
-			<Button on:click={() => (clicked = "Yes")}>
-				<Label>Submit</Label>
-			</Button>
-		</Actions>
-	</Dialog>
+			</Content>
+			<Actions>
+				<Button on:click={() => (clicked = "No")}>
+					<Label>Cancel</Label>
+				</Button>
+				<Button on:click={() => handleSubmit}>
+					<Label>Submit</Label>
+				</Button>
+			</Actions>
+		</Dialog>
+	</form>
 
 	<Button on:click={() => (open = true)}>
 		<Label>Add Transaction</Label>
