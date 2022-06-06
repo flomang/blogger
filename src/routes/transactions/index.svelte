@@ -165,53 +165,51 @@
 
 <div class="todos">
 	<h1>Transactions</h1>
-	<form on:submit|preventDefault={handleSubmit}>
-		<Dialog
-			bind:open
-			aria-labelledby="simple-title"
-			aria-describedby="simple-content"
-			surface$style="width: 650px; max-width: calc(100vw - 32px);"
-		>
-			<!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-			<Title id="simple-title">Add Transaction</Title>
-			<Content id="simple-content">
-				<div>
-					<InlineCalendar bind:store {theme} />
+	<Dialog
+		bind:open
+		aria-labelledby="simple-title"
+		aria-describedby="simple-content"
+		surface$style="width: 650px; max-width: calc(100vw - 32px);"
+	>
+		<!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+		<Title id="simple-title">Add Transaction</Title>
+		<Content id="simple-content">
+			<div>
+				<InlineCalendar bind:store {theme} />
 
-					<div class="grid">
-						<Textfield disabled bind:value={date} label="Date">
-							<Icon class="material-icons" slot="leadingIcon"
-								>event</Icon
-							>
-						</Textfield>
-						<Textfield bind:value={amount} label="Amount">
-							<Icon class="material-icons" slot="leadingIcon"
-								>paid</Icon
-							>
-						</Textfield>
-						<Textfield bind:value={title} label="Title">
-							<Icon class="material-icons" slot="leadingIcon"
-								>label</Icon
-							>
-						</Textfield>
-						<Textfield bind:value={description} label="Description">
-							<Icon class="material-icons" slot="leadingIcon"
-								>article</Icon
-							>
-						</Textfield>
-					</div>
+				<div class="grid">
+					<Textfield disabled bind:value={date} label="Date">
+						<Icon class="material-icons" slot="leadingIcon"
+							>event</Icon
+						>
+					</Textfield>
+					<Textfield bind:value={amount} label="Amount">
+						<Icon class="material-icons" slot="leadingIcon"
+							>paid</Icon
+						>
+					</Textfield>
+					<Textfield bind:value={title} label="Title">
+						<Icon class="material-icons" slot="leadingIcon"
+							>label</Icon
+						>
+					</Textfield>
+					<Textfield bind:value={description} label="Description">
+						<Icon class="material-icons" slot="leadingIcon"
+							>article</Icon
+						>
+					</Textfield>
 				</div>
-			</Content>
-			<Actions>
-				<Button on:click={() => (clicked = "No")}>
-					<Label>Cancel</Label>
-				</Button>
-				<Button on:click={() => handleSubmit}>
-					<Label>Submit</Label>
-				</Button>
-			</Actions>
-		</Dialog>
-	</form>
+			</div>
+		</Content>
+		<Actions>
+			<Button on:click={() => (clicked = "No")}>
+				<Label>Cancel</Label>
+			</Button>
+			<Button on:click={() => handleSubmit()}>
+				<Label>Submit</Label>
+			</Button>
+		</Actions>
+	</Dialog>
 
 	<Button on:click={() => (open = true)}>
 		<Label>Add Transaction</Label>
