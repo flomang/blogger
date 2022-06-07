@@ -133,7 +133,7 @@
 		// TODO implement remember me
 		let body = JSON.stringify({
 			date: date,
-			amount: amount,
+			amount: (parseFloat(amount) * 100),
 			title: title,
 			description: description,
 		});
@@ -214,8 +214,6 @@
 	<Button on:click={() => (open = true)}>
 		<Label>Add Transaction</Label>
 	</Button>
-
-	<pre class="status">Clicked: {clicked}</pre>
 </div>
 
 <style>

@@ -11,6 +11,7 @@ export async function post({ request }) {
 	let response = await prisma.transaction.create({
 		data: {
 			profile_id: 1,
+			day: new Date(data.date),
 			amount: data.amount,
 			title: data.title,
 			description: data.description,
