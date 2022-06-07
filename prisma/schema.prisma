@@ -37,8 +37,7 @@ model Transaction {
   // columns
   id          Int      @id @default(autoincrement())
   profile_id  Int
-  // no timestamp for day
-  day         DateTime @db.Date 
+  day         DateTime 
   amount      Int 
   title       String
   description String

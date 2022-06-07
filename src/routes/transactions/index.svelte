@@ -19,23 +19,23 @@
 	};
 
 	// see https://kit.svelte.dev/docs#loading
-	// export const load: Load = async ({ fetch }) => {
-	// 	const res = await fetch('/todos.json');
+	export const load: Load = async ({ fetch }) => {
+		const res = await fetch("/transactions.json");
 
-	// 	if (res.ok) {
-	// 		const todos = await res.json();
+		if (res.ok) {
+			const transactions = await res.json();
 
-	// 		return {
-	// 			props: { todos }
-	// 		};
-	// 	}
+			return {
+				props: { transactions },
+			};
+		}
 
-	// 	const { message } = await res.json();
+		const { message } = await res.json();
 
-	// 	return {
-	// 		error: new Error(message)
-	// 	};
-	// };
+		return {
+			error: new Error(message),
+		};
+	};
 </script>
 
 <script lang="ts">
@@ -43,86 +43,86 @@
 	import Icon from "@smui/textfield/icon";
 	import Dialog, { Title, Content, Actions } from "@smui/dialog";
 	import Button, { Label } from "@smui/button";
+import { utc } from "moment";
 	let open = false;
-	let clicked = "Nothing yet.";
 	let date = "";
 	let amount = "";
 	let title = "";
 	let description = "";
 
-	let todos = [];
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10.0,
-		description: "test",
-	});
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10.0,
-		description: "test",
-	});
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10,
-		description: "test",
-	});
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10,
-		description: "test",
-	});
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10,
-		description: "test",
-	});
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10,
-		description: "test",
-	});
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10,
-		description: "test",
-	});
-	todos.push({
-		id: 1,
-		profile_id: 1,
-		created_at: new Date("06/02/2022"),
-		updated_at: new Date("06/02/2022"),
-		title: "test",
-		amount: 10,
-		description: "test",
-	});
+	export let transactions = [];
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10.0,
+	// 	description: "test",
+	// });
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10.0,
+	// 	description: "test",
+	// });
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10,
+	// 	description: "test",
+	// });
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10,
+	// 	description: "test",
+	// });
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10,
+	// 	description: "test",
+	// });
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10,
+	// 	description: "test",
+	// });
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10,
+	// 	description: "test",
+	// });
+	// todos.push({
+	// 	id: 1,
+	// 	profile_id: 1,
+	// 	created_at: new Date("06/02/2022"),
+	// 	updated_at: new Date("06/02/2022"),
+	// 	title: "test",
+	// 	amount: 10,
+	// 	description: "test",
+	// });
 
 	let store;
 	$: if ($store?.selected) {
@@ -133,7 +133,7 @@
 		// TODO implement remember me
 		let body = JSON.stringify({
 			date: date,
-			amount: (parseFloat(amount) * 100),
+			amount: parseFloat(amount) * 100,
 			title: title,
 			description: description,
 		});
@@ -214,6 +214,20 @@
 	<Button on:click={() => (open = true)}>
 		<Label>Add Transaction</Label>
 	</Button>
+
+	{#each transactions as transaction (transaction.id)}
+		<div
+			class="todo"
+			transition:scale|local={{ start: 0.7 }}
+			animate:flip={{ duration: 200 }}
+		>
+			<input type="text" name="text" value={dayjs(transaction.day).format("MM/DD/YYYY")} />
+			<input type="text" name="text" value={transaction.title} />
+			<input type="text" name="text" value={transaction.description} />
+			<input type="text" name="text" value={transaction.amount / 100} />
+			<button class="delete" aria-label="Delete todo" />
+		</div>
+	{/each}
 </div>
 
 <style>
@@ -258,7 +272,7 @@
 
 	.todo {
 		display: grid;
-		grid-template-columns: 2rem 2rem 2fr 2rem 2rem;
+		grid-template-columns: 6rem 2rem 2fr 5rem 2rem;
 		grid-gap: 0.5rem;
 		align-items: center;
 		margin: 0 0 0.5rem 0;
@@ -283,11 +297,11 @@
 		flex: 1;
 	}
 
-	.todo input {
+	/* .todo input {
 		flex: 1;
 		padding: 0.5em 2em 0.5em 0.8em;
 		border-radius: 3px;
-	}
+	} */
 
 	.todo button {
 		width: 2em;
