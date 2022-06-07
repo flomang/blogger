@@ -43,7 +43,7 @@
 	import Icon from "@smui/textfield/icon";
 	import Dialog, { Title, Content, Actions } from "@smui/dialog";
 	import Button, { Label } from "@smui/button";
-import { utc } from "moment";
+	import { utc } from "moment";
 	let open = false;
 	let date = "";
 	let amount = "";
@@ -145,8 +145,25 @@ import { utc } from "moment";
 			});
 
 			if (res.ok) {
-				let transaction = await res.json();
-				console.log(transaction);
+				let created = await res.json();
+				let inserted = false;
+				for (var i = 0, len = transactions.length; i < len; i++) {
+					if (created.day > transactions[i].day) {
+						transactions.splice(i, 0, created);
+						inserted = true;
+						break;
+					}
+				}
+
+				if (!inserted) {
+					transactions = [...transactions, created];
+				} else {
+					transactions = [...transactions];
+				}
+
+				// transactions.sort( (a: Transaction, b: Transaction) => {
+				// 	a.day > b.day;
+				// });
 			}
 		} catch (err) {
 			console.log(err);
@@ -202,7 +219,7 @@ import { utc } from "moment";
 			</div>
 		</Content>
 		<Actions>
-			<Button on:click={() => (clicked = "No")}>
+			<Button on:click={() => {}}>
 				<Label>Cancel</Label>
 			</Button>
 			<Button on:click={() => handleSubmit()}>
@@ -216,16 +233,31 @@ import { utc } from "moment";
 	</Button>
 
 	{#each transactions as transaction (transaction.id)}
-		<div
-			class="todo"
-			transition:scale|local={{ start: 0.7 }}
-			animate:flip={{ duration: 200 }}
-		>
-			<input type="text" name="text" value={dayjs(transaction.day).format("MM/DD/YYYY")} />
-			<input type="text" name="text" value={transaction.title} />
-			<input type="text" name="text" value={transaction.description} />
+		<div class="todo">
+			<input
+				type="text"
+				name="text"
+				value={dayjs(transaction.day).format("MM/DD/YYYY")}
+			/>
+			<input
+				type="text"
+				name="text"
+				value={transaction.title + ": " + transaction.description}
+			/>
 			<input type="text" name="text" value={transaction.amount / 100} />
-			<button class="delete" aria-label="Delete todo" />
+			<form
+				action="/transactions/{transaction.id}.json?_method=delete"
+				method="post"
+				use:enhance={{
+					result: () => {
+						transactions = transactions.filter(
+							(t) => t.id !== transaction.id
+						);
+					},
+				}}
+			>
+				<button class="delete" aria-label="Delete todo" />
+			</form>
 		</div>
 	{/each}
 </div>
@@ -272,7 +304,7 @@ import { utc } from "moment";
 
 	.todo {
 		display: grid;
-		grid-template-columns: 6rem 2rem 2fr 5rem 2rem;
+		grid-template-columns: 6rem 2fr 5rem 2rem;
 		grid-gap: 0.5rem;
 		align-items: center;
 		margin: 0 0 0.5rem 0;
