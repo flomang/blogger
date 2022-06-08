@@ -43,15 +43,6 @@
 	import Icon from "@smui/textfield/icon";
 	import Dialog, { Title, Content, Actions } from "@smui/dialog";
 	import Button, { Label } from "@smui/button";
-	import { onMount } from "svelte";
-
-	onMount(async () => {
-		// document.getElementById("date").addEventListener("keydown", keydown);
-		// document
-		// 	.getElementById("description")
-		// 	.addEventListener("keydown", keydown);
-		// document.getElementById("amount").addEventListener("keydown", keydown);
-	});
 
 	let open = false;
 	let date = "";
@@ -67,11 +58,12 @@
 		date = dayjs($store?.selected).format("MM/DD/YYYY");
 	}
 
-	// function keydown(e) {
-	// 	if (e.keyCode === 13) {
-	// 		e.target.blur();
-	// 	}
-	// }
+	function blurAll() {
+		var tmp = document.createElement("input");
+		document.body.appendChild(tmp);
+		tmp.focus();
+		document.body.removeChild(tmp);
+	}
 
 	async function patch(res: Response, form: HTMLFormElement) {
 		const txn = await res.json();
@@ -80,6 +72,7 @@
 			if (t.id === txn.id) return txn;
 			return t;
 		});
+		blurAll();
 	}
 
 	async function handleSubmit() {
@@ -159,10 +152,12 @@
 			</div>
 		</Content>
 		<Actions>
-			<Button on:click={() => { 
-				amount = "";
-				description = "";
-			}}>
+			<Button
+				on:click={() => {
+					amount = "";
+					description = "";
+				}}
+			>
 				<Label>Cancel</Label>
 			</Button>
 			<Button on:click={() => handleSubmit()}>
