@@ -38,7 +38,6 @@ export async function patch({ request }): Promise<{body: any, status: number}> {
 		 				data: {
 							day: date,
 		 					amount: amount,
-		 					title: title,
 		 					description: description,
 		 					updated_at: now,
 		 				},

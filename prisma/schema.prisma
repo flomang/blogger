@@ -39,7 +39,6 @@ model Transaction {
   profile_id  Int
   day         DateTime 
   amount      Int 
-  title       String
   description String
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt

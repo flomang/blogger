@@ -260,10 +260,9 @@
 
 	.todo {
 		display: grid;
-		grid-template-columns: 90px auto auto 2rem;
+		grid-template-columns: 90px 1fr auto 2rem;
 		grid-gap: 0.5rem;
 		align-items: center;
-		margin: 0 0 0.5rem 0;
 		padding: 0.5rem;
 		background-color: white;
 		border-radius: 8px;
@@ -288,16 +287,9 @@
 	}
 
 	input:focus-visible {
-		box-shadow: inset 1px 1px 6px rgba(0, 0, 0, 0.1);
+		box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.1);
 		border: 1px solid #ff3e00 !important;
 		outline: none;
-	}
-
-	form.text {
-		position: relative;
-		display: flex;
-		align-items: center;
-		flex: 1;
 	}
 
 	.todo button {

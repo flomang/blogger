@@ -33,7 +33,6 @@ export async function post({ request }): Promise<{body: any, status: number}> {
 			profile_id: 1,
 			day: new Date(data.date),
 			amount: data.amount,
-			title: data.title,
 			description: data.description,
 			created_at: now,
 			updated_at: now,
