@@ -57,6 +57,8 @@
 	let date = "";
 	let amount = "";
 	let description = "";
+	let today = new Date();
+	today.setHours(0);
 
 	export let transactions = [];
 
@@ -65,11 +67,11 @@
 		date = dayjs($store?.selected).format("MM/DD/YYYY");
 	}
 
-	function keydown(e) {
-		if (e.keyCode === 13) {
-			e.target.blur();
-		}
-	}
+	// function keydown(e) {
+	// 	if (e.keyCode === 13) {
+	// 		e.target.blur();
+	// 	}
+	// }
 
 	async function patch(res: Response, form: HTMLFormElement) {
 		const txn = await res.json();
@@ -114,6 +116,8 @@
 		} catch (err) {
 			console.log(err);
 		}
+		description = "";
+		amount = "";
 	}
 </script>
 
@@ -121,7 +125,7 @@
 	<title>Transactions</title>
 </svelte:head>
 
-<div class="transactions">
+<div class="content">
 	<h1>Transactions</h1>
 	<Dialog
 		bind:open
@@ -133,7 +137,7 @@
 		<Title id="simple-title">Add Transaction</Title>
 		<Content id="simple-content">
 			<div>
-				<InlineCalendar bind:store {theme} />
+				<InlineCalendar bind:store {theme} selected={today} />
 
 				<div class="grid">
 					<Textfield disabled bind:value={date} label="Date">
@@ -155,7 +159,10 @@
 			</div>
 		</Content>
 		<Actions>
-			<Button on:click={() => {}}>
+			<Button on:click={() => { 
+				amount = "";
+				description = "";
+			}}>
 				<Label>Cancel</Label>
 			</Button>
 			<Button on:click={() => handleSubmit()}>
@@ -169,7 +176,7 @@
 	</Button>
 
 	{#each transactions as transaction (transaction.id)}
-		<div class="todo">
+		<div class="transactions">
 			<!-- date -->
 			<form
 				class="text"
@@ -243,6 +250,13 @@
 </div>
 
 <style>
+	.content {
+		width: 100%;
+		max-width: var(--column-width);
+		margin: var(--column-margin-top) auto 0 auto;
+		line-height: 1;
+	}
+
 	.grid {
 		background: #333;
 		display: grid;
@@ -252,17 +266,27 @@
 		width: 600px;
 	}
 
-	.todo {
+	.transactions {
 		display: grid;
 		grid-template-columns: 90px 1fr auto 2rem;
 		grid-gap: 0.5rem;
 		align-items: center;
+		margin: 0 0 0.5rem 0;
 		padding: 0.5rem;
 		background-color: white;
 		border-radius: 8px;
 		filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
 		transform: translate(-1px, -1px);
 		transition: filter 0.2s, transform 0.2s;
+	}
+
+	.transactions button {
+		width: 2em;
+		height: 2em;
+		border: none;
+		background-color: transparent;
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
 	}
 
 	form.text {
@@ -276,13 +300,6 @@
 		text-align: right;
 	}
 
-	.transactions {
-		width: 100%;
-		max-width: var(--column-width);
-		margin: var(--column-margin-top) auto 0 auto;
-		line-height: 1;
-	}
-
 	input {
 		border: 1px solid transparent;
 	}
@@ -291,15 +308,6 @@
 		box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.1);
 		border: 1px solid #ff3e00 !important;
 		outline: none;
-	}
-
-	.todo button {
-		width: 2em;
-		height: 2em;
-		border: none;
-		background-color: transparent;
-		background-position: 50% 50%;
-		background-repeat: no-repeat;
 	}
 
 	.delete {
