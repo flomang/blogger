@@ -56,7 +56,6 @@
 	let open = false;
 	let date = "";
 	let amount = "";
-	let title = "";
 	let description = "";
 
 	export let transactions = [];
@@ -86,7 +85,6 @@
 		let body = JSON.stringify({
 			date: date,
 			amount: parseFloat(amount) * 100,
-			title: title,
 			description: description,
 		});
 
@@ -146,11 +144,6 @@
 					<Textfield bind:value={amount} label="Amount">
 						<Icon class="material-icons" slot="leadingIcon"
 							>paid</Icon
-						>
-					</Textfield>
-					<Textfield bind:value={title} label="Title">
-						<Icon class="material-icons" slot="leadingIcon"
-							>label</Icon
 						>
 					</Textfield>
 					<Textfield bind:value={description} label="Description">
@@ -236,6 +229,7 @@
 				method="post"
 				use:enhance={{
 					result: () => {
+						// remove deleted from transactions
 						transactions = transactions.filter(
 							(t) => t.id !== transaction.id
 						);
@@ -252,7 +246,7 @@
 	.grid {
 		background: #333;
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr auto;
+		grid-template-columns: 150px 1fr 1fr;
 		text-align: left;
 		align-items: left;
 		width: 600px;
@@ -269,6 +263,13 @@
 		filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
 		transform: translate(-1px, -1px);
 		transition: filter 0.2s, transform 0.2s;
+	}
+
+	form.text {
+		position: relative;
+		display: flex;
+		align-items: center;
+		flex: 1;
 	}
 
 	#amount {
