@@ -2,15 +2,16 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-/** @type {import('./__types/items').RequestHandler} */
-export async function get() {
-	const body = await (await prisma.transaction.findMany({
+/** @type {import('@sveltejs/kit').RequestHandler} */
+export async function get(): Promise<{body: any, status: number}> {
+	const body = await prisma.transaction.findMany({
 		orderBy: [
 			{
 				day: 'desc',
 			},
 		]
-	}));
+	});
+
 	const status = 200;
 
 	return {
@@ -19,11 +20,13 @@ export async function get() {
 	};
 }
 
-// POST /transactions.json
+// request is standard request object: https://developer.mozilla.org/en-US/docs/Web/API/Request
 /** @type {import('@sveltejs/kit').RequestHandler} */
-export async function post({ request }) {
+export async function post({ request }): Promise<{body: any, status: number}> {
 
+	// TODO how to make body params more obvious?
 	const data = await request.json();
+
 	let now = new Date();
 	let response = await prisma.transaction.create({
 		data: {
@@ -45,6 +48,7 @@ export async function post({ request }) {
 	}
 
 	return {
+		body: "",
 		status: 500,
 	}
-};
+}

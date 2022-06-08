@@ -1,40 +1,55 @@
-import { api } from './_api';
-import type { RequestHandler } from '@sveltejs/kit';
-import type { Locals } from '$lib/types';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// PATCH /transactions/:id.json
-// export const patch: RequestHandler<Locals> = async (event) => {
-// 	const data = await event.request.formData();
-
-// 	console.log("todo patch");
-// 	return api(event, `transactions/${event.locals.id}/${event.params.id}`, {
-// 	// 	text: data.has('text') ? data.get('text') : undefined,
-// 	// 	done: data.has('done') ? !!data.get('done') : undefined,
-// 	});
-// };
-
-// DELETE /transactions/:id.json
-// export const del: RequestHandler<Locals> = async (event) => {
-
-// 	console.log("todo del");
-// 	return api(event, `transactions/${event.locals.id}/${event.params.id}`);
-// };
-
-/** @type {import('./__types/items').RequestHandler} */
-export async function del({ request }) {
+/** @type {import('@sveltejs/kit').RequestHandler} */
+export async function del({ request }): Promise<{body: any, status: number}> {
 	let id = request.url.match(/(\d+).json/)[0];
+	id = parseInt(id.split('.')[0]);
 
 	let res = await prisma.transaction.delete({
 		where: {
-			id: parseInt(id.split('.')[0])
+			id
 		}
 	});
 
 	return {
 		body: res,
+		status: 200,
+	}
+}
+
+/** @type {import('@sveltejs/kit').RequestHandler} */
+export async function patch({ request }): Promise<{body: any, status: number}> {
+
+	// TODO how to make body params more obvious?
+	let id = request.url.match(/(\d+).json/)[0];
+	id = parseInt(id.split('.')[0]);
+
+	const data = await request.formData();
+	let date = data.has('date') ? new Date(data.get('date')) : undefined;
+	let amount = data.has('amount') ? parseFloat(data.get('amount')) * 100 : undefined;
+	let title = data.has('title') ? data.get('title') : undefined;
+	let description = data.has('description') ? data.get('description') : undefined;
+
+
+	let now = new Date();
+	let body = await prisma.transaction.update({
+		 				data: {
+							day: date,
+		 					amount: amount,
+		 					title: title,
+		 					description: description,
+		 					updated_at: now,
+		 				},
+		 				where: {
+		 					id
+		 				}
+					});
+
+
+	return {
+		body: body,
 		status: 200,
 	}
 }

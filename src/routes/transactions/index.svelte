@@ -43,7 +43,16 @@
 	import Icon from "@smui/textfield/icon";
 	import Dialog, { Title, Content, Actions } from "@smui/dialog";
 	import Button, { Label } from "@smui/button";
-	import { utc } from "moment";
+	import { onMount } from "svelte";
+
+	onMount(async () => {
+		// document.getElementById("date").addEventListener("keydown", keydown);
+		// document
+		// 	.getElementById("description")
+		// 	.addEventListener("keydown", keydown);
+		// document.getElementById("amount").addEventListener("keydown", keydown);
+	});
+
 	let open = false;
 	let date = "";
 	let amount = "";
@@ -51,82 +60,25 @@
 	let description = "";
 
 	export let transactions = [];
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10.0,
-	// 	description: "test",
-	// });
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10.0,
-	// 	description: "test",
-	// });
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10,
-	// 	description: "test",
-	// });
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10,
-	// 	description: "test",
-	// });
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10,
-	// 	description: "test",
-	// });
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10,
-	// 	description: "test",
-	// });
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10,
-	// 	description: "test",
-	// });
-	// todos.push({
-	// 	id: 1,
-	// 	profile_id: 1,
-	// 	created_at: new Date("06/02/2022"),
-	// 	updated_at: new Date("06/02/2022"),
-	// 	title: "test",
-	// 	amount: 10,
-	// 	description: "test",
-	// });
 
 	let store;
 	$: if ($store?.selected) {
 		date = dayjs($store?.selected).format("MM/DD/YYYY");
+	}
+
+	function keydown(e) {
+		if (e.keyCode === 13) {
+			e.target.blur();
+		}
+	}
+
+	async function patch(res: Response) {
+		const txn = await res.json();
+
+		transactions = transactions.map((t) => {
+			if (t.id === txn.id) return txn;
+			return t;
+		});
 	}
 
 	async function handleSubmit() {
@@ -160,19 +112,10 @@
 				} else {
 					transactions = [...transactions];
 				}
-
-				// transactions.sort( (a: Transaction, b: Transaction) => {
-				// 	a.day > b.day;
-				// });
 			}
 		} catch (err) {
 			console.log(err);
 		}
-
-		// 	.then((response) => response.json())
-		// 	.then((json) => {
-		// 		console.log(json);
-		// 	});
 	}
 </script>
 
@@ -234,17 +177,60 @@
 
 	{#each transactions as transaction (transaction.id)}
 		<div class="todo">
-			<input
-				type="text"
-				name="text"
-				value={dayjs(transaction.day).format("MM/DD/YYYY")}
-			/>
-			<input
-				type="text"
-				name="text"
-				value={transaction.title + ": " + transaction.description}
-			/>
-			<input type="text" name="text" value={transaction.amount / 100} />
+			<!-- date -->
+			<form
+				class="text"
+				action="/transactions/{transaction.id}.json?_method=patch"
+				method="post"
+				use:enhance={{
+					result: patch,
+				}}
+			>
+				<input
+					aria-label="Edit date"
+					type="text"
+					name="date"
+					id="date"
+					value={dayjs(transaction.day).format("MM/DD/YYYY")}
+				/>
+			</form>
+
+			<!-- description -->
+			<form
+				class="text"
+				action="/transactions/{transaction.id}.json?_method=patch"
+				method="post"
+				use:enhance={{
+					result: patch,
+				}}
+			>
+				<input
+					aria-label="Edit date"
+					type="text"
+					name="description"
+					id="description"
+					value={transaction.description}
+				/>
+			</form>
+
+			<!-- amount -->
+			<form
+				class="text"
+				action="/transactions/{transaction.id}.json?_method=patch"
+				method="post"
+				use:enhance={{
+					result: patch,
+				}}
+			>
+				<input
+					type="text"
+					name="amount"
+					id="amount"
+					value={transaction.amount / 100}
+				/>
+			</form>
+
+			<!-- delete -->
 			<form
 				action="/transactions/{transaction.id}.json?_method=delete"
 				method="post"
@@ -304,7 +290,7 @@
 
 	.todo {
 		display: grid;
-		grid-template-columns: 6rem 2fr 5rem 2rem;
+		grid-template-columns: 7rem 3fr 5rem 2rem;
 		grid-gap: 0.5rem;
 		align-items: center;
 		margin: 0 0 0.5rem 0;
