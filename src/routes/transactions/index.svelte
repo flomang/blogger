@@ -72,6 +72,10 @@
 			if (t.id === txn.id) return txn;
 			return t;
 		});
+		transactions.sort((a, b) => {
+			return a.day > b.day ? -1 : 1;
+		});
+
 		blurAll();
 	}
 
@@ -91,20 +95,25 @@
 
 			if (res.ok) {
 				let created = await res.json();
-				let inserted = false;
-				for (var i = 0, len = transactions.length; i < len; i++) {
-					if (created.day > transactions[i].day) {
-						transactions.splice(i, 0, created);
-						inserted = true;
-						break;
-					}
-				}
+				transactions = [...transactions, created];
+				transactions.sort((a, b) => {
+					return a.day > b.day ? -1 : 1;
+				});
 
-				if (!inserted) {
-					transactions = [...transactions, created];
-				} else {
-					transactions = [...transactions];
-				}
+				//let inserted = false;
+				//for (var i = 0, len = transactions.length; i < len; i++) {
+				//	if (created.day > transactions[i].day) {
+				//		transactions.splice(i, 0, created);
+				//		inserted = true;
+				//		break;
+				//	}
+				//}
+
+				//if (!inserted) {
+				//	transactions = [...transactions, created];
+				//} else {
+				//	transactions = [...transactions];
+				//}
 			}
 		} catch (err) {
 			console.log(err);
