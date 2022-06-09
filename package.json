@@ -23,7 +23,8 @@
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/kit": "next",
     "@types/cookie": "^0.4.1",
-    "dayjs": "^1.10.7",
+    "dayjs": "^1.11.3",
+    "dayjs-plugin-utc": "^0.1.2",
     "elizabot": "^0.0.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -49,6 +50,7 @@
     "@fontsource/fira-mono": "^4.5.0",
     "@lukeed/uuid": "^2.0.0",
     "@prisma/client": "^3.14.0",
+    "chart.js": "^3.8.0",
     "cookie": "^0.4.1"
   }
 }

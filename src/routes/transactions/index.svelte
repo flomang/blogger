@@ -43,6 +43,50 @@
 	import Icon from "@smui/textfield/icon";
 	import Dialog, { Title, Content, Actions } from "@smui/dialog";
 	import Button, { Label } from "@smui/button";
+	import { onMount } from "svelte";
+	import Chart from "chart.js/auto";
+
+	let ctx;
+
+	onMount(async () => {
+		ctx = document.getElementById("myChart");
+		const myChart = new Chart(ctx, {
+			type: "bar",
+			data: {
+				labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+				datasets: [
+					{
+						label: "# of Votes",
+						data: [12, 19, 3, 5, 2, 3],
+						backgroundColor: [
+							"rgba(255, 99, 132, 0.2)",
+							"rgba(54, 162, 235, 0.2)",
+							"rgba(255, 206, 86, 0.2)",
+							"rgba(75, 192, 192, 0.2)",
+							"rgba(153, 102, 255, 0.2)",
+							"rgba(255, 159, 64, 0.2)",
+						],
+						borderColor: [
+							"rgba(255, 99, 132, 1)",
+							"rgba(54, 162, 235, 1)",
+							"rgba(255, 206, 86, 1)",
+							"rgba(75, 192, 192, 1)",
+							"rgba(153, 102, 255, 1)",
+							"rgba(255, 159, 64, 1)",
+						],
+						borderWidth: 1,
+					},
+				],
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true,
+					},
+				},
+			},
+		});
+	});
 
 	let open = false;
 	let date = "";
@@ -80,7 +124,6 @@
 	}
 
 	async function handleSubmit() {
-		// TODO implement remember me
 		let body = JSON.stringify({
 			date: date,
 			amount: parseFloat(amount) * 100,
@@ -99,21 +142,6 @@
 				transactions.sort((a, b) => {
 					return a.day > b.day ? -1 : 1;
 				});
-
-				//let inserted = false;
-				//for (var i = 0, len = transactions.length; i < len; i++) {
-				//	if (created.day > transactions[i].day) {
-				//		transactions.splice(i, 0, created);
-				//		inserted = true;
-				//		break;
-				//	}
-				//}
-
-				//if (!inserted) {
-				//	transactions = [...transactions, created];
-				//} else {
-				//	transactions = [...transactions];
-				//}
 			}
 		} catch (err) {
 			console.log(err);
@@ -128,6 +156,8 @@
 </svelte:head>
 
 <div class="content">
+	<canvas id="myChart" width="400" height="400" />
+
 	<h1>Transactions</h1>
 	<Dialog
 		bind:open
