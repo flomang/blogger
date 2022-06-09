@@ -70,6 +70,10 @@
 
 	let current_mounth = month[today.getMonth()]
 
+	function formatMoney(value: number): string {
+		return (value / 100).toFixed(2);
+	}
+
 	onMount(async () => {
 		ctx = document.getElementById("myChart");
 		const myChart = new Chart(ctx, {
@@ -79,7 +83,7 @@
 				datasets: [
 					{
 						label: current_mounth,
-						data: [bills, gas, grocery, food, people, fun],
+						data: [formatMoney(bills), formatMoney(gas), formatMoney(grocery), formatMoney(food), formatMoney(people), formatMoney(fun)],
 						backgroundColor: [
 							"rgba(255, 99, 132, 0.2)",
 							"rgba(54, 162, 235, 0.2)",
@@ -154,6 +158,11 @@
 				transactions.sort((a, b) => {
 					return a.day > b.day ? -1 : 1;
 				});
+
+				if (created.description.includes('fun')) {
+					fun += created.amount;
+					console.log(fun);
+				}
 			}
 		} catch (err) {
 			console.log(err);

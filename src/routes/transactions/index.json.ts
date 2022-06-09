@@ -27,12 +27,12 @@ export async function get( {request}): Promise<{body: any, status: number}> {
 	let people = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%people%' and day >= ${month} and day < ${next}`;
 	let fun = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%fun%' and day >= ${month} and day < ${next}`;
 
-	bills = (parseInt(bills[0].sum) / 100).toFixed(2);
-	gas = (parseInt(gas[0].sum) / 100).toFixed(2);
-	grocery = (parseInt(grocery[0].sum) / 100).toFixed(2);
-	food = (parseInt(food[0].sum) / 100).toFixed(2);
-	people = (parseInt(food[0].sum) / 100).toFixed(2);
-	fun = (parseInt(fun[0].sum) / 100).toFixed(2);
+	bills = parseInt(bills[0].sum);
+	gas = parseInt(gas[0].sum);
+	grocery = parseInt(grocery[0].sum);
+	food = parseInt(food[0].sum);
+	people = parseInt(people[0].sum);
+	fun = parseInt(fun[0].sum);
 
 	const status = 200;
 	const body = {
