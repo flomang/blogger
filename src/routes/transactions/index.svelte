@@ -23,10 +23,12 @@
 		const res = await fetch("/transactions.json");
 
 		if (res.ok) {
-			const transactions = await res.json();
+			const response = await res.json();
+			//const transactions = response.transactions;
+			//const bills = response.bills;
 
 			return {
-				props: { transactions },
+				props: response,
 			};
 		}
 
@@ -46,18 +48,38 @@
 	import { onMount } from "svelte";
 	import Chart from "chart.js/auto";
 
+	let open = false;
+	let date = "";
+	let amount = "";
+	let description = "";
+	let today = new Date();
+	today.setHours(0);
+
+	export let transactions = [];
+	export let bills = 0;
+	export let gas = 0;
+	export let grocery = 0;
+	export let food = 0;
+	export let people = 0;
+	export let fun = 0;
+
+	let store;
 	let ctx;
+
+	const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+	let current_mounth = month[today.getMonth()]
 
 	onMount(async () => {
 		ctx = document.getElementById("myChart");
 		const myChart = new Chart(ctx, {
 			type: "bar",
 			data: {
-				labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+				labels: ["Bills", "Gas", "Grocery", "Food", "People", "Fun"],
 				datasets: [
 					{
-						label: "# of Votes",
-						data: [12, 19, 3, 5, 2, 3],
+						label: current_mounth,
+						data: [bills, gas, grocery, food, people, fun],
 						backgroundColor: [
 							"rgba(255, 99, 132, 0.2)",
 							"rgba(54, 162, 235, 0.2)",
@@ -88,16 +110,6 @@
 		});
 	});
 
-	let open = false;
-	let date = "";
-	let amount = "";
-	let description = "";
-	let today = new Date();
-	today.setHours(0);
-
-	export let transactions = [];
-
-	let store;
 	$: if ($store?.selected) {
 		date = dayjs($store?.selected).format("MM/DD/YYYY");
 	}
