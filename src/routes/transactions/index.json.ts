@@ -18,13 +18,12 @@ export async function get({ request }): Promise<{ body: any, status: number }> {
 	let months_array  = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) from transactions)`;
 	let months = months_array[0].array;
 	
-	let bills = await get_monthly_amount(months, "%bill%");
-	let gas = await get_monthly_amount(months, "%gas%");
-	let grocery = await get_monthly_amount(months, "%grocery%");
-	let food = await get_monthly_amount(months, "%food%");
-	let people = await get_monthly_amount(months, "%people%");
-	let fun = await get_monthly_amount(months, "%fun%");
 	let tags = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
+	let bills = await get_monthly_amount(months, tags[0]);
+	let gas = await get_monthly_amount(months, tags[1]);
+	let grocery = await get_monthly_amount(months, tags[2]);
+	let food = await get_monthly_amount(months, tags[3]);
+	let people = await get_monthly_amount(months, tags[4]);
 	let misc = await get_monthly_amounts_not_int_tag(months, tags);
 
 	const status = 200;
