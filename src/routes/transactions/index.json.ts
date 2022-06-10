@@ -34,6 +34,9 @@ export async function get( {request}): Promise<{body: any, status: number}> {
 	people = parseInt(people[0].sum);
 	fun = parseInt(fun[0].sum);
 
+	// read all stored months as yyyy-mm
+	let months = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) from transactions)`;
+
 	const status = 200;
 	const body = {
 		transactions: transactions,
@@ -43,6 +46,7 @@ export async function get( {request}): Promise<{body: any, status: number}> {
 		food: food,
 		people: people,
 		fun: fun,
+		months: months[0].array,
 	}
 
 	return {

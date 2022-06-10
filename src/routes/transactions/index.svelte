@@ -56,6 +56,7 @@
 	today.setHours(0);
 
 	export let transactions = [];
+	export let months = [];
 	export let bills = 0;
 	export let gas = 0;
 	export let grocery = 0;
@@ -66,9 +67,22 @@
 	let store;
 	let ctx;
 
-	const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+	const month = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
 
-	let current_mounth = month[today.getMonth()]
+	let current_mounth = month[today.getMonth()];
 
 	function formatMoney(value: number): string {
 		return (value / 100).toFixed(2);
@@ -79,35 +93,67 @@
 		const myChart = new Chart(ctx, {
 			type: "bar",
 			data: {
-				labels: ["Bills", "Gas", "Grocery", "Food", "People", "Fun"],
+				labels: months,
 				datasets: [
 					{
-						label: current_mounth,
-						data: [formatMoney(bills), formatMoney(gas), formatMoney(grocery), formatMoney(food), formatMoney(people), formatMoney(fun)],
-						backgroundColor: [
-							"rgba(255, 99, 132, 0.2)",
-							"rgba(54, 162, 235, 0.2)",
-							"rgba(255, 206, 86, 0.2)",
-							"rgba(75, 192, 192, 0.2)",
-							"rgba(153, 102, 255, 0.2)",
-							"rgba(255, 159, 64, 0.2)",
-						],
-						borderColor: [
-							"rgba(255, 99, 132, 1)",
-							"rgba(54, 162, 235, 1)",
-							"rgba(255, 206, 86, 1)",
-							"rgba(75, 192, 192, 1)",
-							"rgba(153, 102, 255, 1)",
-							"rgba(255, 159, 64, 1)",
-						],
+						label: "Bills",
+						data: [0.00, 20.22],
+						backgroundColor: "rgba(255, 99, 132, 0.2)",
+						borderColor: "rgba(255, 99, 132, 1)",
 						borderWidth: 1,
 					},
+					{
+						label: "Gas",
+						data: [10.22],
+						backgroundColor: "rgba(54, 162, 235, 0.2)",
+						borderColor: "rgba(54, 162, 235, 1)",
+						borderWidth: 1,
+					},
+					{
+						label: "Grocery",
+						data: [43.07],
+						backgroundColor: "rgba(255, 206, 86, 0.2)",
+						borderColor: "rgba(255, 206, 86, 1.0)",
+						borderWidth: 1,
+					},
+					{
+						label: "Food",
+						data: [10.22],
+						backgroundColor: "rgba(75, 192, 192, 0.2)",
+						borderColor: "rgba(75, 192, 192, 1.0)",
+						borderWidth: 1,
+					},
+					{
+						label: "People",
+						data: [0.00],
+						backgroundColor: "rgba(153, 102, 255, 0.2)",
+						borderColor: "rgba(153, 102, 255, 1.0)",
+						borderWidth: 1,
+					},
+					{
+						label: "Fun",
+						data: [33.22],
+						backgroundColor: "rgba(255, 159, 64, 0.2)",
+						borderColor: "rgba(255, 159, 64, 1.0)",
+						borderWidth: 1,
+					},
+					
 				],
 			},
 			options: {
+				plugins: {
+					title: {
+						display: true,
+						text: "Months",
+					},
+				},
 				scales: {
+					x: {
+						stacked: true,
+					},
 					y: {
 						beginAtZero: true,
+						stacked: true,
 					},
 				},
 			},
@@ -159,7 +205,7 @@
 					return a.day > b.day ? -1 : 1;
 				});
 
-				if (created.description.includes('fun')) {
+				if (created.description.includes("fun")) {
 					fun += created.amount;
 					console.log(fun);
 				}
