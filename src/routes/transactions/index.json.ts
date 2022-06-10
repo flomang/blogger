@@ -14,26 +14,6 @@ export async function get({ request }): Promise<{ body: any, status: number }> {
 		]
 	});
 
-	let today = moment().startOf('month');
-	let month = today.toDate();
-	let next = today.add(1, 'month').toDate();
-	console.log(month);
-	console.log(next);
-
-	//let bills = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%bill%' and day >= ${month} and day < ${next}`;
-	//let gas = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%gas%' and day >= ${month} and day < ${next}`;
-	//let grocery = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%grocery%' and day >= ${month} and day < ${next}`;
-	//let food = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%food%' and day >= ${month} and day < ${next}`;
-	//let people = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%people%' and day >= ${month} and day < ${next}`;
-	//let fun = await prisma.$queryRaw`SELECT sum(amount) FROM transactions where description like '%fun%' and day >= ${month} and day < ${next}`;
-
-	////bills = parseInt(bills[0].sum);
-	//gas = parseInt(gas[0].sum);
-	//grocery = parseInt(grocery[0].sum);
-	//food = parseInt(food[0].sum);
-	//people = parseInt(people[0].sum);
-	//fun = parseInt(fun[0].sum);
-
 	// read all stored months as yyyy-mm
 	let months_array  = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) from transactions)`;
 	let months = months_array[0].array;
@@ -46,7 +26,6 @@ export async function get({ request }): Promise<{ body: any, status: number }> {
 	let fun = await get_monthly_amount(months, "%fun%");
 	let tags = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
 	let misc = await get_monthly_amounts_not_int_tag(months, tags);
-	console.log(misc);
 
 	const status = 200;
 	const body = {
