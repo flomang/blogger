@@ -155,10 +155,6 @@
 					mode: "index",
 				},
 				plugins: {
-					title: {
-						display: true,
-						text: "Months",
-					},
 					tooltip: {
 						callbacks: {
 							footer: footer,

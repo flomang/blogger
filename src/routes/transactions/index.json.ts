@@ -11,11 +11,12 @@ export async function get({ request }): Promise<{ body: any, status: number }> {
 			{
 				day: 'desc',
 			},
-		]
+		],
+		take: 100,
 	});
 
 	// read all stored months as yyyy-mm
-	let months_array  = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) from transactions)`;
+	let months_array  = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
 	let months = months_array[0].array;
 	
 	let tags = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
