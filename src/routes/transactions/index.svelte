@@ -47,6 +47,7 @@
 	import Button, { Label } from "@smui/button";
 	import { onMount } from "svelte";
 	import Chart from "chart.js/auto";
+	import { BitmapFontLoader } from "pixi.js";
 
 	let open = false;
 	let date = "";
@@ -87,6 +88,15 @@
 	function formatMoney(value: number): string {
 		return (value / 100).toFixed(2);
 	}
+
+	const footer = (tooltipItems) => {
+		let sum = 0;
+
+		tooltipItems.forEach(function (tooltipItem) {
+			sum += tooltipItem.parsed.y;
+		});
+		return "Total: " + sum;
+	};
 
 	onMount(async () => {
 		ctx = document.getElementById("myChart");
@@ -137,14 +147,22 @@
 						borderColor: "rgba(255, 159, 64, 1.0)",
 						borderWidth: 1,
 					},
-					
 				],
 			},
 			options: {
+				interaction: {
+					intersect: false,
+					mode: "index",
+				},
 				plugins: {
 					title: {
 						display: true,
 						text: "Months",
+					},
+					tooltip: {
+						callbacks: {
+							footer: footer,
+						},
 					},
 				},
 				scales: {
