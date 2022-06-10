@@ -57,12 +57,12 @@
 
 	export let transactions = [];
 	export let months = [];
-	export let bills = 0;
-	export let gas = 0;
-	export let grocery = 0;
-	export let food = 0;
-	export let people = 0;
-	export let fun = 0;
+	export let bills = [];
+	export let gas = [];
+	export let grocery = [];
+	export let food = [];
+	export let people = [];
+	export let misc = [];
 
 	let store;
 	let ctx;
@@ -97,42 +97,42 @@
 				datasets: [
 					{
 						label: "Bills",
-						data: [0.00, 20.22],
+						data: bills,
 						backgroundColor: "rgba(255, 99, 132, 0.2)",
 						borderColor: "rgba(255, 99, 132, 1)",
 						borderWidth: 1,
 					},
 					{
 						label: "Gas",
-						data: [10.22],
+						data: gas,
 						backgroundColor: "rgba(54, 162, 235, 0.2)",
 						borderColor: "rgba(54, 162, 235, 1)",
 						borderWidth: 1,
 					},
 					{
 						label: "Grocery",
-						data: [43.07],
+						data: grocery,
 						backgroundColor: "rgba(255, 206, 86, 0.2)",
 						borderColor: "rgba(255, 206, 86, 1.0)",
 						borderWidth: 1,
 					},
 					{
 						label: "Food",
-						data: [10.22],
+						data: food,
 						backgroundColor: "rgba(75, 192, 192, 0.2)",
 						borderColor: "rgba(75, 192, 192, 1.0)",
 						borderWidth: 1,
 					},
 					{
 						label: "People",
-						data: [0.00],
+						data: people,
 						backgroundColor: "rgba(153, 102, 255, 0.2)",
 						borderColor: "rgba(153, 102, 255, 1.0)",
 						borderWidth: 1,
 					},
 					{
-						label: "Fun",
-						data: [33.22],
+						label: "Misc",
+						data: misc,
 						backgroundColor: "rgba(255, 159, 64, 0.2)",
 						borderColor: "rgba(255, 159, 64, 1.0)",
 						borderWidth: 1,
@@ -205,10 +205,10 @@
 					return a.day > b.day ? -1 : 1;
 				});
 
-				if (created.description.includes("fun")) {
-					fun += created.amount;
-					console.log(fun);
-				}
+				//if (created.description.includes("fun")) {
+				//	fun += created.amount;
+				//	console.log(fun);
+				//}
 			}
 		} catch (err) {
 			console.log(err);
