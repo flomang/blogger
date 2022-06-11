@@ -83,7 +83,8 @@
 		"December",
 	];
 
-	let current_mounth = month[today.getMonth()];
+	//let current_month = month[today.getMonth()];
+	//console.log(current_month);
 
 	function formatMoney(value: number): string {
 		return (value / 100).toFixed(2);
@@ -98,9 +99,55 @@
 		return "Total: " + sum;
 	};
 
+	let myChart;
+	let selectedMonth;
+
+	async function getTransactions(params: {}) {
+		const url =
+			"/transactions.json?" + new URLSearchParams(params).toString();
+		console.log(url);
+		const res = await fetch(url);
+
+		if (res.ok) {
+			const response = await res.json();
+			transactions = response.transactions;
+			//const transactions = response.transactions;
+			//const bills = response.bills;
+
+			//return {
+			//	props: response,
+			//};
+		} else {
+			const { message } = await res.json();
+			console.log(message);
+		}
+	}
+
+	async function clickHandler(evt) {
+		const points = myChart.getElementsAtEventForMode(
+			evt,
+			"nearest",
+			{ intersect: true },
+			true
+		);
+
+		if (points.length) {
+			const firstPoint = points[0];
+			const label = myChart.data.labels[firstPoint.index];
+			selectedMonth = label;
+
+			await getTransactions({ month: selectedMonth });
+			// clicked amount
+			//const value =
+			//	myChart.data.datasets[firstPoint.datasetIndex].data[
+			//		firstPoint.index
+			//	];
+		}
+	}
+
 	onMount(async () => {
 		ctx = document.getElementById("myChart");
-		const myChart = new Chart(ctx, {
+		myChart = new Chart(ctx, {
 			type: "bar",
 			data: {
 				labels: months,
@@ -150,8 +197,9 @@
 				],
 			},
 			options: {
+				onClick: clickHandler,
 				interaction: {
-					intersect: false,
+					intersect: true,
 					mode: "index",
 				},
 				plugins: {

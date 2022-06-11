@@ -4,21 +4,27 @@ import moment from "moment";
 const prisma = new PrismaClient();
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
-export async function get({ request }): Promise<{ body: any, status: number }> {
-	const data = await request.params
-	const transactions = await prisma.transaction.findMany({
-		orderBy: [
-			{
-				day: 'desc',
-			},
-		],
-		take: 100,
-	});
+export async function get({ url }): Promise<{ body: any, status: number }> {
+	const month = url.searchParams.get('month')
+
+	let transactions;
+	if (month == null) {
+		transactions = await prisma.transaction.findMany({
+			orderBy: [
+				{
+					day: 'desc',
+				},
+			],
+			take: 100,
+		});
+	} else {
+		transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month}`;
+	}
 
 	// read all stored months as yyyy-mm
-	let months_array  = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
+	let months_array = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
 	let months = months_array[0].array;
-	
+
 	let tags = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
 	let bills = await get_monthly_amount(months, tags[0]);
 	let gas = await get_monthly_amount(months, tags[1]);
@@ -46,7 +52,7 @@ export async function get({ request }): Promise<{ body: any, status: number }> {
 }
 
 async function get_monthly_amount(months: string[], tag: string): Promise<number[]> {
-	let results: {month: string, sum: string}[] = await prisma.$queryRaw`
+	let results: { month: string, sum: string }[] = await prisma.$queryRaw`
 	with months as (
 		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
 	)
@@ -54,7 +60,7 @@ async function get_monthly_amount(months: string[], tag: string): Promise<number
 
 	let amounts = [];
 	months.forEach(function (month) {
-		let foo = results.find( element => element.month == month)
+		let foo = results.find(element => element.month == month)
 		if (foo == undefined) {
 			amounts.push(0);
 		} else {
@@ -67,7 +73,7 @@ async function get_monthly_amount(months: string[], tag: string): Promise<number
 }
 
 async function get_monthly_amounts_not_int_tag(months: string[], tags: string[]): Promise<number[]> {
-	let results: {month: string, sum: string}[] = await prisma.$queryRaw`
+	let results: { month: string, sum: string }[] = await prisma.$queryRaw`
 	with months as (
 		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
 	)
@@ -75,7 +81,7 @@ async function get_monthly_amounts_not_int_tag(months: string[], tags: string[])
 
 	let amounts = [];
 	months.forEach(function (month) {
-		let foo = results.find( element => element.month == month)
+		let foo = results.find(element => element.month == month)
 		if (foo == undefined) {
 			amounts.push(0);
 		} else {
