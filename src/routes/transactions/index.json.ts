@@ -18,7 +18,7 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 			take: 100,
 		});
 	} else {
-		transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month}`;
+		transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} order by day desc`;
 	}
 
 	// read all stored months as yyyy-mm
