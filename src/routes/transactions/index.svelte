@@ -136,12 +136,16 @@
 			const label = myChart.data.labels[firstPoint.index];
 			selectedMonth = label;
 
-			await getTransactions({ month: selectedMonth });
 			// clicked amount
-			//const value =
-			//	myChart.data.datasets[firstPoint.datasetIndex].data[
-			//		firstPoint.index
-			//	];
+		    const value =
+			 	myChart.data.datasets[firstPoint.datasetIndex].data[
+			 		firstPoint.index
+			 	];
+
+			const datasets = myChart.data.datasets.filter((ds, i) => myChart.isDatasetVisible(i) ? ds : undefined);
+			const labels = datasets.map(data => data.label);
+			await getTransactions({ month: selectedMonth, labels: labels });
+			console.log(labels);
 		}
 	}
 
@@ -153,30 +157,30 @@
 				labels: months,
 				datasets: [
 					{
-						label: "Bills",
+						label: "Bill",
 						data: bills,
-						backgroundColor: "rgba(255, 99, 132, 0.2)",
+						backgroundColor: "rgba(255, 99, 132, 0.7)",
 						borderColor: "rgba(255, 99, 132, 1)",
 						borderWidth: 1,
 					},
 					{
 						label: "Gas",
 						data: gas,
-						backgroundColor: "rgba(54, 162, 235, 0.2)",
+						backgroundColor: "rgba(54, 162, 235, 0.6)",
 						borderColor: "rgba(54, 162, 235, 1)",
 						borderWidth: 1,
 					},
 					{
 						label: "Grocery",
 						data: grocery,
-						backgroundColor: "rgba(255, 206, 86, 0.2)",
-						borderColor: "rgba(255, 206, 86, 1.0)",
+						backgroundColor: "rgba(54, 206, 86, 1.0)",
+						borderColor: "rgba(54, 206, 86, 1.0)",
 						borderWidth: 1,
 					},
 					{
 						label: "Food",
 						data: food,
-						backgroundColor: "rgba(75, 192, 192, 0.2)",
+						backgroundColor: "rgba(75, 192, 192, 0.5)",
 						borderColor: "rgba(75, 192, 192, 1.0)",
 						borderWidth: 1,
 					},
@@ -190,8 +194,8 @@
 					{
 						label: "Misc",
 						data: misc,
-						backgroundColor: "rgba(255, 159, 64, 0.2)",
-						borderColor: "rgba(255, 159, 64, 1.0)",
+						backgroundColor: "rgba(255, 159, 64, 0.3)",
+						borderColor: "rgba(255, 159, 64, 0.3)",
 						borderWidth: 1,
 					},
 				],

@@ -5,27 +5,47 @@ const prisma = new PrismaClient();
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function get({ url }): Promise<{ body: any, status: number }> {
-	const month = url.searchParams.get('month')
+	const month = url.searchParams.get('month');
+	let filter = url.searchParams.get('labels');
+	//const terms = filter.map(term => term.toLowerCase());
+	if (filter != null) {
+		//filter = filter.split(',').map(x => '%' + x.toLowerCase() + '%');
+		filter = filter.split(',').map(x => x.toLowerCase());
+		filter = '%(' + filter.join('|') + ')%';
+	}
+
+	let tags = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
 
 	let transactions;
-	if (month == null) {
-		transactions = await prisma.transaction.findMany({
-			orderBy: [
-				{
-					day: 'desc',
-				},
-			],
-			take: 100,
-		});
-	} else {
+	if (month == null && filter == null) {
+		transactions = await prisma.$queryRaw`select * from transactions order by day desc limit 100`;
+	}
+
+	if (month == null && filter != null) {
+
+		if (filter == '%(misc)%') {
+			transactions = await prisma.$queryRaw`select * from transactions where description not like all(${tags}) order by day desc limit 100`;
+		} else {
+			transactions = await prisma.$queryRaw`select * from transactions where description similar to ${filter} order by day desc limit 100`;
+		}
+	}
+
+	if (month != null && filter == null) {
 		transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} order by day desc`;
+	}
+
+	if (month != null && filter != null) {
+		if (filter == '%(misc)%') {
+			transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and description not like all (${tags}) order by day desc`;
+		} else {
+			transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and description similar to ${filter} order by day desc`;
+		}
 	}
 
 	// read all stored months as yyyy-mm
 	let months_array = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
 	let months = months_array[0].array;
 
-	let tags = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
 	let bills = await get_monthly_amount(months, tags[0]);
 	let gas = await get_monthly_amount(months, tags[1]);
 	let grocery = await get_monthly_amount(months, tags[2]);
