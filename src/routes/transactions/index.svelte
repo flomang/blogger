@@ -357,10 +357,8 @@
 						}}
 					>
 						<input
-							aria-label="Edit date"
 							type="text"
 							name="date"
-							id="date"
 							value={dayjs(transaction.day).format("MM/DD/YYYY")}
 						/>
 					</form>
@@ -375,10 +373,8 @@
 						}}
 					>
 						<input
-							aria-label="Edit date"
 							type="text"
 							name="description"
-							id="description"
 							value={transaction.description}
 						/>
 					</form>
@@ -395,7 +391,7 @@
 						<input
 							type="text"
 							name="amount"
-							id="amount"
+							class="amount"
 							value={(transaction.amount / 100).toFixed(2)}
 						/>
 					</form>
@@ -424,7 +420,7 @@
 <style>
 	.content {
 		width: 100%;
-		max-height: 1000px;
+		max-height: 900px;
 		display: flex;
 	}
 
@@ -446,9 +442,8 @@
 
 	.transactions-grid {
 		display: grid;
-		grid-template-columns: 90px 1fr auto 2rem;
+		grid-template-columns: 90px auto auto 2rem;
 		grid-gap: 0.5rem;
-		align-items: center;
 		margin: 0 0 0.5rem 0;
 		padding: 0.5rem;
 		background-color: white;
@@ -483,7 +478,7 @@
 		flex: 1;
 	}
 
-	#amount {
+	.amount {
 		text-align: right;
 	}
 
