@@ -375,6 +375,7 @@
 						<input
 							type="text"
 							name="description"
+							class="description"
 							value={transaction.description}
 						/>
 					</form>
@@ -442,7 +443,7 @@
 
 	.transactions-grid {
 		display: grid;
-		grid-template-columns: 90px auto auto 2rem;
+		grid-template-columns: 90px 1fr auto 2rem;
 		grid-gap: 0.5rem;
 		margin: 0 0 0.5rem 0;
 		padding: 0.5rem;
@@ -471,6 +472,10 @@
 		width: 600px;
 	}
 
+	.description {
+		min-width: 270px;
+	}
+
 	form.text {
 		position: relative;
 		display: flex;
@@ -480,6 +485,7 @@
 
 	.amount {
 		text-align: right;
+		max-width: 75px;
 	}
 
 	input {
