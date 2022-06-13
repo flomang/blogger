@@ -424,34 +424,24 @@
 <style>
 	.content {
 		width: 100%;
+		max-height: 1000px;
 		display: flex;
 	}
 
 	.chart {
 		max-width: 70%;
-		max-height: 900px;
+		max-height: 100%;
 	}
 
 	.transactions {
 		width: 30%;
 	}
 
-	.grid {
-		background: #333;
-		display: grid;
-		grid-template-columns: 150px 1fr 1fr;
-		text-align: left;
-		align-items: left;
-		width: 600px;
-	}
-
 	.transactions-scrollable {
-		position: absolute;
-		top: 200px;
-		margin: 0 0 0.5em 0;
+		position: relative;
 		padding-left: 10px;
 		overflow-y: auto;
-		height: 59%;
+		height: 81%;
 	}
 
 	.transactions-grid {
@@ -475,6 +465,15 @@
 		background-color: transparent;
 		background-position: 50% 50%;
 		background-repeat: no-repeat;
+	}
+
+	.grid {
+		background: #333;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		text-align: left;
+		align-items: left;
+		width: 600px;
 	}
 
 	form.text {
