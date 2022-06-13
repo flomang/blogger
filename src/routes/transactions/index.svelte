@@ -137,13 +137,15 @@
 			selectedMonth = label;
 
 			// clicked amount
-		    const value =
-			 	myChart.data.datasets[firstPoint.datasetIndex].data[
-			 		firstPoint.index
-			 	];
+			const value =
+				myChart.data.datasets[firstPoint.datasetIndex].data[
+					firstPoint.index
+				];
 
-			const datasets = myChart.data.datasets.filter((ds, i) => myChart.isDatasetVisible(i) ? ds : undefined);
-			const labels = datasets.map(data => data.label);
+			const datasets = myChart.data.datasets.filter((ds, i) =>
+				myChart.isDatasetVisible(i) ? ds : undefined
+			);
+			const labels = datasets.map((data) => data.label);
 			await getTransactions({ month: selectedMonth, labels: labels });
 			console.log(labels);
 		}
@@ -289,9 +291,6 @@
 </svelte:head>
 
 <div class="content">
-	<canvas id="myChart" width="400" height="400" />
-
-	<h1>Transactions</h1>
 	<Dialog
 		bind:open
 		aria-labelledby="simple-title"
@@ -338,90 +337,103 @@
 		</Actions>
 	</Dialog>
 
-	<Button on:click={() => (open = true)}>
-		<Label>Add Transaction</Label>
-	</Button>
+	<canvas class="chart" id="myChart" width="1000" height="1000" />
+	<div class="transactions">
+		<h1>Transactions</h1>
+		<Button on:click={() => (open = true)}>
+			<Label>Add Transaction</Label>
+		</Button>
 
-	{#each transactions as transaction (transaction.id)}
-		<div class="transactions">
-			<!-- date -->
-			<form
-				class="text"
-				action="/transactions/{transaction.id}.json?_method=patch"
-				method="post"
-				use:enhance={{
-					result: patch,
-				}}
-			>
-				<input
-					aria-label="Edit date"
-					type="text"
-					name="date"
-					id="date"
-					value={dayjs(transaction.day).format("MM/DD/YYYY")}
-				/>
-			</form>
+		<div class="transactions-scrollable">
+			{#each transactions as transaction (transaction.id)}
+				<div class="transactions-grid">
+					<!-- date -->
+					<form
+						class="text"
+						action="/transactions/{transaction.id}.json?_method=patch"
+						method="post"
+						use:enhance={{
+							result: patch,
+						}}
+					>
+						<input
+							aria-label="Edit date"
+							type="text"
+							name="date"
+							id="date"
+							value={dayjs(transaction.day).format("MM/DD/YYYY")}
+						/>
+					</form>
 
-			<!-- description -->
-			<form
-				class="text"
-				action="/transactions/{transaction.id}.json?_method=patch"
-				method="post"
-				use:enhance={{
-					result: patch,
-				}}
-			>
-				<input
-					aria-label="Edit date"
-					type="text"
-					name="description"
-					id="description"
-					value={transaction.description}
-				/>
-			</form>
+					<!-- description -->
+					<form
+						class="text"
+						action="/transactions/{transaction.id}.json?_method=patch"
+						method="post"
+						use:enhance={{
+							result: patch,
+						}}
+					>
+						<input
+							aria-label="Edit date"
+							type="text"
+							name="description"
+							id="description"
+							value={transaction.description}
+						/>
+					</form>
 
-			<!-- amount -->
-			<form
-				class="text"
-				action="/transactions/{transaction.id}.json?_method=patch"
-				method="post"
-				use:enhance={{
-					result: patch,
-				}}
-			>
-				<input
-					type="text"
-					name="amount"
-					id="amount"
-					value={(transaction.amount / 100).toFixed(2)}
-				/>
-			</form>
+					<!-- amount -->
+					<form
+						class="text"
+						action="/transactions/{transaction.id}.json?_method=patch"
+						method="post"
+						use:enhance={{
+							result: patch,
+						}}
+					>
+						<input
+							type="text"
+							name="amount"
+							id="amount"
+							value={(transaction.amount / 100).toFixed(2)}
+						/>
+					</form>
 
-			<!-- delete -->
-			<form
-				action="/transactions/{transaction.id}.json?_method=delete"
-				method="post"
-				use:enhance={{
-					result: () => {
-						// remove deleted from transactions
-						transactions = transactions.filter(
-							(t) => t.id !== transaction.id
-						);
-					},
-				}}
-			>
-				<button class="delete" aria-label="Delete todo" />
-			</form>
+					<!-- delete -->
+					<form
+						action="/transactions/{transaction.id}.json?_method=delete"
+						method="post"
+						use:enhance={{
+							result: () => {
+								// remove deleted from transactions
+								transactions = transactions.filter(
+									(t) => t.id !== transaction.id
+								);
+							},
+						}}
+					>
+						<button class="delete" aria-label="Delete todo" />
+					</form>
+				</div>
+			{/each}
 		</div>
-	{/each}
+	</div>
 </div>
 
 <style>
 	.content {
 		width: 100%;
-		max-width: var(--column-width);
-		margin: var(--column-margin-top) auto 0 auto;
-		line-height: 1;
+		display: flex;
+	}
+
+	.chart {
+		max-width: 70%;
+		max-height: 900px;
+	}
+
+	.transactions {
+		width: 30%;
 	}
 
 	.grid {
@@ -433,7 +445,16 @@
 		width: 600px;
 	}
 
-	.transactions {
+	.transactions-scrollable {
+		position: absolute;
+		top: 200px;
+		margin: 0 0 0.5em 0;
+		padding-left: 10px;
+		overflow-y: auto;
+		height: 59%;
+	}
+
+	.transactions-grid {
 		display: grid;
 		grid-template-columns: 90px 1fr auto 2rem;
 		grid-gap: 0.5rem;
