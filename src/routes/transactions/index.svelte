@@ -339,10 +339,12 @@
 
 	<canvas class="chart" id="myChart" width="1000" height="1000" />
 	<div class="transactions">
-		<h1>Transactions</h1>
-		<Button on:click={() => (open = true)}>
-			<Label>Add Transaction</Label>
-		</Button>
+		<div>
+			<h1>Transactions</h1>
+			<Button on:click={() => (open = true)}>
+				<Label>Add Transaction</Label>
+			</Button>
+		</div>
 
 		<div class="transactions-scrollable">
 			{#each transactions as transaction (transaction.id)}
@@ -422,29 +424,26 @@
 <style>
 	.content {
 		width: 100%;
-		max-height: 80vh;
 		display: flex;
-		flex-direction: row;
+		flex-flow: row wrap;
 		gap: 6px;
+		position: relative;
 	}
 
 	.chart {
-		flex-grow: 4; /* default 0 */
 		max-width: 60%;
-		max-height: 100%;
+		max-height: 80vh;
 	}
 
 	.transactions {
-		flex-grow: 1; /* default 0 */
-		width: 30%;
-		max-height: 100%;
-		min-width: 420px;
+		flex: 1; /* Standard syntax */
+		max-height: 80vh;
+		overflow: hidden;
 	}
 
 	.transactions-scrollable {
-		position: relative;
 		overflow-y: auto;
-		height: 80%;
+		height: 100%;
 	}
 
 	.transactions-grid {
@@ -480,7 +479,8 @@
 		width: 600px;
 	}
 
-	form.date, input.date{
+	form.date,
+	input.date {
 		max-width: 90px;
 	}
 
@@ -490,7 +490,7 @@
 	}
 
 	input.description {
-		flex-grow: 3;
+		flex-grow: 1;
 	}
 
 	form.text {
@@ -500,7 +500,8 @@
 		flex: 1;
 	}
 
-	form.amount, input.amount {
+	form.amount,
+	input.amount {
 		text-align: right;
 		max-width: 69px;
 	}
