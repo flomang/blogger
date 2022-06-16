@@ -426,11 +426,12 @@
 		width: 100%;
 		display: flex;
 		flex-flow: row wrap;
-		gap: 6px;
+		gap: 12px;
 		position: relative;
 	}
 
 	.chart {
+		padding-top: 100px;
 		max-width: 60%;
 		max-height: 80vh;
 	}
