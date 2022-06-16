@@ -43,11 +43,11 @@
 <script lang="ts">
 	import Textfield from "@smui/textfield";
 	import Icon from "@smui/textfield/icon";
-	import Dialog, { Title, Content, Actions } from "@smui/dialog";
+	// import Dialog, { Title, Content, Actions } from "@smui/dialog";
 	import Button, { Label } from "@smui/button";
 	import { onMount } from "svelte";
 	import Chart from "chart.js/auto";
-	import { BitmapFontLoader } from "pixi.js";
+	import Dialog from "./Dialog.svelte";
 
 	let open = false;
 	let date = "";
@@ -228,9 +228,9 @@
 		});
 	});
 
-	$: if ($store?.selected) {
-		date = dayjs($store?.selected).format("MM/DD/YYYY");
-	}
+	// $: if ($store?.selected) {
+	// 	date = dayjs($store?.selected).format("MM/DD/YYYY");
+	// }
 
 	function blurAll() {
 		var tmp = document.createElement("input");
@@ -252,38 +252,6 @@
 
 		blurAll();
 	}
-
-	async function handleSubmit() {
-		let body = JSON.stringify({
-			date: date,
-			amount: parseFloat(amount) * 100,
-			description: description,
-		});
-
-		try {
-			const res = await fetch("/transactions.json", {
-				method: "POST",
-				body: body,
-			});
-
-			if (res.ok) {
-				let created = await res.json();
-				transactions = [...transactions, created];
-				transactions.sort((a, b) => {
-					return a.day > b.day ? -1 : 1;
-				});
-
-				//if (created.description.includes("fun")) {
-				//	fun += created.amount;
-				//	console.log(fun);
-				//}
-			}
-		} catch (err) {
-			console.log(err);
-		}
-		description = "";
-		amount = "";
-	}
 </script>
 
 <svelte:head>
@@ -291,59 +259,15 @@
 </svelte:head>
 
 <div class="content">
-	<Dialog
-		bind:open
-		aria-labelledby="simple-title"
-		aria-describedby="simple-content"
-		surface$style="width: 650px; max-width: calc(100vw - 32px);"
-	>
-		<!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-		<Title id="simple-title">Add Transaction</Title>
-		<Content id="simple-content">
-			<div>
-				<InlineCalendar bind:store {theme} selected={today} />
-
-				<div class="grid">
-					<Textfield disabled bind:value={date} label="Date">
-						<Icon class="material-icons" slot="leadingIcon"
-							>event</Icon
-						>
-					</Textfield>
-					<Textfield bind:value={amount} label="Amount">
-						<Icon class="material-icons" slot="leadingIcon"
-							>paid</Icon
-						>
-					</Textfield>
-					<Textfield bind:value={description} label="Description">
-						<Icon class="material-icons" slot="leadingIcon"
-							>article</Icon
-						>
-					</Textfield>
-				</div>
-			</div>
-		</Content>
-		<Actions>
-			<Button
-				on:click={() => {
-					amount = "";
-					description = "";
-				}}
-			>
-				<Label>Cancel</Label>
-			</Button>
-			<Button on:click={() => handleSubmit()}>
-				<Label>Submit</Label>
-			</Button>
-		</Actions>
-	</Dialog>
-
 	<canvas class="chart" id="myChart" width="1000" height="1000" />
 	<div class="transactions">
 		<div>
 			<h1>Transactions</h1>
-			<Button on:click={() => (open = true)}>
-				<Label>Add Transaction</Label>
-			</Button>
+			<Dialog bind:transactions bind:open>
+				<Button on:click={() => (open = true)}>
+					<Label>Add Transaction</Label>
+				</Button>
+			</Dialog>
 		</div>
 
 		<div class="transactions-scrollable">
@@ -431,7 +355,7 @@
 	}
 
 	.chart {
-		padding-top: 100px;
+		padding-top: 103px;
 		max-width: 60%;
 		max-height: 80vh;
 	}
@@ -469,15 +393,6 @@
 		background-color: transparent;
 		background-position: 50% 50%;
 		background-repeat: no-repeat;
-	}
-
-	.grid {
-		background: #333;
-		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		text-align: left;
-		align-items: left;
-		width: 600px;
 	}
 
 	form.date,
