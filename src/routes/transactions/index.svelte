@@ -349,7 +349,7 @@
 				<div class="transactions-grid">
 					<!-- date -->
 					<form
-						class="text"
+						class="text date"
 						action="/transactions/{transaction.id}.json?_method=patch"
 						method="post"
 						use:enhance={{
@@ -359,13 +359,14 @@
 						<input
 							type="text"
 							name="date"
+							class="date"
 							value={dayjs(transaction.day).format("MM/DD/YYYY")}
 						/>
 					</form>
 
 					<!-- description -->
 					<form
-						class="text"
+						class="text description"
 						action="/transactions/{transaction.id}.json?_method=patch"
 						method="post"
 						use:enhance={{
@@ -382,7 +383,7 @@
 
 					<!-- amount -->
 					<form
-						class="text"
+						class="text amount"
 						action="/transactions/{transaction.id}.json?_method=patch"
 						method="post"
 						use:enhance={{
@@ -421,30 +422,37 @@
 <style>
 	.content {
 		width: 100%;
-		max-height: 900px;
+		max-height: 80vh;
 		display: flex;
+		flex-direction: row;
+		gap: 6px;
 	}
 
 	.chart {
-		max-width: 70%;
+		flex-grow: 4; /* default 0 */
+		max-width: 60%;
 		max-height: 100%;
 	}
 
 	.transactions {
+		flex-grow: 1; /* default 0 */
 		width: 30%;
+		max-height: 100%;
+		min-width: 420px;
 	}
 
 	.transactions-scrollable {
 		position: relative;
-		padding-left: 10px;
 		overflow-y: auto;
-		height: 81%;
+		height: 80%;
 	}
 
 	.transactions-grid {
-		display: grid;
-		grid-template-columns: 90px 1fr auto 2rem;
-		grid-gap: 0.5rem;
+		display: flex;
+		align-items: center;
+		/* grid-template-columns: 90px 1fr auto 2rem; */
+		/* grid-gap: 0.5rem; */
+		gap: 0.5rem;
 		margin: 0 0 0.5rem 0;
 		padding: 0.5rem;
 		background-color: white;
@@ -472,8 +480,17 @@
 		width: 600px;
 	}
 
-	.description {
-		min-width: 270px;
+	form.date, input.date{
+		max-width: 90px;
+	}
+
+	form.description {
+		display: flex;
+		align-items: center;
+	}
+
+	input.description {
+		flex-grow: 3;
 	}
 
 	form.text {
@@ -483,9 +500,9 @@
 		flex: 1;
 	}
 
-	.amount {
+	form.amount, input.amount {
 		text-align: right;
-		max-width: 75px;
+		max-width: 69px;
 	}
 
 	input {
