@@ -37,7 +37,6 @@
 	let myChart;
 	let open = false;
 
-	export const prerender = true;
 	export let transactions = [];
 	export let months = [];
 	export let bills = [];

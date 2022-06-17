@@ -8,11 +8,11 @@
 
     export let transactions = [];
     export let open = false;
+
     let date = "";
     let amount = "";
     let description = "";
     let today = new Date();
-    today.setHours(0);
 
     let store;
     $: if ($store?.selected) {
