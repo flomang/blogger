@@ -34,9 +34,8 @@
 	import Chart from "chart.js/auto";
 	import Dialog from "./Dialog.svelte";
 
+	let myChart;
 	let open = false;
-	let today = new Date();
-	today.setHours(0);
 
 	export const prerender = true;
 	export let transactions = [];
@@ -47,10 +46,6 @@
 	export let food = [];
 	export let people = [];
 	export let misc = [];
-
-	let myChart;
-	let selectedMonth;
-	let ctx;
 
 	// const months = [
 	// 	"January",
@@ -78,7 +73,7 @@
 		return "Total: " + sum;
 	};
 
-	async function getTransactions(params: {}) {
+	const getTransactions = async (params: {}) => {
 		const url =
 			"/transactions.json?" + new URLSearchParams(params).toString();
 		console.log(url);
@@ -99,7 +94,8 @@
 		}
 	}
 
-	async function clickHandler(evt) {
+	const clickChartHandler = async (evt) => { 
+	//async function clickChartHandler(evt) {
 		const points = myChart.getElementsAtEventForMode(
 			evt,
 			"nearest",
@@ -109,8 +105,7 @@
 
 		if (points.length) {
 			const firstPoint = points[0];
-			const label = myChart.data.labels[firstPoint.index];
-			selectedMonth = label;
+			const selectedMonth = myChart.data.labels[firstPoint.index];
 
 			// clicked amount
 			// const value =
@@ -121,21 +116,20 @@
 			const datasets = myChart.data.datasets.filter((ds, i) =>
 				myChart.isDatasetVisible(i) ? ds : undefined
 			);
-			const labels = datasets.map((data) => data.label);
-			await getTransactions({ month: selectedMonth, labels: labels });
+			const selectedFilters = datasets.map((data) => data.label);
+			await getTransactions({ month: selectedMonth, labels: selectedFilters });
 			//console.log(labels);
 		}
 	}
 
-
-	function blurAll() {
+	const blurAll = () => {
 		var tmp = document.createElement("input");
 		document.body.appendChild(tmp);
 		tmp.focus();
 		document.body.removeChild(tmp);
 	}
 
-	async function patch(res: Response, form: HTMLFormElement) {
+	const patch = async(res: Response, form: HTMLFormElement) => {
 		const txn = await res.json();
 
 		transactions = transactions.map((t) => {
@@ -150,7 +144,7 @@
 	}
 
 	onMount(async () => {
-		ctx = document.getElementById("myChart");
+		const ctx: any = document.getElementById("myChart");
 		myChart = new Chart(ctx, {
 			type: "bar",
 			data: {
@@ -201,7 +195,7 @@
 				],
 			},
 			options: {
-				onClick: clickHandler,
+				onClick: clickChartHandler,
 				interaction: {
 					intersect: true,
 					mode: "index",
