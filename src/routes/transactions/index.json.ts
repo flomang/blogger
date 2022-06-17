@@ -43,15 +43,15 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 
 
 	// read all stored months as yyyy-mm
-	let months_array = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
-	let months = months_array[0].array;
+	const months_array = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
+	const months = months_array[0].array;
 
-	let bills = await get_monthly_sums(months, terms[0]);
-	let gas = await get_monthly_sums(months, terms[1]);
-	let grocery = await get_monthly_sums(months, terms[2]);
-	let food = await get_monthly_sums(months, terms[3]);
-	let people = await get_monthly_sums(months, terms[4]);
-	let misc = await get_monthly_sums_not(months, terms);
+	const bills = await get_monthly_sums(months, terms[0]);
+	const gas = await get_monthly_sums(months, terms[1]);
+	const grocery = await get_monthly_sums(months, terms[2]);
+	const food = await get_monthly_sums(months, terms[3]);
+	const people = await get_monthly_sums(months, terms[4]);
+	const misc = await get_monthly_sums_not(months, terms);
 
 	const status = 200;
 	const body = {
@@ -72,7 +72,7 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 }
 
 async function get_monthly_sums(months: string[], description: string): Promise<number[]> {
-	let results: { month: string, sum: string }[] = await prisma.$queryRaw`
+	const results: { month: string, sum: string }[] = await prisma.$queryRaw`
 	with months as (
 		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
 	)
@@ -93,7 +93,7 @@ async function get_monthly_sums(months: string[], description: string): Promise<
 }
 
 async function get_monthly_sums_not(months: string[], terms: string[]): Promise<number[]> {
-	let results: { month: string, sum: string }[] = await prisma.$queryRaw`
+	const results: { month: string, sum: string }[] = await prisma.$queryRaw`
 	with months as (
 		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
 	)
@@ -119,9 +119,9 @@ export async function post({ request }): Promise<{ body: any, status: number }> 
 
 	// TODO how to make body params more obvious?
 	const data = await request.json();
+	const now = new Date();
 
-	let now = new Date();
-	let response = await prisma.transaction.create({
+	const response = await prisma.transaction.create({
 		data: {
 			profile_id: 1,
 			day: new Date(data.date),

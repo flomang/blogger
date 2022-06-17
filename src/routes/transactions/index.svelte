@@ -69,7 +69,7 @@
 		tooltipItems.forEach(function (tooltipItem) {
 			sum += tooltipItem.parsed.y;
 		});
-		return "Total: " + sum;
+		return "Total: " + sum.toFixed(2);
 	};
 
 	const getTransactions = async (params: {}) => {
