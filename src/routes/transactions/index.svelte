@@ -1,22 +1,5 @@
 <script context="module" lang="ts">
-	import { enhance } from "$lib/form";
 	import type { Load } from "@sveltejs/kit";
-	import { InlineCalendar } from "svelte-calendar";
-	import dayjs from "dayjs";
-
-	export const prerender = true;
-
-	const theme = {
-		calendar: {
-			width: "600px",
-			shadow: "0px 0px 30px rgba(0.0, 0.0, 0.0, .3)",
-			colors: {
-				background: {
-					highlight: "#333",
-				},
-			},
-		},
-	};
 
 	// see https://kit.svelte.dev/docs#loading
 	export const load: Load = async ({ fetch }) => {
@@ -24,8 +7,11 @@
 
 		if (res.ok) {
 			const response = await res.json();
+
 			//const transactions = response.transactions;
 			//const bills = response.bills;
+			//const gas = response.gas;
+			//const misc = response.misc;
 
 			return {
 				props: response,
@@ -41,21 +27,18 @@
 </script>
 
 <script lang="ts">
-	import Textfield from "@smui/textfield";
-	import Icon from "@smui/textfield/icon";
-	// import Dialog, { Title, Content, Actions } from "@smui/dialog";
+	import { enhance } from "$lib/form";
+	import dayjs from "dayjs";
 	import Button, { Label } from "@smui/button";
 	import { onMount } from "svelte";
 	import Chart from "chart.js/auto";
 	import Dialog from "./Dialog.svelte";
 
 	let open = false;
-	let date = "";
-	let amount = "";
-	let description = "";
 	let today = new Date();
 	today.setHours(0);
 
+	export const prerender = true;
 	export let transactions = [];
 	export let months = [];
 	export let bills = [];
@@ -65,31 +48,27 @@
 	export let people = [];
 	export let misc = [];
 
-	let store;
+	let myChart;
+	let selectedMonth;
 	let ctx;
 
-	const month = [
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"October",
-		"November",
-		"December",
-	];
+	// const months = [
+	// 	"January",
+	// 	"February",
+	// 	"March",
+	// 	"April",
+	// 	"May",
+	// 	"June",
+	// 	"July",
+	// 	"August",
+	// 	"September",
+	// 	"October",
+	// 	"November",
+	// 	"December",
+	// ];
 
-	//let current_month = month[today.getMonth()];
-	//console.log(current_month);
 
-	function formatMoney(value: number): string {
-		return (value / 100).toFixed(2);
-	}
-
+	// chart footer sum
 	const footer = (tooltipItems) => {
 		let sum = 0;
 
@@ -98,9 +77,6 @@
 		});
 		return "Total: " + sum;
 	};
-
-	let myChart;
-	let selectedMonth;
 
 	async function getTransactions(params: {}) {
 		const url =
@@ -137,18 +113,40 @@
 			selectedMonth = label;
 
 			// clicked amount
-			const value =
-				myChart.data.datasets[firstPoint.datasetIndex].data[
-					firstPoint.index
-				];
+			// const value =
+			// 	myChart.data.datasets[firstPoint.datasetIndex].data[
+			// 		firstPoint.index
+			// 	];
 
 			const datasets = myChart.data.datasets.filter((ds, i) =>
 				myChart.isDatasetVisible(i) ? ds : undefined
 			);
 			const labels = datasets.map((data) => data.label);
 			await getTransactions({ month: selectedMonth, labels: labels });
-			console.log(labels);
+			//console.log(labels);
 		}
+	}
+
+
+	function blurAll() {
+		var tmp = document.createElement("input");
+		document.body.appendChild(tmp);
+		tmp.focus();
+		document.body.removeChild(tmp);
+	}
+
+	async function patch(res: Response, form: HTMLFormElement) {
+		const txn = await res.json();
+
+		transactions = transactions.map((t) => {
+			if (t.id === txn.id) return txn;
+			return t;
+		});
+		transactions.sort((a, b) => {
+			return a.day > b.day ? -1 : 1;
+		});
+
+		blurAll();
 	}
 
 	onMount(async () => {
@@ -227,31 +225,6 @@
 			},
 		});
 	});
-
-	// $: if ($store?.selected) {
-	// 	date = dayjs($store?.selected).format("MM/DD/YYYY");
-	// }
-
-	function blurAll() {
-		var tmp = document.createElement("input");
-		document.body.appendChild(tmp);
-		tmp.focus();
-		document.body.removeChild(tmp);
-	}
-
-	async function patch(res: Response, form: HTMLFormElement) {
-		const txn = await res.json();
-
-		transactions = transactions.map((t) => {
-			if (t.id === txn.id) return txn;
-			return t;
-		});
-		transactions.sort((a, b) => {
-			return a.day > b.day ? -1 : 1;
-		});
-
-		blurAll();
-	}
 </script>
 
 <svelte:head>
@@ -272,7 +245,7 @@
 
 		<div class="transactions-scrollable">
 			{#each transactions as transaction (transaction.id)}
-				<div class="transactions-grid">
+				<div class="transaction-entry">
 					<!-- date -->
 					<form
 						class="text date"
@@ -351,7 +324,6 @@
 		display: flex;
 		flex-flow: row wrap;
 		gap: 12px;
-		position: relative;
 	}
 
 	.chart {
@@ -361,7 +333,7 @@
 	}
 
 	.transactions {
-		flex: 1; /* Standard syntax */
+		flex: 1; 
 		max-height: 80vh;
 		overflow: hidden;
 	}
@@ -371,11 +343,9 @@
 		height: 100%;
 	}
 
-	.transactions-grid {
+	.transaction-entry {
 		display: flex;
 		align-items: center;
-		/* grid-template-columns: 90px 1fr auto 2rem; */
-		/* grid-gap: 0.5rem; */
 		gap: 0.5rem;
 		margin: 0 0 0.5rem 0;
 		padding: 0.5rem;
