@@ -31,12 +31,12 @@
         },
     };
 
-    function handleCancel() {
+    const handleCancel = () => {
         amount = "";
         description = "";
     }
 
-    async function handleSubmit() {
+    const handleSubmit = async() => {
         let body = JSON.stringify({
             date: date,
             amount: parseFloat(amount) * 100,
