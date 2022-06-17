@@ -116,7 +116,7 @@
 				myChart.isDatasetVisible(i) ? ds : undefined
 			);
 			const selectedFilters = datasets.map((data) => data.label);
-			await getTransactions({ month: selectedMonth, labels: selectedFilters });
+			await getTransactions({ month: selectedMonth, filter: selectedFilters });
 			//console.log(labels);
 		}
 	}
