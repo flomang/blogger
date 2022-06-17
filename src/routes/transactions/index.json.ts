@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function get({ url }): Promise<{ body: any, status: number }> {
-	const tags = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
+	const terms = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
 	const month = url.searchParams.get('month');
 	let filter = url.searchParams.get('filter');
 
@@ -20,9 +20,9 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 			transactions = await prisma.$queryRaw`select * from transactions order by day desc limit 100`;
 		} else {
 			if (filter == '%(misc)%') {
-				transactions = await prisma.$queryRaw`select * from transactions where description not like all(${tags}) order by day desc limit 100`;
+				transactions = await prisma.$queryRaw`select * from transactions where description not like all(${terms}) order by day desc limit 100`;
 			} else if (filter.includes('misc')) {
-				transactions = await prisma.$queryRaw`select * from transactions where description similar to ${filter} or description not like all(${tags}) order by day desc limit 100`;
+				transactions = await prisma.$queryRaw`select * from transactions where description similar to ${filter} or description not like all(${terms}) order by day desc limit 100`;
 			} else {
 				transactions = await prisma.$queryRaw`select * from transactions where description similar to ${filter} order by day desc limit 100`;
 			}
@@ -32,9 +32,9 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 			transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} order by day desc`;
 		} else {
 			if (filter == '%(misc)%') {
-				transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and description not like all (${tags}) order by day desc`;
+				transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and description not like all (${terms}) order by day desc`;
 			} else if (filter.includes('misc')) {
-				transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and (description similar to ${filter} or description not like all (${tags})) order by day desc`;
+				transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and (description similar to ${filter} or description not like all (${terms})) order by day desc`;
 			} else {
 				transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and description similar to ${filter} order by day desc`;
 			}
@@ -46,12 +46,12 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 	let months_array = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
 	let months = months_array[0].array;
 
-	let bills = await get_monthly_amount(months, tags[0]);
-	let gas = await get_monthly_amount(months, tags[1]);
-	let grocery = await get_monthly_amount(months, tags[2]);
-	let food = await get_monthly_amount(months, tags[3]);
-	let people = await get_monthly_amount(months, tags[4]);
-	let misc = await get_monthly_amounts_not_int_tag(months, tags);
+	let bills = await get_monthly_sums(months, terms[0]);
+	let gas = await get_monthly_sums(months, terms[1]);
+	let grocery = await get_monthly_sums(months, terms[2]);
+	let food = await get_monthly_sums(months, terms[3]);
+	let people = await get_monthly_sums(months, terms[4]);
+	let misc = await get_monthly_sums_not(months, terms);
 
 	const status = 200;
 	const body = {
@@ -71,12 +71,12 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 	};
 }
 
-async function get_monthly_amount(months: string[], tag: string): Promise<number[]> {
+async function get_monthly_sums(months: string[], description: string): Promise<number[]> {
 	let results: { month: string, sum: string }[] = await prisma.$queryRaw`
 	with months as (
 		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
 	)
-	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description like ${tag} group by m.month`;
+	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description like ${description} group by m.month`;
 
 	let amounts = [];
 	months.forEach(function (month) {
@@ -92,12 +92,12 @@ async function get_monthly_amount(months: string[], tag: string): Promise<number
 	return amounts;
 }
 
-async function get_monthly_amounts_not_int_tag(months: string[], tags: string[]): Promise<number[]> {
+async function get_monthly_sums_not(months: string[], terms: string[]): Promise<number[]> {
 	let results: { month: string, sum: string }[] = await prisma.$queryRaw`
 	with months as (
 		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
 	)
-	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description not like all(${tags}) group by m.month`;
+	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description not like all(${terms}) group by m.month`;
 
 	let amounts = [];
 	months.forEach(function (month) {
