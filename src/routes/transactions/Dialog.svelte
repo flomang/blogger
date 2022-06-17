@@ -34,9 +34,9 @@
     const handleCancel = () => {
         amount = "";
         description = "";
-    }
+    };
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
         let body = JSON.stringify({
             date: date,
             amount: parseFloat(amount) * 100,
@@ -66,7 +66,7 @@
         }
         description = "";
         amount = "";
-    }
+    };
 </script>
 
 <Dialog
@@ -85,7 +85,12 @@
                 <Textfield disabled bind:value={date} label="Date">
                     <Icon class="material-icons" slot="leadingIcon">event</Icon>
                 </Textfield>
-                <Textfield bind:value={amount} label="Amount">
+                <Textfield
+                    bind:value={amount}
+                    label="Amount"
+                    type="number"
+                    input$step=".01"
+                >
                     <Icon class="material-icons" slot="leadingIcon">paid</Icon>
                 </Textfield>
                 <Textfield bind:value={description} label="Description">
@@ -100,7 +105,10 @@
         <Button on:click={() => handleCancel()}>
             <Label>Cancel</Label>
         </Button>
-        <Button on:click={() => handleSubmit()}>
+        <Button
+            on:click={() => handleSubmit()}
+            disabled={amount == "" || description == ""}
+        >
             <Label>Submit</Label>
         </Button>
     </Actions>
@@ -109,12 +117,12 @@
 <slot {transactions} />
 
 <style>
-	.grid {
-		background: #333;
-		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		text-align: left;
-		align-items: left;
-		width: 600px;
-	}
+    .grid {
+        background: #333;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        text-align: left;
+        align-items: left;
+        width: 600px;
+    }
 </style>
