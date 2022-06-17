@@ -28,15 +28,14 @@ export async function patch({ request }): Promise<{body: any, status: number}> {
 
 	const data = await request.formData();
 	let date = data.has('date') ? new Date(data.get('date')) : undefined;
-	let amount = data.has('amount') ? parseFloat(data.get('amount')) * 100 : undefined;
+	let amount = data.has('amount') ? Math.floor(parseFloat(data.get('amount')) * 100) : undefined;
 	let description = data.has('description') ? data.get('description') : undefined;
-
 
 	let now = new Date();
 	let body = await prisma.transaction.update({
 		 				data: {
 							day: date,
-		 					amount: Math.floor(amount),
+		 					amount: amount,
 		 					description: description,
 		 					updated_at: now,
 		 				},

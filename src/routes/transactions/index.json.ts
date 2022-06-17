@@ -36,8 +36,6 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 		transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} order by day desc`;
 	}
 
-	console.log(month);
-
 	if (month != null && filter != null) {
 		if (filter == '%(misc)%') {
 			transactions = await prisma.$queryRaw`select * from transactions where to_char(day, 'YYYY-MM') = ${month} and description not like all (${tags}) order by day desc`;
