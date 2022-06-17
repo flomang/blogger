@@ -29,7 +29,6 @@ export async function patch({ request }): Promise<{body: any, status: number}> {
 	const data = await request.formData();
 	let date = data.has('date') ? new Date(data.get('date')) : undefined;
 	let amount = data.has('amount') ? parseFloat(data.get('amount')) * 100 : undefined;
-	let title = data.has('title') ? data.get('title') : undefined;
 	let description = data.has('description') ? data.get('description') : undefined;
 
 
@@ -37,7 +36,7 @@ export async function patch({ request }): Promise<{body: any, status: number}> {
 	let body = await prisma.transaction.update({
 		 				data: {
 							day: date,
-		 					amount: amount,
+		 					amount: Math.floor(amount),
 		 					description: description,
 		 					updated_at: now,
 		 				},
