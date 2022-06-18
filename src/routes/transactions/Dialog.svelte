@@ -53,7 +53,7 @@
                 let created = await res.json();
                 transactions = [...transactions, created];
                 transactions.sort((a, b) => {
-                    return a.day > b.day ? -1 : 1;
+                    return (a.day >= b.day? -1 : 1);
                 });
 
                 //if (created.description.includes("fun")) {

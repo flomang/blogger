@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function get({ url }): Promise<{ body: any, status: number }> {
+	// TODO implement profile ID in queries
 	const terms = ["%bill%", "%gas%", "%grocery%", "%food%", "%people%"];
 	const month = url.searchParams.get('month');
 	let filter = url.searchParams.get('filter');
