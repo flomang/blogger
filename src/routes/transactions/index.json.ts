@@ -2,6 +2,41 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+function normalize_amounts(months: string[], amounts: { month: string, sum: string }[]): number[] {
+	let normalized = [];
+	months.forEach(function (month) {
+		let foo = amounts.find(element => element.month == month)
+		if (foo == undefined) {
+			normalized.push(0);
+		} else {
+			normalized.push((parseInt(foo.sum) / 100).toFixed(2));
+		}
+
+	});
+
+	return normalized;
+}
+
+async function get_monthly_sums(months: string[], description: string): Promise<number[]> {
+	const results: { month: string, sum: string }[] = await prisma.$queryRaw`
+	with months as (
+		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
+	)
+	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description like ${description} group by m.month`;
+
+	return normalize_amounts(months, results);
+}
+
+async function get_monthly_sums_not(months: string[], terms: string[]): Promise<number[]> {
+	const results: { month: string, sum: string }[] = await prisma.$queryRaw`
+	with months as (
+		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
+	)
+	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description not like all(${terms}) group by m.month`;
+
+	return normalize_amounts(months, results);
+}
+
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function get({ url }): Promise<{ body: any, status: number }> {
 	// TODO implement profile ID in queries
@@ -71,47 +106,6 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 	};
 }
 
-async function get_monthly_sums(months: string[], description: string): Promise<number[]> {
-	const results: { month: string, sum: string }[] = await prisma.$queryRaw`
-	with months as (
-		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
-	)
-	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description like ${description} group by m.month`;
-
-	let amounts = [];
-	months.forEach(function (month) {
-		let foo = results.find(element => element.month == month)
-		if (foo == undefined) {
-			amounts.push(0);
-		} else {
-			amounts.push((parseInt(foo.sum) / 100).toFixed(2));
-		}
-
-	});
-
-	return amounts;
-}
-
-async function get_monthly_sums_not(months: string[], terms: string[]): Promise<number[]> {
-	const results: { month: string, sum: string }[] = await prisma.$queryRaw`
-	with months as (
-		select distinct(to_char(day, 'YYYY-MM')) as month from transactions
-	)
-	select m.month, sum(amount) from months m left join transactions t on to_char(t.day, 'YYYY-MM') = m.month where description not like all(${terms}) group by m.month`;
-
-	let amounts = [];
-	months.forEach(function (month) {
-		let foo = results.find(element => element.month == month)
-		if (foo == undefined) {
-			amounts.push(0);
-		} else {
-			amounts.push((parseInt(foo.sum) / 100).toFixed(2));
-		}
-
-	});
-
-	return amounts;
-}
 
 // request is standard request object: https://developer.mozilla.org/en-US/docs/Web/API/Request
 /** @type {import('@sveltejs/kit').RequestHandler} */
