@@ -47,6 +47,7 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 	if (filter != null) {
 		filter = filter.split(',').map(x => x.toLowerCase());
 		filter = '%(' + filter.join('|') + ')%';
+		filter = filter.replace('bills', 'bill');
 	}
 
 	let transactions;

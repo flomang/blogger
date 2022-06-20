@@ -150,7 +150,7 @@
 				labels: months,
 				datasets: [
 					{
-						label: "Bill",
+						label: "Bills",
 						data: bills,
 						backgroundColor: "rgba(255, 99, 132, 0.7)",
 						borderColor: "rgba(255, 99, 132, 1)",
