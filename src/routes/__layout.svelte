@@ -1,7 +1,30 @@
 <script lang="ts">
-	import Header from '$lib/header/Header.svelte';
-	import '../app.css';
+	import Header from "$lib/header/Header.svelte";
+	import "../app.css";
+
+	let dark = false;
 </script>
+
+<svelte:head>
+	{#if dark}
+		<!-- SMUI Styles -->
+		<link
+			rel="stylesheet"
+			href="/smui.css"
+			media="(prefers-color-scheme: light)"
+		/>
+		<link
+			rel="stylesheet"
+			href="/smui-dark.css"
+			media="screen and (prefers-color-scheme: dark)"
+		/>
+	{:else}
+		<link
+			rel="stylesheet"
+			href="/smui.css"
+		/>
+	{/if}
+</svelte:head>
 
 <Header />
 

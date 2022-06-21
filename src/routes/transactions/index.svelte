@@ -363,7 +363,7 @@
 	.stats {
 		display: flex;
 		flex-direction: row;
-		padding-top: 13px;
+		padding-top: 15px;
 	}
 
 	.stat {
