@@ -374,12 +374,12 @@
 	.transactions {
 		flex: 1;
 		max-height: 80vh;
-		overflow: hidden;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.transactions-scrollable {
 		overflow-y: auto;
-		height: 100%;
 	}
 
 	.transaction-entry {
