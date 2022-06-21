@@ -33,6 +33,7 @@
 	import { onMount } from "svelte";
 	import Chart from "chart.js/auto";
 	import Dialog from "./Dialog.svelte";
+	import Card, { Content } from "@smui/card";
 
 	let myChart;
 	let open = false;
@@ -45,6 +46,7 @@
 	export let food = [];
 	export let people = [];
 	export let misc = [];
+	export let grand_sum = 0.0;
 
 	// const months = [
 	// 	"January",
@@ -60,7 +62,6 @@
 	// 	"November",
 	// 	"December",
 	// ];
-
 
 	// chart footer sum
 	const footer = (tooltipItems) => {
@@ -91,10 +92,10 @@
 			const { message } = await res.json();
 			console.log(message);
 		}
-	}
+	};
 
-	const clickChartHandler = async (evt) => { 
-	//async function clickChartHandler(evt) {
+	const clickChartHandler = async (evt) => {
+		//async function clickChartHandler(evt) {
 		const points = myChart.getElementsAtEventForMode(
 			evt,
 			"nearest",
@@ -116,19 +117,22 @@
 				myChart.isDatasetVisible(i) ? ds : undefined
 			);
 			const selectedFilters = datasets.map((data) => data.label);
-			await getTransactions({ month: selectedMonth, filter: selectedFilters });
+			await getTransactions({
+				month: selectedMonth,
+				filter: selectedFilters,
+			});
 			//console.log(labels);
 		}
-	}
+	};
 
 	const blurAll = () => {
 		var tmp = document.createElement("input");
 		document.body.appendChild(tmp);
 		tmp.focus();
 		document.body.removeChild(tmp);
-	}
+	};
 
-	const patch = async(res: Response, form: HTMLFormElement) => {
+	const patch = async (res: Response, form: HTMLFormElement) => {
 		const txn = await res.json();
 
 		transactions = transactions.map((t) => {
@@ -140,7 +144,7 @@
 		});
 
 		blurAll();
-	}
+	};
 
 	onMount(async () => {
 		const ctx: any = document.getElementById("myChart");
@@ -199,6 +203,8 @@
 					intersect: true,
 					mode: "index",
 				},
+				responsive: true,
+				maintainAspectRatio: false,
 				plugins: {
 					tooltip: {
 						callbacks: {
@@ -225,7 +231,16 @@
 </svelte:head>
 
 <div class="content">
-	<canvas class="chart" id="myChart" width="1000" height="1000" />
+	<div class="metrics">
+		<div class="stats">
+			<Card variant="outlined" padded>
+				<Content>Total: ${grand_sum}</Content>
+			</Card>
+		</div>
+		<div class="chart">
+			<canvas id="myChart"/>
+		</div>
+	</div>
 	<div class="transactions">
 		<div>
 			<h1>Transactions</h1>
@@ -319,14 +334,26 @@
 		gap: 12px;
 	}
 
+	.metrics {
+		width: 60%;
+		height: 80vh;
+		display: flex;
+		flex-direction: column;
+
+	}
+
 	.chart {
-		padding-top: 103px;
-		max-width: 60%;
-		max-height: 80vh;
+		text-align: center;
+		height: 100%;
+	}
+
+	.stats {
+		padding-top: 13px;
+		text-align: center;
 	}
 
 	.transactions {
-		flex: 1; 
+		flex: 1;
 		max-height: 80vh;
 		overflow: hidden;
 	}

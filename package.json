@@ -2,7 +2,7 @@
   "name": "blogger",
   "version": "0.0.1",
   "scripts": {
-    "dev": "svelte-kit dev --port 3001",
+    "dev": "svelte-kit dev --port 6001",
     "build": "svelte-kit build",
     "package": "svelte-kit package",
     "prepare": "svelte-kit sync && npm run smui-theme-light && npm run smui-theme-dark",
@@ -15,6 +15,7 @@
   "devDependencies": {
     "@pixi/sound": "^4.2.0",
     "@smui/button": "^6.0.0-beta.16",
+    "@smui/card": "^6.0.0-beta.16",
     "@smui/checkbox": "^6.0.0-beta.16",
     "@smui/dialog": "^6.0.0-beta.16",
     "@smui/form-field": "^6.0.0-beta.16",
