@@ -80,6 +80,12 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 	const all_time = await prisma.$queryRaw`select sum(amount) from transactions`;
 	const grand_sum = (parseInt(all_time[0].sum) / 100).toFixed(2);
 
+	let this_month = await prisma.$queryRaw`select sum(amount) from transactions where to_char(now(), 'YYYY-MM') = to_char(day, 'YYYY-MM')`;
+	this_month = (parseInt(this_month[0].sum) / 100).toFixed(2);
+
+	let avg_month = await prisma.$queryRaw`select avg(month_amount)::int from (select to_char(day, 'YYYY-MM') as month, sum(amount) as month_amount from transactions group by to_char(day, 'YYYY-MM')) as months`;
+	avg_month = (parseInt(avg_month[0].avg) / 100).toFixed(2);
+
 	// read all stored months as yyyy-mm
 	const months_array = await prisma.$queryRaw`select ARRAY(select distinct(to_char(day, 'YYYY-MM')) as month from transactions order by month)`;
 	const months = months_array[0].array;
@@ -103,6 +109,8 @@ export async function get({ url }): Promise<{ body: any, status: number }> {
 		misc,
 		months,
 		grand_sum,
+		this_month,
+		avg_month
 	}
 
 	return {

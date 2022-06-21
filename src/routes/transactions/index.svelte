@@ -47,6 +47,8 @@
 	export let people = [];
 	export let misc = [];
 	export let grand_sum = 0.0;
+	export let avg_month = 0.0;
+	export let this_month = 0.0;
 
 	// const months = [
 	// 	"January",
@@ -233,12 +235,24 @@
 <div class="content">
 	<div class="metrics">
 		<div class="stats">
-			<Card variant="outlined" padded>
-				<Content>Total: ${grand_sum}</Content>
-			</Card>
+			<div class="stat">
+				<Card variant="outlined" padded>
+					<Content>Total: ${grand_sum}</Content>
+				</Card>
+			</div>
+			<div class="stat">
+				<Card variant="outlined" padded>
+					<Content>Average: ${avg_month}</Content>
+				</Card>
+			</div>
+			<div class="stat">
+				<Card variant="outlined" padded>
+					<Content>This Month: ${this_month}</Content>
+				</Card>
+			</div>
 		</div>
 		<div class="chart">
-			<canvas id="myChart"/>
+			<canvas id="myChart" />
 		</div>
 	</div>
 	<div class="transactions">
@@ -339,7 +353,6 @@
 		height: 80vh;
 		display: flex;
 		flex-direction: column;
-
 	}
 
 	.chart {
@@ -348,7 +361,13 @@
 	}
 
 	.stats {
+		display: flex;
+		flex-direction: row;
 		padding-top: 13px;
+	}
+
+	.stat {
+		flex-grow: 2;
 		text-align: center;
 	}
 
