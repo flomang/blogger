@@ -22,7 +22,7 @@
     const theme = {
         calendar: {
             width: "600px",
-            shadow: "0px 0px 30px rgba(0.0, 0.0, 0.0, .3)",
+            shadow: "0px 0px 30px rgba(0.0, 0.0, 0.0, .0)",
             colors: {
                 background: {
                     highlight: "#333",
@@ -118,7 +118,6 @@
 
 <style>
     .grid {
-        background: #333;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         text-align: left;
