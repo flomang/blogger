@@ -238,7 +238,7 @@
 			<div class="stat">
 				<Card>
 					<Content>
-						<div>Total</div>
+						<div class="label">Total</div>
 						<div>${grand_sum}</div>
 					</Content>
 				</Card>
@@ -246,7 +246,7 @@
 			<div class="stat">
 				<Card>
 					<Content>
-						<div>Average</div>
+						<div class="label">Average</div>
 						<div>${avg_month}</div>
 					</Content>
 				</Card>
@@ -254,7 +254,7 @@
 			<div class="stat">
 				<Card>
 					<Content>
-						<div>This Month</div>
+						<div class="label">This Month</div>
 						<div>${this_month}</div>
 					</Content>
 				</Card>
@@ -373,13 +373,18 @@
 		display: flex;
 		flex-direction: row;
 		grid-gap: 3px;
-		padding-top: 15px;
-		padding-bottom: 15px;
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
 
 	.stat {
 		flex-grow: 1;
 		text-align: center;
+	}
+
+	.label {
+		font-size: 25px;
+		font-weight: 700;
 	}
 
 	.transactions {
@@ -397,11 +402,11 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 0.2rem 0;
 		padding: 0.5rem;
 		background-color: white;
 		border-radius: 8px;
-		filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
+		filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.3));
 		transform: translate(-1px, -1px);
 		transition: filter 0.2s, transform 0.2s;
 	}
