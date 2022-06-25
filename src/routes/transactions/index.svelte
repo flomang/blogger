@@ -237,17 +237,26 @@
 		<div class="stats">
 			<div class="stat">
 				<Card variant="outlined" padded>
-					<Content>Total: ${grand_sum}</Content>
+					<Content>
+						<div>Total</div>
+						<div>${grand_sum}</div>
+					</Content>
 				</Card>
 			</div>
 			<div class="stat">
 				<Card variant="outlined" padded>
-					<Content>Average: ${avg_month}</Content>
+					<Content>
+						<div>Average</div>
+						<div>${avg_month}</div>
+					</Content>
 				</Card>
 			</div>
 			<div class="stat">
 				<Card variant="outlined" padded>
-					<Content>This Month: ${this_month}</Content>
+					<Content>
+						<div>This Month</div>
+						<div>${this_month}</div>
+					</Content>
 				</Card>
 			</div>
 		</div>
@@ -363,11 +372,10 @@
 	.stats {
 		display: flex;
 		flex-direction: row;
-		padding-top: 15px;
 	}
 
 	.stat {
-		flex-grow: 2;
+		flex-grow: 1;
 		text-align: center;
 	}
 
