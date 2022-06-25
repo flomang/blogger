@@ -236,7 +236,7 @@
 	<div class="metrics">
 		<div class="stats">
 			<div class="stat">
-				<Card variant="outlined" padded>
+				<Card>
 					<Content>
 						<div>Total</div>
 						<div>${grand_sum}</div>
@@ -244,7 +244,7 @@
 				</Card>
 			</div>
 			<div class="stat">
-				<Card variant="outlined" padded>
+				<Card>
 					<Content>
 						<div>Average</div>
 						<div>${avg_month}</div>
@@ -252,7 +252,7 @@
 				</Card>
 			</div>
 			<div class="stat">
-				<Card variant="outlined" padded>
+				<Card>
 					<Content>
 						<div>This Month</div>
 						<div>${this_month}</div>
@@ -372,6 +372,9 @@
 	.stats {
 		display: flex;
 		flex-direction: row;
+		grid-gap: 3px;
+		padding-top: 15px;
+		padding-bottom: 15px;
 	}
 
 	.stat {
