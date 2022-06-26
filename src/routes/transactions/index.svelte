@@ -50,20 +50,23 @@
 	export let avg_month = 0.0;
 	export let this_month = 0.0;
 
-	// const months = [
-	// 	"January",
-	// 	"February",
-	// 	"March",
-	// 	"April",
-	// 	"May",
-	// 	"June",
-	// 	"July",
-	// 	"August",
-	// 	"September",
-	// 	"October",
-	// 	"November",
-	// 	"December",
-	// ];
+	const calendarMonths = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	];
+
+	const d = new Date();
+    const thisMonth = calendarMonths[d.getMonth()];
 
 	// chart footer sum
 	const footer = (tooltipItems) => {
@@ -84,12 +87,6 @@
 		if (res.ok) {
 			const response = await res.json();
 			transactions = response.transactions;
-			//const transactions = response.transactions;
-			//const bills = response.bills;
-
-			//return {
-			//	props: response,
-			//};
 		} else {
 			const { message } = await res.json();
 			console.log(message);
@@ -97,7 +94,6 @@
 	};
 
 	const clickChartHandler = async (evt) => {
-		//async function clickChartHandler(evt) {
 		const points = myChart.getElementsAtEventForMode(
 			evt,
 			"nearest",
@@ -254,7 +250,7 @@
 			<div class="stat">
 				<Card>
 					<Content>
-						<div class="label">This Month</div>
+						<div class="label">{thisMonth}</div>
 						<div>${this_month}</div>
 					</Content>
 				</Card>
