@@ -21,8 +21,8 @@
 
     const theme = {
         calendar: {
-            width: "600px",
-            shadow: "0px 0px 30px rgba(0.0, 0.0, 0.0, .0)",
+            width: "450px",
+            shadow: "0px 0px 0px rgba(0.0, 0.0, 0.0, .0)",
             colors: {
                 background: {
                     highlight: "#333",
@@ -36,7 +36,7 @@
         description = "";
         // restore calendar day to today
         store.setDay(today);
-    }
+    };
 
     const handleCancel = () => {
         resetValues();
@@ -59,7 +59,7 @@
                 let created = await res.json();
                 transactions = [...transactions, created];
                 transactions.sort((a, b) => {
-                    return (a.day >= b.day? -1 : 1);
+                    return a.day >= b.day ? -1 : 1;
                 });
 
                 //if (created.description.includes("fun")) {
@@ -78,32 +78,29 @@
     bind:open
     aria-labelledby="simple-title"
     aria-describedby="simple-content"
-    surface$style="width: 650px; max-width: calc(100vw - 32px);"
+    surface$style="width: 500px;"
 >
     <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
     <Title id="simple-title">Add Transaction</Title>
     <Content id="simple-content">
         <div>
             <InlineCalendar bind:store {theme} selected={today} />
-
-            <div class="grid">
-                <Textfield disabled bind:value={date} label="Date">
-                    <Icon class="material-icons" slot="leadingIcon">event</Icon>
-                </Textfield>
-                <Textfield
-                    bind:value={amount}
-                    label="Amount"
-                    type="number"
-                    input$step=".01"
-                >
-                    <Icon class="material-icons" slot="leadingIcon">paid</Icon>
-                </Textfield>
-                <Textfield bind:value={description} label="Description">
-                    <Icon class="material-icons" slot="leadingIcon"
-                        >article</Icon
-                    >
-                </Textfield>
-            </div>
+        </div>
+        <div class="grid">
+            <Textfield disabled bind:value={date} label="Date">
+                <Icon class="material-icons" slot="leadingIcon">event</Icon>
+            </Textfield>
+            <Textfield
+                bind:value={amount}
+                label="Amount"
+                type="number"
+                input$step=".01"
+            >
+                <Icon class="material-icons" slot="leadingIcon">paid</Icon>
+            </Textfield>
+            <Textfield bind:value={description} label="Description">
+                <Icon class="material-icons" slot="leadingIcon">article</Icon>
+            </Textfield>
         </div>
     </Content>
     <Actions>
@@ -127,6 +124,6 @@
         grid-template-columns: 1fr 1fr 1fr;
         text-align: left;
         align-items: left;
-        width: 600px;
+        width: 450px;
     }
 </style>
