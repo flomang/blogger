@@ -31,9 +31,15 @@
         },
     };
 
-    const handleCancel = () => {
+    const resetValues = () => {
         amount = "";
         description = "";
+        // restore calendar day to today
+        store.setDay(today);
+    }
+
+    const handleCancel = () => {
+        resetValues();
     };
 
     const handleSubmit = async () => {
@@ -64,8 +70,7 @@
         } catch (err) {
             console.log(err);
         }
-        description = "";
-        amount = "";
+        resetValues();
     };
 </script>
 

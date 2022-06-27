@@ -401,7 +401,7 @@
 		margin: 0 0 0.2rem 0;
 		padding: 0.5rem;
 		background-color: white;
-		border-radius: 8px;
+		border-radius: 3px;
 		filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.3));
 		transform: translate(-1px, -1px);
 		transition: filter 0.2s, transform 0.2s;
