@@ -132,7 +132,7 @@ export async function post({ request }): Promise<{ body: any, status: number }> 
 		data: {
 			profile_id: 1,
 			day: new Date(data.date),
-			amount: data.amount,
+			amount: Math.floor(data.amount),
 			description: data.description,
 			created_at: now,
 			updated_at: now,
